@@ -4,6 +4,7 @@
 // @version      1.0
 // @description  Skips "You are correct" dialogs, binds swipeleft to CHECK button and adds counter in practise.
 // @author       xeyqe
+// @license      MIT
 // @match        https://www.duolingo.com/*
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
 // @require      https://hammerjs.github.io/dist/hammer.min.js
