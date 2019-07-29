@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.5.2
+// @version      2.8.5.3
 // @description  Skips "You are correct" dialogs, binds swipeleft to CHECK button, adds counter to practise and words in answers where you don't write it only select from several inputs are rearrangable by drag and drop.
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -132,6 +132,7 @@
 
     label.append(input, span);
     label.setAttribute('class','switch');
+    label.style.zIndex = '100';
     label.style.top = '0.8em';
     label.style.marginLeft = '9px';
     input.setAttribute('type','checkbox');
@@ -155,7 +156,6 @@
 
     function appendThemeSwitcher() {
         if (document.querySelector('._3F_8q') != null) {
-            console.log(window.innerWidth);
             if (window.innerWidth < 700) {
                 document.querySelector('._3F_8q').parentNode.parentNode.append(label);
                 label.style.top = '4em';
@@ -313,7 +313,6 @@
                 $('#tempAlert').fadeOut(1000, function() { $(this).remove(); });
             }
         });
-        console.log(el);
     }
 
     function removeTempAlert() {
@@ -444,7 +443,6 @@
 
     function throwNotif() {
         if (window.innerWidth < 700) {
-            console.log(el);
             document.querySelector('._1Zqmf').insertBefore(el, $('._1Zqmf')[0].childNodes[0] || null);
         }
         else
@@ -688,10 +686,7 @@
                     appendThemeSwitcher();
                 }
 
-                console.log(mutation.addedNodes[0]);
                 if (mutation.addedNodes[0].contains(document.querySelector('.KekRP._3Txod._1yRbM'))) {
-                    console.log('shit');
-
                     neco('green').then(()=>{
                         autoClick();
                         if (counterBool)
