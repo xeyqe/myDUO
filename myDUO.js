@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.5.3
+// @version      2.8.5.6
 // @description  Skips "You are correct" dialogs, binds swipeleft to CHECK button, adds counter to practise and words in answers where you don't write it only select from several inputs are rearrangable by drag and drop.
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -97,6 +97,9 @@
                "textarea, input {",
                "	-moz-user-select: text;",
                "	direction: ltr;",
+               "}",
+               "#tempAlert {",
+               "    font-size: 25px",
                "}"
               ].join("\n");
     if (typeof GM_addStyle != "undefined") {
@@ -275,7 +278,7 @@
 
         el.setAttribute("style","padding:0.1em;line-height:0.7em !important;right:3%;" +
                         "max-width:94%;width:fit-content;overflow:visible;position:absolute;" +
-                        "color:#58a700;background:#b8f28b;z-index:100");
+                        "color:#58a700;background:#b8f28b;z-index:900");
         $(el).attr('id', 'tempAlert');
 
 
@@ -442,10 +445,10 @@
     }
 
     function throwNotif() {
-        if (window.innerWidth < 700) {
-            document.querySelector('._1Zqmf').insertBefore(el, $('._1Zqmf')[0].childNodes[0] || null);
-        }
-        else
+        //if (window.innerWidth < 700) {
+          //  document.querySelector('._1Zqmf').insertBefore(el, $('._1Zqmf')[0].childNodes[0] || null);
+        //}
+        //else
             document.body.appendChild(el);
         el = null;
     }
@@ -711,7 +714,7 @@
                 if (mutation.addedNodes[0].classList.value == '_1Y5M_ _2szQy _2P2ug _3T--_ AuoX4 _2EF-o' &&
                     mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
                     mutation.addedNodes[0].contains(document.querySelector('input'))) {
-                    $('textarea, input')[0].focus();
+                    setTimeout(()=>{$('textarea, input')[0].focus()},200);
                 }
 
                 if (mutation.addedNodes[0].contains(document.querySelector('._1Zqmf')) && el!=null) {
