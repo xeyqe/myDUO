@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.5.6
+// @version      2.8.5.7
 // @description  Skips "You are correct" dialogs, binds swipeleft to CHECK button, adds counter to practise and words in answers where you don't write it only select from several inputs are rearrangable by drag and drop.
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -338,7 +338,7 @@
     }
 
     function getListOfButtons() {
-        var list = Array.from(document.querySelector('._6HogY').children);
+        var list = Array.from(document.querySelector('._3Ptco').firstElementChild.children);
         var listOfButtons = [];
 
         for (var i=0; i<list.length; i++) {
@@ -353,7 +353,7 @@
         var inBtt = [];
 
         for (var i = 0; i < list.length; i++) {
-            $("._6HogY button").each(function () {
+            $("._2T9b4 button").each(function () {
                 if (this.innerText == list[i] && !outBtt.includes(this)) {
                     outBtt.push(this);
                     this.click();
@@ -386,7 +386,7 @@
 
 
     function draggable() {
-        var output = document.querySelector('._6HogY');
+        var output = document.querySelector('._3Ptco').firstElementChild;
         output.addEventListener("touchstart", allowSwiping, false);
         output.addEventListener("touchend", disallowSwiping, false);
 
@@ -398,7 +398,7 @@
 
     function keyboardShortcuts() {
         var span = document.createElement('span');
-        var list = $('._30i_q').find('._3vhCb');
+        var list = $('._30i_q').find('.lnZE0._2ocEa');
         //var listOfChar = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm'];
         //var listOfCode = [81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 65, 83, 68, 70, 71, 72, 74, 75, 76, 90, 88, 67, 86, 66, 78, 77];
         var listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
@@ -417,7 +417,7 @@
                 var char = e.code[3].toLowerCase();
                 list.find('span:contains('+char+')').click();
             } else if (e.code == "Backspace") {
-                var node = document.querySelector('._6HogY');
+                var node = document.querySelector('._3Ptco').firstElementChild;
                 if (node.children.length > 0) {
                     node.childNodes[node.childNodes.length-1].firstElementChild.click();
                 }
@@ -706,13 +706,12 @@
                             counterBool = true;
                     });
                 }
-                else if (mutation.addedNodes[0].contains(document.querySelector('._6HogY'))) {
+                else if (mutation.addedNodes[0].contains(document.querySelector('._1oLqd'))) {
                     draggable();
                     if (!$.detectSwipe.enabled) keyboardShortcuts();
                 }
 
-                if (mutation.addedNodes[0].classList.value == '_1Y5M_ _2szQy _2P2ug _3T--_ AuoX4 _2EF-o' &&
-                    mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
+                if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
                     mutation.addedNodes[0].contains(document.querySelector('input'))) {
                     setTimeout(()=>{$('textarea, input')[0].focus()},200);
                 }
