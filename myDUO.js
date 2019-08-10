@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.5.7
+// @version      2.8.6.8
 // @description  Skips "You are correct" dialogs, binds swipeleft to CHECK button, adds counter to practise and words in answers where you don't write it only select from several inputs are rearrangable by drag and drop.
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,9 +9,8 @@
 // @include      https://duolingo.com/*
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
-// @require      https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js
 // @require      https://cdn.jsdelivr.net/npm/sortablejs@1.10.0-rc3/Sortable.min.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/detect_swipe/2.1.4/jquery.detect_swipe.min.js
 // @resource     customCSS https://raw.githubusercontent.com/xeyqe/duolingo/master/darkDUOmobile.css
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
@@ -21,7 +20,6 @@
     'use strict';
 
     var $ = jQuery;
-    var mayI = true;
     //var script = document.createElement('script');script.src = "https://code.jquery.com/jquery-3.4.1.min.js";document.getElementsByTagName('head')[0].appendChild(script);
 
     if (document.querySelector('._3giip') != null) {
@@ -29,62 +27,62 @@
     }
 
     var css = [".switch {",
-               "position: relative;",
-               "display: inline-block;",
-               "width: 60px;",
-               "height: 34px;",
+               "    position: relative;",
+               "    display: inline-block;",
+               "    width: 60px;",
+               "    height: 34px;",
                "}",
                "",
                ".switch input { ",
-               "opacity: 0;",
-               "width: 0;",
-               "height: 0;",
+               "    opacity: 0;",
+               "    width: 0;",
+               "    height: 0;",
                "}",
                "",
                ".slider {",
-               "position: absolute;",
-               "cursor: pointer;",
-               "top: 0;",
-               "left: 0;",
-               "right: 0;",
-               "bottom: 0;",
-               "background-color: #ccc;",
-               "-webkit-transition: .4s;",
-               "transition: .4s;",
+               "    position: absolute;",
+               "    cursor: pointer;",
+               "    top: 0;",
+               "    left: 0;",
+               "    right: 0;",
+               "    bottom: 0;",
+               "    background-color: #ccc;",
+               "    -webkit-transition: .4s;",
+               "    transition: .4s;",
                "}",
                "",
                ".slider:before {",
-               "position: absolute;",
-               "content: '';",
-               "height: 26px;",
-               "width: 26px;",
-               "left: 4px;",
-               "bottom: 4px;",
-               "background-color: white;",
-               "-webkit-transition: .4s;",
-               "transition: .4s;",
+               "    position: absolute;",
+               "    content: '';",
+               "    height: 26px;",
+               "    width: 26px;",
+               "    left: 4px;",
+               "    bottom: 4px;",
+               "    background-color: white;",
+               "    -webkit-transition: .4s;",
+               "    transition: .4s;",
                "}",
                "",
                "input:checked + .slider {",
-               "background-color: #2196F3;",
+               "    background-color: #2196F3;",
                "}",
                "",
                "input:focus + .slider {",
-               "box-shadow: 0 0 1px #2196F3;",
+               "    box-shadow: 0 0 1px #2196F3;",
                "}",
                "",
                "input:checked + .slider:before {",
-               "-webkit-transform: translateX(26px);",
-               "-ms-transform: translateX(26px);",
-               "transform: translateX(26px);",
+               "    -webkit-transform: translateX(26px);",
+               "    -ms-transform: translateX(26px);",
+               "    transform: translateX(26px);",
                "}",
                "",
                ".slider.round {",
-               "border-radius: 34px;",
+               "    border-radius: 34px;",
                "}",
                "",
                ".slider.round:before {",
-               "border-radius: 50%;",
+               "    border-radius: 50%;",
                "}",
                ".panel::-webkit-scrollbar {",
                "	width:0 !important",
@@ -98,8 +96,25 @@
                "	-moz-user-select: text;",
                "	direction: ltr;",
                "}",
-               "#tempAlert {",
-               "    font-size: 25px",
+               ".lnZE0 {",
+               "    height: unset;",
+               "}",
+               "._1ttrU.Au17D._2CBTu {",
+               "    margin-top: 0;",
+               "}",
+               "._1Y5M_ {",
+               "    flex-grow: unset;",
+               "}",
+               ".panel {",
+               "    line-height: 1.15;",
+               "}",
+               "@media (min-width: 700px) {",
+               "    #tempAlert {",
+               "        font-size: 25pt;",
+               "    }",
+               "    panel {",
+               "        font-size: 25pt;",
+               "    }",
                "}"
               ].join("\n");
     if (typeof GM_addStyle != "undefined") {
@@ -187,20 +202,36 @@
     }
 
     function mistrKladivo(destination) {
-        var element = document.querySelector(destination);
-        $(element).on('swipeleft', (function(){
-            if (mayI) {
-                if (document.querySelector('.hide') == null) {
-                    swipeFunc();
-                } else if (document.querySelector('.show') == null)
+        var touchstartX = 0;
+        var touchstartY = 0;
+        var touchendX = 0;
+        var touchendY = 0;
+
+        var gesuredZone = document.querySelector(destination);
+
+        gesuredZone.addEventListener('touchstart', function(event) {
+            touchstartX = event.touches[0].pageX;
+            touchstartY = event.touches[0].pageY;
+        }, false);
+
+        gesuredZone.addEventListener('touchend', function(event) {
+            touchendX = event.changedTouches[0].pageX;
+            touchendY = event.changedTouches[0].pageY;
+            if (event.target.className != "_33FS8 _3hwFg" && event.target.className != "iNLw3 _2KUSO") {
+                if (touchstartX - touchendX < -25 &&
+                    Math.abs(touchstartY - touchendY) < 75) {
                     showHidePanel();
+                }
+
+                else if (touchstartX - touchendX > 25 &&
+                         Math.abs(touchstartY - touchendY) < 75) {
+                    if (document.querySelector('.hide') == null) {
+                        swipeFunc();
+                    } else if (document.querySelector('.show') == null)
+                        showHidePanel();
+                }
             }
-        }));
-        $(element).on('swiperight', (function(){
-            if (mayI) {
-                showHidePanel();
-            }
-        }));
+        }, false);
     }
 
 
@@ -216,7 +247,8 @@
         $(node).css({'position':'relative',
                      'right':'1%',
                      'top':'1%',
-                     'paddingLeft':'3%'
+                     'paddingLeft':'3%',
+                     'fontSize':'20pt'
                     });
 
         node.innerHTML =
@@ -288,7 +320,7 @@
             el.innerHTML += "<span>" + str2 + "</span>";
         if (str3 != null)
             el.innerHTML += "<span>" + str3 + "</span>";
-        $(el).find('span').css({'display':'block','font-size':'0.7em','font-weight':'lighter'});
+        $(el).find('span').css({'display':'block','font-weight':'lighter'});
 
         timeout = removeTempAlert();
 
@@ -338,7 +370,7 @@
     }
 
     function getListOfButtons() {
-        var list = Array.from(document.querySelector('._3Ptco').firstElementChild.children);
+        var list = Array.from(document.querySelector('._3Ptco').children);
         var listOfButtons = [];
 
         for (var i=0; i<list.length; i++) {
@@ -376,19 +408,8 @@
         }
     }
 
-    function allowSwiping() {
-        mayI = false;
-    }
-
-    function disallowSwiping() {
-        mayI = true;
-    }
-
-
     function draggable() {
-        var output = document.querySelector('._3Ptco').firstElementChild;
-        output.addEventListener("touchstart", allowSwiping, false);
-        output.addEventListener("touchend", disallowSwiping, false);
+        var output = document.querySelector('._3Ptco');
 
         Sortable.create(output, {
             onEnd: function (evt){ reclick(getListOfButtons()) },
@@ -399,8 +420,7 @@
     function keyboardShortcuts() {
         var span = document.createElement('span');
         var list = $('._30i_q').find('.lnZE0._2ocEa');
-        //var listOfChar = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm'];
-        //var listOfCode = [81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 65, 83, 68, 70, 71, 72, 74, 75, 76, 90, 88, 67, 86, 66, 78, 77];
+
         var listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
                           "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
                           "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyZ", "KeyX",
@@ -417,7 +437,7 @@
                 var char = e.code[3].toLowerCase();
                 list.find('span:contains('+char+')').click();
             } else if (e.code == "Backspace") {
-                var node = document.querySelector('._3Ptco').firstElementChild;
+                var node = document.querySelector('._3Ptco');
                 if (node.children.length > 0) {
                     node.childNodes[node.childNodes.length-1].firstElementChild.click();
                 }
@@ -426,6 +446,7 @@
     }
 
     function moveHintDiv(el) {
+        el.style.top = el.parentElement.getBoundingClientRect().height + 15 + "px"
         var xPx = el.getBoundingClientRect().x;
         var xWidthP = el.parentElement.getBoundingClientRect().width;
         var xWidth = el.getBoundingClientRect().width;
@@ -445,12 +466,10 @@
     }
 
     function throwNotif() {
-        //if (window.innerWidth < 700) {
-          //  document.querySelector('._1Zqmf').insertBefore(el, $('._1Zqmf')[0].childNodes[0] || null);
-        //}
-        //else
+        if (el != null) {
             document.body.appendChild(el);
-        el = null;
+            el = null;
+        }
     }
 
     var myArray = [];
@@ -513,13 +532,13 @@
         var color;
 
         var div = document.createElement('div');
-        div.append(document.createElement('span'),
-                   document.createElement('span'),
-                   document.createElement('span'),
-                   document.createElement('span'),
-                   document.createElement('span'),
-                   document.createElement('span'),
-                   document.createElement('span')
+        div.append(document.createElement('span'), // header
+                   document.createElement('span'), // question
+                   document.createElement('span'), // yourAnswer
+                   document.createElement('span'), // correctAnswer
+                   document.createElement('span'), // anotherCorrect
+                   document.createElement('span'), // meaning
+                   document.createElement('span') //  color
                   );
 
         if (array[array.length-1] == 'red') {
@@ -589,8 +608,16 @@
                 question = document.querySelector('div._3oJjO._1py6s._1e69E._3_NyK._1Juqt').innerText.replace(/\n/g, "");
 
 
-            if ( document.querySelector('._6HogY') != null)
-                yourAnswer = document.querySelector('._6HogY').innerText.replace(/\n/g, " ");
+
+            if ( document.querySelector('._3Ptco') != null) {
+                var elements = document.querySelector('._3Ptco').children;
+                for (var el of elements) {
+                    if (yourAnswer != null)
+                        yourAnswer += el.innerText + " ";
+                    else
+                        yourAnswer = el.innerText + " ";
+                }
+            }
             else if (document.querySelector('[data-test="challenge-translate-input"]') != null)
                 yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').innerHTML;
             else if (document.querySelector('[data-test="challenge-judge-text"]') != null) {
@@ -656,8 +683,7 @@
 
                 if (mutation.attributeName == "class") {
                     if (document.querySelector('button.cVLwd._2arQ0._2vmUZ._2Zh2S._1X3l0.eJd0I._3yrdh._2wXoR._1AM95._1dlWz._2gnHr._3Ry1f') != null &&
-                        document.querySelector('button.cVLwd._2arQ0._2vmUZ._2Zh2S._1X3l0.eJd0I._3yrdh._2wXoR._1AM95._1dlWz._2gnHr._3Ry1f')
-                        .innerText.includes('...')) {
+                        document.querySelector('._1TkZD') != null && document.querySelector('._1TkZD').style.width == "100%") {
                         throwNotif();
                     }
 
@@ -708,7 +734,11 @@
                 }
                 else if (mutation.addedNodes[0].contains(document.querySelector('._1oLqd'))) {
                     draggable();
-                    if (!$.detectSwipe.enabled) keyboardShortcuts();
+
+                    if ("ontouchstart" in document.documentElement == false &&
+                       window.innerWidth > 700) {
+                        keyboardShortcuts();
+                    }
                 }
 
                 if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
@@ -732,8 +762,8 @@
             }
 
             if (mutation.removedNodes.length) {
-                if ($(mutation.removedNodes[0]).find('._6HogY').length) {
-                    if (document.querySelector('._6HogY') == null) {
+                if ($(mutation.removedNodes[0]).find('._3Ptco').length) {
+                    if (document.querySelector('._3Ptco') == null) {
                         document.onkeyup = function (e) {
                             return false;
                         }
@@ -749,7 +779,6 @@
 
     observer.observe(targetNode, config);
 
-    $.detectSwipe.threshold = 75;
 
 
 })();
