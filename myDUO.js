@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.7.7
+// @version      2.8.8.2
 // @description  Skips "You are correct" dialogs, binds swipeleft to CHECK button, adds counter to practise and words in answers where you don't write it only select from several inputs are rearrangable by drag and drop.
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -40,54 +40,48 @@ Node.prototype.swiper = function(direction, func) {
     gesuredZone.addEventListener('touchstart', function(event) {
         touchstartX = event.touches[0].pageX;
         touchstartY = event.touches[0].pageY;
-    }, false);
+    });
 
     gesuredZone.addEventListener('touchend', function(event) {
         touchendX = event.changedTouches[0].pageX;
         touchendY = event.changedTouches[0].pageY;
-        var mayI = true;
-        if (document.querySelector('.CfwZx') != null) {
-            if (document.querySelector('.CfwZx').contains(event.target)) {
-                mayI = false;
-            }
-        }
 
-        if (mayI) {
-            if (direction == "swipeRight") {
-                if (touchstartX - touchendX < -25 &&
-                    Math.abs(touchstartY - touchendY) < 175) {
-                    func();
-                }
-            }
-            else if (direction == "swipeLeft") {
-                if (touchstartX - touchendX > 25 &&
-                    Math.abs(touchstartY - touchendY) < 175) {
-                    func();
-                }
-            }
-            else if (direction == "swipeUp") {
-                if (touchstartY - touchendY < -25 &&
-                    Math.abs(touchstartX - touchendX) < 175) {
-                    func();
-                }
-            }
-            else if (direction == "swipeUp") {
-                if (touchstartY - touchendY > 25 &&
-                    Math.abs(touchstartX - touchendX) < 175) {
-                    func();
-                }
+        if (direction == "swipeRight") {
+            if (touchstartX - touchendX < -25 &&
+                Math.abs(touchstartY - touchendY) < 175) {
+                func(event);
             }
         }
-    }, false);
+        else if (direction == "swipeLeft") {
+            if (touchstartX - touchendX > 25 &&
+                Math.abs(touchstartY - touchendY) < 175) {
+                func(event);
+            }
+        }
+        else if (direction == "swipeUp") {
+            if (touchstartY - touchendY < -25 &&
+                Math.abs(touchstartX - touchendX) < 175) {
+                func(event);
+            }
+        }
+        else if (direction == "swipeUp") {
+            if (touchstartY - touchendY > 25 &&
+                Math.abs(touchstartX - touchendX) < 175) {
+                func(event);
+            }
+        }
+    });
 }
 
-function swipeFunc() {
-    if (document.querySelector('.hide') == null) {
-        if ($('button').last()[0] != null)
-            $('button').last()[0].click();
+function swipeFunc(event) {
+    if (mayISwipe(event)) {
+        if (document.querySelector('.hide') == null) {
+            if ($('button').last()[0] != null)
+                $('button').last()[0].click();
+        }
+        else if (document.querySelector('.show') == null)
+            showHidePanel();
     }
-    else if (document.querySelector('.show') == null)
-        showHidePanel();
 }
 
 function createNumber() {
@@ -97,7 +91,7 @@ function createNumber() {
                  'right':'1%',
                  'top':'1%',
                  'paddingLeft':'3%',
-                 'fontSize':'20pt'
+                 'fontSize':'2rem'
                 });
 
     node.innerHTML =
@@ -130,7 +124,7 @@ var launchAlert = function() {
 
             for (var i=0; i<col.length; i++) {
                 if (col[i].classList.contains('_3Fow7')) {
-                    string2 += "<u>" + col[i].innerText + "</u>";
+                    string2 += `<u> ${col[i].innerText} </u>`;
                 } else
                     string2 += col[i].innerText;
             }
@@ -153,18 +147,18 @@ function tempAlert(str1,str2,str3) {
 
     el = document.createElement("div");
 
-    el.setAttribute("style","padding:0.1em;top:1.5em;right:3%;" +
+    el.setAttribute("style","padding:0.2rem;top:1.5rem;left:50%;transform:translateX(-50%);" +
                     "max-width:94%;width:fit-content;overflow:visible;position:absolute;" +
                     "color:#58a700;background:#b8f28b;z-index:900");
     $(el).attr('id', 'tempAlert');
 
 
     if (!(str2 == null && str3 != null))
-        el.innerHTML = "<span><b>" + str1 + "</b2></span>";
+        el.innerHTML = `<span><b>  ${str1} </b2></span>`;
     if (str2 != null)
-        el.innerHTML += "<span>" + str2 + "</span>";
+        el.innerHTML += `<span> ${str2} </span>`;
     if (str3 != null)
-        el.innerHTML += "<span>" + str3 + "</span>";
+        el.innerHTML += `<span> ${str3} </span>`;
     $(el).find('span').css({'display':'block','font-weight':'lighter'});
 
     timeout = removeTempAlert();
@@ -263,10 +257,8 @@ function draggable() {
 }
 
 function keyboardShortcuts() {
-    $('.iNLw3, ._3Ptco').attr('style', 'font-size: 23px !important');
-    $('._30i_q, ._1yghA').attr("style", "display: block");
     var span = document.createElement('span');
-    span.style.fontSize = "23px";
+    span.style.fontSize = "33px";
     var list = $('._30i_q').find('._2ocEa');
 
     var listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
@@ -355,22 +347,24 @@ function createSlider() {
 
 }
 
-function showHidePanel(){
-    if ($('.panel').find('div').length > 0) {
-        if($('.panel').hasClass('show')){
-            $( ".panel" ).animate({
-                left: "+0"
-            }, 700, function() {
-            });
-            $('.panel').removeClass('show').addClass('hide');
-        }
-        else {
-            var num = -1*(document.querySelector('.panel').getBoundingClientRect().width-20);
-            $( ".panel" ).animate({
-                left: num+""
-            }, 700, function() {
-            });
-            $('.panel').removeClass('hide').addClass('show');
+function showHidePanel(event){
+    if (mayISwipe(event)) {
+        if ($('.panel').find('div').length > 0) {
+            if($('.panel').hasClass('show')){
+                $( ".panel" ).animate({
+                    left: "+0"
+                }, 700, function() {
+                });
+                $('.panel').removeClass('show').addClass('hide');
+            }
+            else {
+                var num = -1*(document.querySelector('.panel').getBoundingClientRect().width-20);
+                $( ".panel" ).animate({
+                    left: num+""
+                }, 700, function() {
+                });
+                $('.panel').removeClass('hide').addClass('show');
+            }
         }
     }
 }
@@ -600,12 +594,23 @@ var css = [".switch {",
            "._1gjlS {",
            "    transform: unset;",
            "}",
+           ".rotmp {",
+           "    grid-row-gap: unset;",
+           "}",
            "@media (min-width: 700px) {",
-           "    #tempAlert {",
-           "        font-size: 1.8em;",
+           "    ._30i_q, ._1yghA {",
+           "        display: block;",
            "    }",
-           "    .panel * {",
-           "        font-size: 1.3em !important;",
+           "}",
+           "@media only screen and (orientation: portrait) {",
+           "    @media (min-width: 700px) {",
+           "        #tempAlert {",
+           "            font-size: 2.5rem;",
+           "            line-height: 1;",
+           "        }",
+           "        .panel * {",
+           "            font-size: 2.5rem !important;",
+           "        }",
            "    }",
            "}"
           ].join("\n");
@@ -687,6 +692,14 @@ function appendThemeSwitcher() {
 }
 
 addThemes();
+
+function mayISwipe(event) {
+    if (event != null && document.querySelector('.CfwZx') != null &&
+        document.querySelector('.CfwZx').contains(event.target)) {
+        return false;
+    } else
+        return true
+}
 
 (function() {
     'use strict';
