@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.8.2
+// @version      2.8.8.4
 // @description  Skips "You are correct" dialogs, binds swipeleft to CHECK button, adds counter to practise and words in answers where you don't write it only select from several inputs are rearrangable by drag and drop.
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -258,7 +258,6 @@ function draggable() {
 
 function keyboardShortcuts() {
     var span = document.createElement('span');
-    span.style.fontSize = "33px";
     var list = $('._30i_q').find('._2ocEa');
 
     var listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
@@ -283,6 +282,13 @@ function keyboardShortcuts() {
             }
         }
     }
+
+    $(window).off("resize", hideShowKey);
+
+    $(window).resize(hideShowKey);
+
+    hideShowKey();
+
 }
 
 function moveHintDiv(el) {
@@ -701,6 +707,13 @@ function mayISwipe(event) {
         return true
 }
 
+function hideShowKey() {
+    if (window.innerWidth>700 && window.innerWidth>window.innerHeight)
+        $('.iNLw3 span').attr("style", "display: block !important");
+    else
+        $('.iNLw3 span').attr("style", "display: none !important");
+}
+
 (function() {
     'use strict';
 
@@ -794,11 +807,7 @@ function mayISwipe(event) {
                 }
                 else if (mutation.addedNodes[0].contains(document.querySelector('._1oLqd'))) {
                     draggable();
-
-                    if ("ontouchstart" in document.documentElement == false &&
-                        window.innerWidth > 700) {
-                        keyboardShortcuts();
-                    }
+                    keyboardShortcuts();
                 }
 
                 if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
