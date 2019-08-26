@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.8.4
+// @version      2.8.8.5
 // @description  Skips "You are correct" dialogs, binds swipeleft to CHECK button, adds counter to practise and words in answers where you don't write it only select from several inputs are rearrangable by drag and drop.
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -11,7 +11,7 @@
 // @include      https://*.duolingo.com/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js
 // @require      https://cdn.jsdelivr.net/npm/sortablejs@1.10.0-rc3/Sortable.min.js
-// @resource     customCSS https://raw.githubusercontent.com/xeyqe/duolingo/master/darkDUOmobile.css
+// @resource     customCSS https://raw.githubusercontent.com/xeyqe/duolingo/master/darkDUO.css
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // ==/UserScript==
