@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.8.5
+// @version      2.8.8.7
 // @description  Skips "You are correct" dialogs, binds swipeleft to CHECK button, adds counter to practise and words in answers where you don't write it only select from several inputs are rearrangable by drag and drop.
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -11,7 +11,7 @@
 // @include      https://*.duolingo.com/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js
 // @require      https://cdn.jsdelivr.net/npm/sortablejs@1.10.0-rc3/Sortable.min.js
-// @resource     customCSS https://raw.githubusercontent.com/xeyqe/duolingo/master/darkDUO.css
+// @resource     customCSS https://raw.githubusercontent.com/xeyqe/duolingo-style/master/darkDUO.css
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -91,7 +91,8 @@ function createNumber() {
                  'right':'1%',
                  'top':'1%',
                  'paddingLeft':'3%',
-                 'fontSize':'2rem'
+                 'fontSize':'2rem',
+                 'margin-left':'20px'
                 });
 
     node.innerHTML =
@@ -483,13 +484,13 @@ function neco(color) {
         else if (document.querySelector('[data-test="challenge-judge-text"]') != null) {
             if (document.querySelector('label._1VKCj._2VgPp._1-PLN._2QNyK._3DsW-._2q1CL._1X3l0.eJd0I.H7AnT') != null) {
                 yourAnswer = document.querySelector('label._1VKCj._2VgPp._1-PLN._2QNyK._3DsW-._2q1CL._1X3l0.eJd0I.H7AnT')
-                    .querySelector('[data-test="challenge-judge-text"]').innerText
+                    .querySelector('[data-test="challenge-judge-text"]').innerText;
             } else yourAnswer = '';
         }
         else if (document.querySelector('[data-test="challenge-text-input"]') != null)
             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').getAttribute('value');
-        else if (document.querySelector('._1xgIc') != null)
-            yourAnswer = document.querySelector('._1xgIc').innerText;
+        else if (document.querySelectorAll('[data-test="challenge-choice-card"]') != null)
+            yourAnswer = document.querySelector('._3DsW-').innerText;
         if (yourAnswer == '' && yourAnswer != null)
             yourAnswer = 'SKIPPED';
 
