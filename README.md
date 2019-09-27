@@ -1,5 +1,5 @@
 # myDUO
-javascript for duolingo
+javascript for <a href="https://www.duolingo.com" target="_blank">Duolingo</a>
 
 ## Features
 
@@ -22,8 +22,8 @@ javascript for duolingo
 * Counter of right and wrong answers
 
 ## How to use
-Install some usescript manager extensione for your browser (e.g. tampermonkey for <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en" target="_blank">chrome</a>
- or for <a href="https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/" target="_blank">firefox</a>).
+Install some usescript manager extension for your browser (e.g. tampermonkey for <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en" target="_blank">Chrome</a>
+ or for <a href="https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/" target="_blank">Firefox</a>).
  
  Install script from here or from <a href="https://openuserjs.org/scripts/xeyqe/Duolingo_Improver" target="_blank">OpenUserJS</a>
  

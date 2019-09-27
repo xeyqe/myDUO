@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.8.7
-// @description  Skips "You are correct" dialogs, binds swipeleft to CHECK button, adds counter to practise and words in answers where you don't write it only select from several inputs are rearrangable by drag and drop.
+// @version      2.8.8.8
+// @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
 // @license      MIT
@@ -24,7 +24,7 @@ var el;
 var label;
 
 var progressBar = "_1TkZD";
-var hint = "_1gjlS";
+var hint = "XUDC1 _2nhHI _3ZTEO";
 var coloredHint = "_1c_ny _1gjlS";
 
 //var script = document.createElement('script');script.src = "https://code.jquery.com/jquery-3.4.1.min.js";document.getElementsByTagName('head')[0].appendChild(script);
@@ -293,9 +293,10 @@ function keyboardShortcuts() {
 }
 
 function moveHintDiv(el) {
+    var arrowX = document.querySelector('._3h4O4').style.left;
     var left = el.parentElement.getBoundingClientRect().width/2 - el.getBoundingClientRect().width/2;
     el.style.left = left + "px";
-    el.style.top = el.parentElement.getBoundingClientRect().height + 15 + "px";
+    el.style.top = el.parentElement.getBoundingClientRect().height + "px";
     var xPx = el.getBoundingClientRect().x;
     var xWidthP = el.parentElement.getBoundingClientRect().width;
     var xWidth = el.getBoundingClientRect().width;
@@ -307,11 +308,15 @@ function moveHintDiv(el) {
     if (error<0) {
         var positionXRight = left + error;
         el.style.left = positionXRight +"px";
+        document.querySelector('._3h4O4').style.left = arrowX - positionXRight + "px";
     }
     if (xPx < padding) {
         var positionXLeft = -el.parentElement.getBoundingClientRect().x + padding;
         el.style.left = positionXLeft + 'px';
+        document.querySelector('._3h4O4').style.left = arrowX - positionXLeft + "px";
     }
+
+
 }
 
 function throwNotif() {
@@ -598,7 +603,7 @@ var css = [".switch {",
            ".panel {",
            "    line-height: 1.15;",
            "}",
-           "._1gjlS {",
+           ".XUDC1._2nhHI._3ZTEO {",
            "    transform: unset;",
            "}",
            ".rotmp {",
@@ -753,18 +758,6 @@ function hideShowKey() {
                     }, 100);
 
                 }
-
-                if (mutation.attributeName == "class") {
-                    //move and color hints
-                    if (mutation.target.className == hint) {
-                        moveHintDiv(mutation.target);
-                        mutation.target.parentElement.style.background = 'purple';
-                        mutation.target.parentElement.style.color = 'white';
-                    } else if (mutation.target.className == coloredHint) {
-                        mutation.target.parentElement.style.background = '';
-                        mutation.target.parentElement.style.color = '';
-                    }
-                }
             }
 
             if (mutation.addedNodes.length && mutation.addedNodes[0].className != null) {
@@ -787,6 +780,12 @@ function hideShowKey() {
                 if (mutation.addedNodes[0].contains(document.querySelector('._3F_8q')) ||
                     mutation.addedNodes[0].contains(document.querySelector('._31whh'))) {
                     appendThemeSwitcher()
+                }
+
+                if (mutation.addedNodes[0].className == "XUDC1 _2nhHI _3ZTEO") {
+                    moveHintDiv(mutation.target.firstElementChild);
+                    mutation.target.style.background = 'purple';
+                    mutation.target.style.color = 'white';
                 }
 
                 if (mutation.addedNodes[0].contains(document.querySelector('.KekRP._3Txod._1yRbM'))) {
@@ -839,6 +838,10 @@ function hideShowKey() {
                             return false;
                         }
                     }
+                }
+                if (mutation.removedNodes[0].className == "XUDC1 _2nhHI _3ZTEO") {
+                    mutation.target.style.background = '';
+                    mutation.target.style.color = '';
                 }
             }
         }
