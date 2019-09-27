@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.8.8
+// @version      2.8.8.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -214,7 +214,7 @@ function getListOfButtons() {
     var listOfButtons = [];
 
     for (var i=0; i<list.length; i++) {
-        listOfButtons.push(list[i].innerText);
+        listOfButtons.push(list[i].innerText.replace(/(\r\n|\n|\r)/gm, "")); //kiwi browser adds here a new line for some reason
     }
 
     return listOfButtons;
