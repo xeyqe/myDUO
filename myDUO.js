@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.8.9
+// @version      2.8.9.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -786,6 +786,7 @@ function hideShowKey() {
                     moveHintDiv(mutation.target.firstElementChild);
                     mutation.target.style.background = 'purple';
                     mutation.target.style.color = 'white';
+                    document.querySelector('._3bFAF').style.color = 'black';
                 }
 
                 if (mutation.addedNodes[0].contains(document.querySelector('.KekRP._3Txod._1yRbM'))) {
