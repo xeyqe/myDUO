@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.9.0
+// @version      2.8.9.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -46,27 +46,30 @@ Node.prototype.swiper = function(direction, func) {
         touchendX = event.changedTouches[0].pageX;
         touchendY = event.changedTouches[0].pageY;
 
+        const absX = Math.abs(touchstartX - touchendX);
+        const absY = Math.abs(touchstartY - touchendY);
+
         if (direction == "swipeRight") {
             if (touchstartX - touchendX < -25 &&
-                Math.abs(touchstartY - touchendY) < 175) {
+                absY < absX) {
                 func(event);
             }
         }
         else if (direction == "swipeLeft") {
             if (touchstartX - touchendX > 25 &&
-                Math.abs(touchstartY - touchendY) < 175) {
+                absY < absX) {
                 func(event);
             }
         }
         else if (direction == "swipeUp") {
             if (touchstartY - touchendY < -25 &&
-                Math.abs(touchstartX - touchendX) < 175) {
+                absY > absX) {
                 func(event);
             }
         }
         else if (direction == "swipeUp") {
             if (touchstartY - touchendY > 25 &&
-                Math.abs(touchstartX - touchendX) < 175) {
+                absY > absX) {
                 func(event);
             }
         }
@@ -487,8 +490,8 @@ function neco(color) {
         else if (document.querySelector('[data-test="challenge-translate-input"]') != null)
             yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').innerHTML;
         else if (document.querySelector('[data-test="challenge-judge-text"]') != null) {
-            if (document.querySelector('label._1VKCj._2VgPp._1-PLN._2QNyK._3DsW-._2q1CL._1X3l0.eJd0I.H7AnT') != null) {
-                yourAnswer = document.querySelector('label._1VKCj._2VgPp._1-PLN._2QNyK._3DsW-._2q1CL._1X3l0.eJd0I.H7AnT')
+            if (document.querySelector('._3DsW-') != null) {
+                yourAnswer = document.querySelector('._3DsW-')
                     .querySelector('[data-test="challenge-judge-text"]').innerText;
             } else yourAnswer = '';
         }
