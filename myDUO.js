@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.9.2
+// @version      2.8.9.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -497,7 +497,7 @@ function neco(color) {
         }
         else if (document.querySelector('[data-test="challenge-text-input"]') != null)
             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').getAttribute('value');
-        else if (document.querySelectorAll('[data-test="challenge-choice-card"]') != null)
+        else if (document.querySelector('[data-test="challenge-choice-card"]') != null)
             yourAnswer = document.querySelector('._3DsW-').innerText;
         if (yourAnswer == '' && yourAnswer != null)
             yourAnswer = 'SKIPPED';
@@ -772,8 +772,8 @@ function hideShowKey() {
                 // takes care of skipping
                 if (mutation.addedNodes[0].contains(document.querySelector('[data-test="player-skip"]'))) {
                     setTimeout(()=>{
-                        if (document.querySelector('._1uJnx') != null || document.querySelector('[data-test="challenge-speak-button"]')) {
-                            document.querySelector('[data-test="player-skip"]').addEventListener('click', function(){
+                        if (document.querySelector('._1uJnx') != null || document.querySelector('[data-test="challenge-speak-button"]') != null) {
+                            document.querySelector('[data-test="player-skip"]').addEventListener('click', function() {
                                 counterBool = false;
                             });
                         }
