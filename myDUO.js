@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.9.4
+// @version      2.8.9.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -450,7 +450,10 @@ function neco(color) {
                             .children.length-1].innerText;
 
         if (document.querySelector('[data-test="hint-sentence"]') != null) {
-            question = document.querySelector('[data-test="hint-sentence"]').innerText;
+            const listOfTokens = document.querySelectorAll('[data-test="hint-token"]');
+            for (let i of listOfTokens) {
+                question += i.innerText.split("\n")[0];
+            }
             var spanList = document.querySelectorAll('label span');
             if (spanList.length) {
                 var append = "";
