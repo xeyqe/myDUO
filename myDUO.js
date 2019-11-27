@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.9.3
+// @version      2.8.9.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -191,6 +191,10 @@ function tempAlert(str1,str2,str3) {
             $('#tempAlert').fadeOut(1000, function() { $(this).remove(); });
         }
     });
+    if (el != null) {
+        document.querySelector('body').appendChild(el);
+        el = null;
+    }
 }
 
 function removeTempAlert() {
@@ -320,13 +324,6 @@ function moveHintDiv(el) {
     }
 
 
-}
-
-function throwNotif() {
-    if (el != null) {
-        document.querySelector('._3PBCS').appendChild(el);
-        el = null;
-    }
 }
 
 function createSlider() {
@@ -750,19 +747,6 @@ function hideShowKey() {
     var callback = function(mutationsList, observer) {
         for(var mutation of mutationsList) {
 
-            if (mutation.type == "attributes") {
-
-                //throwNotif to last question
-                if (mutation.target.className == progressBar) {
-                    setTimeout(()=>{
-                        if (document.querySelector("."+progressBar) != null && document.querySelector("."+progressBar).style.width == "100%") {
-                            throwNotif();
-                        }
-                    }, 100);
-
-                }
-            }
-
             if (mutation.addedNodes.length && mutation.addedNodes[0].className != null) {
 
                 if (mutation.addedNodes[0].contains(document.querySelector('._1bfyi'))) {
@@ -817,10 +801,6 @@ function hideShowKey() {
                 if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
                     mutation.addedNodes[0].contains(document.querySelector('input'))) {
                     setTimeout(()=>{$('textarea, input')[0].focus()},200);
-                }
-
-                if (mutation.addedNodes[0].contains(document.querySelector('._1Zqmf')) && el!=null) {
-                    throwNotif();
                 }
 
                 if (mutation.addedNodes[0].contains(document.querySelector('._3giip'))) {
