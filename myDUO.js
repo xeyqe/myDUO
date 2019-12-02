@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.9.6
+// @version      2.8.9.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -10,32 +10,32 @@
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js
-// @require      https://cdn.jsdelivr.net/npm/sortablejs@1.10.0-rc3/Sortable.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.1/Sortable.min.js
 // @resource     customCSS https://raw.githubusercontent.com/xeyqe/duolingo-style/master/darkDUO.css
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // ==/UserScript==
 
-var $ = jQuery;
-var style;
-var head;
-var myArray = [];
-var el;
-var label;
+const $ = jQuery;
+let style;
+let head;
+let myArray = [];
+let el;
+let label;
 
-var progressBar = "_1TkZD";
-var hint = "XUDC1 _2nhHI _3ZTEO";
-var coloredHint = "_1c_ny _1gjlS";
+const progressBar = "_1TkZD";
+const hint = "XUDC1 _2nhHI _3ZTEO";
+const coloredHint = "_1c_ny _1gjlS";
 
 //var script = document.createElement('script');script.src = "https://code.jquery.com/jquery-3.4.1.min.js";document.getElementsByTagName('head')[0].appendChild(script);
 
 Node.prototype.swiper = function(direction, func) {
-    var touchstartX = 0;
-    var touchstartY = 0;
-    var touchendX = 0;
-    var touchendY = 0;
+    let touchstartX = 0;
+    let touchstartY = 0;
+    let touchendX = 0;
+    let touchendY = 0;
 
-    var gesuredZone = this;
+    const gesuredZone = this;
 
     gesuredZone.addEventListener('touchstart', function(event) {
         touchstartX = event.touches[0].pageX;
@@ -88,7 +88,7 @@ function swipeFunc(event) {
 }
 
 function createNumber() {
-    var node = document.createElement("p");
+    const node = document.createElement("p");
     node.setAttribute("id", "counter");
     $(node).css({'position':'relative',
                  'right':'1%',
@@ -107,8 +107,8 @@ function createNumber() {
 }
 
 function changeCounter(whichOne) {
-    var first = parseInt(document.querySelector('#right').innerText);
-    var second = parseInt(document.querySelector('#wrong').innerText);
+    const first = parseInt(document.querySelector('#right').innerText);
+    const second = parseInt(document.querySelector('#wrong').innerText);
 
     if (whichOne == 'right')
         document.querySelector('#right').innerText = first + 1;
@@ -116,17 +116,17 @@ function changeCounter(whichOne) {
         document.querySelector('#wrong').innerText = second + 1;
 }
 
-var launchAlert = function() {
-    var promise = new Promise(function(resolve) {
+const launchAlert = function() {
+    const promise = new Promise(function(resolve) {
         if (document.querySelector('h2._3H0e2._28jVs') != null) {
             var string1 = document.querySelector('h2._3H0e2._28jVs').innerText.split('\n', 1)[0];
         }
 
         if (document.querySelector('._75iiA') != null) {
-            var col = document.querySelector('._75iiA').firstElementChild.children;
+            const col = document.querySelector('._75iiA').firstElementChild.children;
             var string2 = '';
 
-            for (var i=0; i<col.length; i++) {
+            for (let i=0; i<col.length; i++) {
                 if (col[i].classList.contains('_3Fow7')) {
                     string2 += `<u> ${col[i].innerText} </u>`;
                 } else
@@ -146,7 +146,7 @@ var launchAlert = function() {
 }
 
 function tempAlert(str1,str2,str3) {
-    var timeout = null;
+    let timeout = null;
     if ($('#tempAlert') != null) $('#tempAlert').remove();
 
     el = document.createElement("div");
@@ -198,7 +198,7 @@ function tempAlert(str1,str2,str3) {
 }
 
 function removeTempAlert() {
-    var timeout = setTimeout(function(){
+    const timeout = setTimeout(function(){
         $('#tempAlert').fadeOut(1000, function() {
             $(this).remove();
         })
@@ -217,10 +217,10 @@ function autoClick() {
 }
 
 function getListOfButtons() {
-    var list = Array.from(document.querySelector('._3Ptco').children);
-    var listOfButtons = [];
+    const list = Array.from(document.querySelector('._3Ptco').children);
+    let listOfButtons = [];
 
-    for (var i=0; i<list.length; i++) {
+    for (let i=0; i<list.length; i++) {
         listOfButtons.push(list[i].innerText.replace(/(\r\n|\n|\r)/gm, "")); //kiwi browser adds here a new line for some reason
     }
 
@@ -228,10 +228,10 @@ function getListOfButtons() {
 }
 
 function reclick(list) {
-    var outBtt = [];
-    var inBtt = [];
+    let outBtt = [];
+    let inBtt = [];
 
-    for (var i = 0; i < list.length; i++) {
+    for (let i = 0; i < list.length; i++) {
         $("._2T9b4 button").each(function () {
             if (this.innerText == list[i] && !outBtt.includes(this)) {
                 outBtt.push(this);
@@ -241,7 +241,7 @@ function reclick(list) {
         });
     }
 
-    for (var j = 0; j < list.length; j++) {
+    for (let j = 0; j < list.length; j++) {
         $("._30i_q button").each(function () {
             if (this.childNodes[this.childNodes.length-1].nodeValue == list[j] && !inBtt.includes(this)) {
                 inBtt.push(this);
@@ -250,13 +250,13 @@ function reclick(list) {
         });
     }
 
-    for (var k=0; k<inBtt.length; k++) {
+    for (let k=0; k<inBtt.length; k++) {
         inBtt[k].click();
     }
 }
 
 function draggable() {
-    var output = document.querySelector('._3Ptco');
+    const output = document.querySelector('._3Ptco');
 
     Sortable.create(output, {
         onEnd: function (evt){ reclick(getListOfButtons()) },
@@ -265,15 +265,15 @@ function draggable() {
 }
 
 function keyboardShortcuts() {
-    var span = document.createElement('span');
-    var list = $('._30i_q').find('._2ocEa');
+    const span = document.createElement('span');
+    const list = $('._30i_q').find('._2ocEa');
 
-    var listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
+    const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
                       "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
                       "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyZ", "KeyX",
                       "KeyC", "KeyV", "KeyB", "KeyN", "KeyM"];
 
-    for (var i=0; i<list.length; i++) {
+    for (let i=0; i<list.length; i++) {
         list[i].childNodes[0].insertBefore(span.cloneNode(), list[i].childNodes[0].childNodes[0] || null);
         list[i].childNodes[0].querySelector('span').innerText = listOfCode[i][3].toLowerCase();
         list[i].childNodes[0].querySelector('span').style.display = 'block';
@@ -281,10 +281,10 @@ function keyboardShortcuts() {
 
     document.onkeyup = function(e) {
         if (listOfCode.includes(e.code)) {
-            var char = e.code[3].toLowerCase();
+            let char = e.code[3].toLowerCase();
             list.find('span:contains('+char+')').click();
         } else if (e.code == "Backspace") {
-            var node = document.querySelector('._3Ptco');
+            let node = document.querySelector('._3Ptco');
             if (node.children.length > 0) {
                 node.childNodes[node.childNodes.length-1].firstElementChild.click();
             }
@@ -300,25 +300,25 @@ function keyboardShortcuts() {
 }
 
 function moveHintDiv(el) {
-    var arrowX = document.querySelector('._3h4O4').style.left;
-    var left = el.parentElement.getBoundingClientRect().width/2 - el.getBoundingClientRect().width/2;
+    const arrowX = document.querySelector('._3h4O4').style.left;
+    const left = el.parentElement.getBoundingClientRect().width/2 - el.getBoundingClientRect().width/2;
     el.style.left = left + "px";
     el.style.top = el.parentElement.getBoundingClientRect().height + "px";
-    var xPx = el.getBoundingClientRect().x;
-    var xWidthP = el.parentElement.getBoundingClientRect().width;
-    var xWidth = el.getBoundingClientRect().width;
-    var win = window.innerWidth;
-    var padding = parseInt(window.getComputedStyle(document.querySelector('._3giip'), null)
+    const xPx = el.getBoundingClientRect().x;
+    const xWidthP = el.parentElement.getBoundingClientRect().width;
+    const xWidth = el.getBoundingClientRect().width;
+    const win = window.innerWidth;
+    const padding = parseInt(window.getComputedStyle(document.querySelector('._3giip'), null)
                            .getPropertyValue('padding-left').split('p')[0]);
-    var error = win - (xPx + xWidth) - padding;
+    const error = win - (xPx + xWidth) - padding;
 
     if (error<0) {
-        var positionXRight = left + error;
+        const positionXRight = left + error;
         el.style.left = positionXRight +"px";
         document.querySelector('._3h4O4').style.left = arrowX - positionXRight + "px";
     }
     if (xPx < padding) {
-        var positionXLeft = -el.parentElement.getBoundingClientRect().x + padding;
+        const positionXLeft = -el.parentElement.getBoundingClientRect().x + padding;
         el.style.left = positionXLeft + 'px';
         document.querySelector('._3h4O4').style.left = arrowX - positionXLeft + "px";
     }
@@ -327,7 +327,7 @@ function moveHintDiv(el) {
 }
 
 function createSlider() {
-    var panel = document.createElement("div");
+    const panel = document.createElement("div");
     $(panel).css({'width':'fit-content',
                   'max-width':'95vw',
                   'float':'left',
@@ -343,7 +343,7 @@ function createSlider() {
     document.querySelector('._3giip').appendChild(panel);
 
     document.querySelector('._3giip').addEventListener('mousedown', function(event) {
-        var isClickInside = document.querySelector('.panel').contains(event.target) || panel == event.target;
+        const isClickInside = document.querySelector('.panel').contains(event.target) || panel == event.target;
 
         if (!isClickInside) {
             if (document.querySelector('.hide') != null)
@@ -370,7 +370,7 @@ function showHidePanel(event){
                 $('.panel').removeClass('show').addClass('hide');
             }
             else {
-                var num = -1*(document.querySelector('.panel').getBoundingClientRect().width-20);
+                const num = -1*(document.querySelector('.panel').getBoundingClientRect().width-20);
                 $( ".panel" ).animate({
                     left: num+""
                 }, 700, function() {
@@ -382,10 +382,10 @@ function showHidePanel(event){
 }
 
 function addAnswerResultToPanel(array){
-    var background;
-    var color;
+    const background;
+    const color;
 
-    var div = document.createElement('div');
+    const div = document.createElement('div');
     div.append(document.createElement('span'), // header
                document.createElement('span'), // question
                document.createElement('span'), // yourAnswer
@@ -420,8 +420,8 @@ function addAnswerResultToPanel(array){
     div.querySelectorAll('span')[1].style.color = 'black';
 
 
-    var div2 = div.cloneNode(true);
-    for (var i=0; i<array.length-1; i++) {
+    const div2 = div.cloneNode(true);
+    for (let i=0; i<array.length-1; i++) {
         if (array[i] != null)
             div2.childNodes[i].innerHTML = array[i];
     }
@@ -436,13 +436,13 @@ function addAnswerResultToPanel(array){
 }
 
 function neco(color) {
-    var promise = new Promise((resolve)=>{
-        var header;
-        var question;
-        var yourAnswer;
-        var correctAnswer;
-        var anotherCorrect;
-        var meaning;
+    const promise = new Promise((resolve)=>{
+        let header;
+        let question;
+        let yourAnswer;
+        let correctAnswer;
+        let anotherCorrect;
+        let meaning;
 
         if (document.querySelector('[data-test="challenge-header"]') != null )
             header = document.querySelector('[data-test="challenge-header"]')
@@ -455,10 +455,10 @@ function neco(color) {
             for (let i of listOfTokens) {
                 question += i.innerText.split("\n")[0];
             }
-            var spanList = document.querySelectorAll('label span');
+            const spanList = document.querySelectorAll('label span');
             if (spanList.length) {
-                var append = "";
-                for (var ap of spanList) {
+                let append = "";
+                for (let ap of spanList) {
                     if (ap.className == "")
                         append += ap.innerText;
                     else
@@ -480,8 +480,8 @@ function neco(color) {
 
 
         if ( document.querySelector('._3Ptco') != null) {
-            var elements = document.querySelector('._3Ptco').children;
-            for (var el of elements) {
+            const elements = document.querySelector('._3Ptco').children;
+            for (let el of elements) {
                 if (yourAnswer != null)
                     yourAnswer += el.innerText + " ";
                 else
@@ -504,17 +504,17 @@ function neco(color) {
             yourAnswer = 'SKIPPED';
 
         if (document.querySelector('._75iiA') != null) {
-            var col = document.querySelector('._75iiA').firstElementChild.children;
+            const col = document.querySelector('._75iiA').firstElementChild.children;
             anotherCorrect = '';
-            for (var i=0; i<col.length; i++) {
+            for (let i=0; i<col.length; i++) {
                 if (col[i].classList.contains('_3Fow7')) {
                     anotherCorrect += "<u>" + col[i].innerText + "</u>";
                 } else
                     anotherCorrect += col[i].innerText;
             }
         }
-        if (document.querySelector('._2GiCe') != null) {
-            meaning = document.querySelector('._2GiCe').innerText;
+        if (document.querySelector('._12wY2._29hw3') != null) {
+            meaning = document.querySelector('._12wY2._29hw3').innerText;
         }
 
         addAnswerResultToPanel([header,question,yourAnswer,correctAnswer,anotherCorrect,meaning,color]);
@@ -525,7 +525,7 @@ function neco(color) {
 
 }
 
-var css = [".switch {",
+const css = [".switch {",
            "    position: relative;",
            "    display: inline-block;",
            "    width: 60px;",
@@ -639,10 +639,10 @@ function addThemes() {
     } else if (typeof addStyle != "undefined") {
         addStyle(css);
     } else {
-        var node = document.createElement("style");
+        const node = document.createElement("style");
         node.type = "text/css";
         node.appendChild(document.createTextNode(css));
-        var heads = document.getElementsByTagName("head");
+        const heads = document.getElementsByTagName("head");
         if (heads.length > 0) {
             heads[0].appendChild(node);
         } else {
@@ -650,7 +650,7 @@ function addThemes() {
         }
     }
 
-    var newCSS = GM_getResourceText("customCSS");
+    const newCSS = GM_getResourceText("customCSS");
 
     style = document.createElement("style");
     style.type = "text/css";
@@ -661,8 +661,8 @@ function addThemes() {
 
 function createThemeSwitcherButton() {
     label = document.createElement('label');
-    var input = document.createElement('input');
-    var span = document.createElement('span');
+    const input = document.createElement('input');
+    const span = document.createElement('span');
 
     label.append(input, span);
     label.setAttribute('class','switch');
@@ -745,11 +745,10 @@ function hideShowKey() {
             document.querySelector('#checkbx').checked = true;
     }
 
-    var counterBool = true;
-    var cantListenVar = 0;
+    const counterBool = true;
 
-    var callback = function(mutationsList, observer) {
-        for(var mutation of mutationsList) {
+    const callback = function(mutationsList, observer) {
+        for(let mutation of mutationsList) {
 
             if (mutation.addedNodes.length && mutation.addedNodes[0].className != null) {
 
@@ -835,9 +834,9 @@ function hideShowKey() {
         }
     }
 
-    var targetNode = document.querySelector('body');
-    var config = { attributes: true, childList: true, subtree: true, characterData: true };
-    var observer = new MutationObserver(callback);
+    const targetNode = document.querySelector('body');
+    const config = { attributes: true, childList: true, subtree: true, characterData: true };
+    const observer = new MutationObserver(callback);
 
     observer.observe(targetNode, config);
 
