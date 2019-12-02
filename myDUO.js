@@ -88,7 +88,7 @@ function swipeFunc(event) {
 }
 
 function createNumber() {
-    const node = document.createElement("p");
+    let node = document.createElement("p");
     node.setAttribute("id", "counter");
     $(node).css({'position':'relative',
                  'right':'1%',
@@ -382,8 +382,8 @@ function showHidePanel(event){
 }
 
 function addAnswerResultToPanel(array){
-    const background;
-    const color;
+    let background;
+    let color;
 
     const div = document.createElement('div');
     div.append(document.createElement('span'), // header
