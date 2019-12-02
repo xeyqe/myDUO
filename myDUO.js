@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.9.7
+// @version      2.8.9.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -134,8 +134,8 @@ const launchAlert = function() {
             }
         }
 
-        if (document.querySelector('._2GiCe._12wY2') != null) {
-            var string3 = document.querySelector('._2GiCe._12wY2').innerText;
+        if (document.querySelector('._12wY2') != null) {
+            var string3 = document.querySelector('._12wY2').innerText;
         }
 
         if (string1.length || string2.length || string3.length)
@@ -513,8 +513,8 @@ function neco(color) {
                     anotherCorrect += col[i].innerText;
             }
         }
-        if (document.querySelector('._12wY2._29hw3') != null) {
-            meaning = document.querySelector('._12wY2._29hw3').innerText;
+        if (document.querySelector('._12wY2') != null) {
+            meaning = document.querySelector('._12wY2').innerText;
         }
 
         addAnswerResultToPanel([header,question,yourAnswer,correctAnswer,anotherCorrect,meaning,color]);
