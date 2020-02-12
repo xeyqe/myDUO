@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.9.8
+// @version      2.8.9.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -117,14 +117,16 @@ function changeCounter(whichOne) {
 }
 
 const launchAlert = function() {
+    let string1 = '';
+    let string2 = '';
+    let string3 = '';
     const promise = new Promise(function(resolve) {
         if (document.querySelector('h2._3H0e2._28jVs') != null) {
-            var string1 = document.querySelector('h2._3H0e2._28jVs').innerText.split('\n', 1)[0];
+            string1 = document.querySelector('h2._3H0e2._28jVs').innerText.split('\n', 1)[0];
         }
 
         if (document.querySelector('._75iiA') != null) {
             const col = document.querySelector('._75iiA').firstElementChild.children;
-            var string2 = '';
 
             for (let i=0; i<col.length; i++) {
                 if (col[i].classList.contains('_3Fow7')) {
@@ -135,7 +137,7 @@ const launchAlert = function() {
         }
 
         if (document.querySelector('._12wY2') != null) {
-            var string3 = document.querySelector('._12wY2').innerText;
+            string3 = document.querySelector('._12wY2').innerText;
         }
 
         if (string1.length || string2.length || string3.length)
