@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.8.9.9
+// @version      2.9.0.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -116,38 +116,7 @@ function changeCounter(whichOne) {
         document.querySelector('#wrong').innerText = second + 1;
 }
 
-const launchAlert = function() {
-    let string1 = '';
-    let string2 = '';
-    let string3 = '';
-    const promise = new Promise(function(resolve) {
-        if (document.querySelector('h2._3H0e2._28jVs') != null) {
-            string1 = document.querySelector('h2._3H0e2._28jVs').innerText.split('\n', 1)[0];
-        }
-
-        if (document.querySelector('._75iiA') != null) {
-            const col = document.querySelector('._75iiA').firstElementChild.children;
-
-            for (let i=0; i<col.length; i++) {
-                if (col[i].classList.contains('_3Fow7')) {
-                    string2 += `<u> ${col[i].innerText} </u>`;
-                } else
-                    string2 += col[i].innerText;
-            }
-        }
-
-        if (document.querySelector('._12wY2') != null) {
-            string3 = document.querySelector('._12wY2').innerText;
-        }
-
-        if (string1.length || string2.length || string3.length)
-            tempAlert(string1, string2, string3);
-        resolve();
-    });
-    return promise;
-}
-
-function tempAlert(str1,str2,str3) {
+function tempAlert(str) {
     let timeout = null;
     if ($('#tempAlert') != null) $('#tempAlert').remove();
 
@@ -158,13 +127,8 @@ function tempAlert(str1,str2,str3) {
                     "color:#58a700;background:#b8f28b;z-index:900");
     $(el).attr('id', 'tempAlert');
 
+    el.innerText = str;
 
-    if (!(str2 == null && str3 != null))
-        el.innerHTML = `<span><b>  ${str1} </b2></span>`;
-    if (str2 != null)
-        el.innerHTML += `<span> ${str2} </span>`;
-    if (str3 != null)
-        el.innerHTML += `<span> ${str3} </span>`;
     $(el).find('span').css({'display':'block','font-weight':'lighter'});
 
     timeout = removeTempAlert();
@@ -211,9 +175,9 @@ function removeTempAlert() {
 function autoClick() {
     if (document.querySelector('._1sntG') != null) {
         if ($('button').last()[0] != null) {
-            launchAlert().then(function() {
+            //launchAlert().then(function() {
                 $('button').last()[0].click();
-            });
+            //});
         }
     }
 }
@@ -442,9 +406,7 @@ function neco(color) {
         let header;
         let question;
         let yourAnswer;
-        let correctAnswer;
-        let anotherCorrect;
-        let meaning;
+        let ar = [null, null, null];
 
         if (document.querySelector('[data-test="challenge-header"]') != null )
             header = document.querySelector('[data-test="challenge-header"]')
@@ -482,13 +444,7 @@ function neco(color) {
 
 
         if ( document.querySelector('._3Ptco') != null) {
-            const elements = document.querySelector('._3Ptco').children;
-            for (let el of elements) {
-                if (yourAnswer != null)
-                    yourAnswer += el.innerText + " ";
-                else
-                    yourAnswer = el.innerText + " ";
-            }
+            yourAnswer = document.querySelector('._3Ptco').innerText.replace(/\n/g, ' ');
         }
         else if (document.querySelector('[data-test="challenge-translate-input"]') != null)
             yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').innerHTML;
@@ -498,28 +454,44 @@ function neco(color) {
                     .querySelector('[data-test="challenge-judge-text"]').innerText;
             } else yourAnswer = '';
         }
-        else if (document.querySelector('[data-test="challenge-text-input"]') != null)
+        else if (document.querySelector('[data-test="challenge-text-input"]'))
             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').getAttribute('value');
-        else if (document.querySelector('[data-test="challenge-choice-card"]') != null)
-            yourAnswer = document.querySelector('._3DsW-').innerText;
+        else if (document.querySelector('[data-test="challenge-choice-card"]')) {
+            const cards = document.querySelectorAll('[data-test="challenge-choice-card"]');
+            for (let card of cards) {
+                if (!card.querySelector('.Wcbs3'))
+                    yourAnswer = card.innerText;
+            }
+        }
         if (yourAnswer == '' && yourAnswer != null)
             yourAnswer = 'SKIPPED';
 
-        if (document.querySelector('._75iiA') != null) {
-            const col = document.querySelector('._75iiA').firstElementChild.children;
-            anotherCorrect = '';
-            for (let i=0; i<col.length; i++) {
-                if (col[i].classList.contains('_3Fow7')) {
-                    anotherCorrect += "<u>" + col[i].innerText + "</u>";
-                } else
-                    anotherCorrect += col[i].innerText;
+        if (document.querySelector('._75iiA')) {
+            const col = document.querySelectorAll('._75iiA');
+            for (let i = 0; i < col.length; i++) {
+                if (!col[i].querySelector('._3Fow7')) {
+                    ar[i] = col[i].innerText;
+                } else {
+                    let children = col[i].firstElementChild.children;
+                    for (let child of children) {
+                        if (col[i].classList.contains('_3Fow7')) {
+                            ar[i] += "<u>" + col[i].innerText + "</u>";
+                        } else {
+                            ar[i] += col[i].innerText;
+                        }
+                    }
+                }
             }
         }
-        if (document.querySelector('._12wY2') != null) {
-            meaning = document.querySelector('._12wY2').innerText;
+
+        if (color === 'green') {
+            if (ar[0])
+                tempAlert(ar[0]);
+            else
+                tempAlert('  ;)  ');
         }
 
-        addAnswerResultToPanel([header,question,yourAnswer,correctAnswer,anotherCorrect,meaning,color]);
+        addAnswerResultToPanel([header,question,yourAnswer,ar[0],ar[2],ar[1],color]);
 
         resolve();
     });
