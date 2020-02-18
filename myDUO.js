@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.0.0
+// @version      2.9.0.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -127,7 +127,7 @@ function tempAlert(str) {
                     "color:#58a700;background:#b8f28b;z-index:900");
     $(el).attr('id', 'tempAlert');
 
-    el.innerText = str;
+    el.innerHTML = str;
 
     $(el).find('span').css({'display':'block','font-weight':'lighter'});
 
@@ -473,11 +473,12 @@ function neco(color) {
                     ar[i] = col[i].innerText;
                 } else {
                     let children = col[i].firstElementChild.children;
+                    ar[i] = '';
                     for (let child of children) {
-                        if (col[i].classList.contains('_3Fow7')) {
-                            ar[i] += "<u>" + col[i].innerText + "</u>";
+                        if (child.classList.contains('_3Fow7')) {
+                            ar[i] += "<u>" + child.innerText + "</u>";
                         } else {
-                            ar[i] += col[i].innerText;
+                            ar[i] += child.innerText;
                         }
                     }
                 }
