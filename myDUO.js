@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.0.1
+// @version      2.9.0.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -115,9 +115,12 @@ function changeCounter(whichOne) {
     else
         document.querySelector('#wrong').innerText = second + 1;
 }
-
+let timeout;
 function tempAlert(str) {
-    let timeout = null;
+    if (timeout) {
+        clearTimeout(timeout);
+    }
+
     if ($('#tempAlert') != null) $('#tempAlert').remove();
 
     el = document.createElement("div");
@@ -131,7 +134,7 @@ function tempAlert(str) {
 
     $(el).find('span').css({'display':'block','font-weight':'lighter'});
 
-    timeout = removeTempAlert();
+    removeTempAlert();
 
     $(el)
         .mouseenter(function() {
@@ -143,7 +146,7 @@ function tempAlert(str) {
     })
         .mouseleave(function() {
         if (document.querySelector('#tempAlert').style.border == "") {
-            timeout = removeTempAlert();
+            removeTempAlert();
         }
     });
 
@@ -164,20 +167,18 @@ function tempAlert(str) {
 }
 
 function removeTempAlert() {
-    const timeout = setTimeout(function(){
+    timeout = setTimeout(function(){
         $('#tempAlert').fadeOut(1000, function() {
             $(this).remove();
+            timeout = null;
         })
     },3000);
-    return timeout;
 }
 
 function autoClick() {
     if (document.querySelector('._1sntG') != null) {
         if ($('button').last()[0] != null) {
-            //launchAlert().then(function() {
-                $('button').last()[0].click();
-            //});
+            $('button').last()[0].click();
         }
     }
 }
@@ -489,7 +490,7 @@ function neco(color) {
             if (ar[0])
                 tempAlert(ar[0]);
             else
-                tempAlert('  ;)  ');
+                tempAlert(document.querySelector('h2').innerText);
         }
 
         addAnswerResultToPanel([header,question,yourAnswer,ar[0],ar[2],ar[1],color]);
