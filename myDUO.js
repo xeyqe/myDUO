@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.0.2
+// @version      2.9.0.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -26,6 +26,7 @@ let label;
 const progressBar = "_1TkZD";
 const hint = "XUDC1 _2nhHI _3ZTEO";
 const coloredHint = "_1c_ny _1gjlS";
+const father = '._26xNT';
 
 //var script = document.createElement('script');script.src = "https://code.jquery.com/jquery-3.4.1.min.js";document.getElementsByTagName('head')[0].appendChild(script);
 
@@ -101,8 +102,8 @@ function createNumber() {
     node.innerHTML =
         "<span id=\"wrong\" style=\"color:red\">0</span>/<span id=\"right\" style=\"color:#79c822\">0</span>";
 
-    if (document.querySelector('.Mlxjr') != null) {
-        document.querySelector('.Mlxjr').appendChild(node);
+    if (document.querySelector('._3-qon') != null) {
+        document.querySelector('._3-qon').appendChild(node);
     }
 }
 
@@ -176,64 +177,37 @@ function removeTempAlert() {
 }
 
 function autoClick() {
-    if (document.querySelector('._1sntG') != null) {
+    if (document.querySelector('._1Ag8k._1p08S') != null) {
         if ($('button').last()[0] != null) {
             $('button').last()[0].click();
         }
     }
 }
 
-function getListOfButtons() {
-    const list = Array.from(document.querySelector('._3Ptco').children);
-    let listOfButtons = [];
+function reclick() {
+    let clickedBtt = document.querySelectorAll('._3ysW7 button');
+    let unclickedBtt = Array.from(document.querySelectorAll('._3OG7A button:disabled'));
 
-    for (let i=0; i<list.length; i++) {
-        listOfButtons.push(list[i].innerText.replace(/(\r\n|\n|\r)/gm, "")); //kiwi browser adds here a new line for some reason
+    for (let i = 0; i < clickedBtt.length; i++) {
+        clickedBtt[i].click();
+        let el2Click = unclickedBtt.find(el => el.innerText.split('\n')[0] === clickedBtt[i].innerText);
+        el2Click.click();
     }
 
-    return listOfButtons;
-}
-
-function reclick(list) {
-    let outBtt = [];
-    let inBtt = [];
-
-    for (let i = 0; i < list.length; i++) {
-        $("._2T9b4 button").each(function () {
-            if (this.innerText == list[i] && !outBtt.includes(this)) {
-                outBtt.push(this);
-                this.click();
-                return false;
-            }
-        });
-    }
-
-    for (let j = 0; j < list.length; j++) {
-        $("._30i_q button").each(function () {
-            if (this.childNodes[this.childNodes.length-1].nodeValue == list[j] && !inBtt.includes(this)) {
-                inBtt.push(this);
-                return false;
-            }
-        });
-    }
-
-    for (let k=0; k<inBtt.length; k++) {
-        inBtt[k].click();
-    }
 }
 
 function draggable() {
-    const output = document.querySelector('._3Ptco');
+    const output = document.querySelector('._3ysW7');
 
     Sortable.create(output, {
-        onEnd: function (evt){ reclick(getListOfButtons()) },
+        onEnd: function (evt){ reclick() },
         animation: 150
     });
 }
 
 function keyboardShortcuts() {
     const span = document.createElement('span');
-    const list = $('._30i_q').find('._2ocEa');
+    const list = document.querySelectorAll('[data-test="challenge-tap-token"]');
 
     const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
                       "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
@@ -241,17 +215,17 @@ function keyboardShortcuts() {
                       "KeyC", "KeyV", "KeyB", "KeyN", "KeyM"];
 
     for (let i=0; i<list.length; i++) {
-        list[i].childNodes[0].insertBefore(span.cloneNode(), list[i].childNodes[0].childNodes[0] || null);
-        list[i].childNodes[0].querySelector('span').innerText = listOfCode[i][3].toLowerCase();
-        list[i].childNodes[0].querySelector('span').style.display = 'block';
+        list[i].appendChild(span.cloneNode());
+        list[i].querySelector('span').innerText = listOfCode[i][3].toLowerCase();
+        list[i].querySelector('span').style.display = 'block';
     }
 
     document.onkeyup = function(e) {
         if (listOfCode.includes(e.code)) {
             let char = e.code[3].toLowerCase();
-            list.find('span:contains('+char+')').click();
+            $(list).find('span:contains('+char+')').click();
         } else if (e.code == "Backspace") {
-            let node = document.querySelector('._3Ptco');
+            let node = document.querySelector('._3ysW7');
             if (node.children.length > 0) {
                 node.childNodes[node.childNodes.length-1].firstElementChild.click();
             }
@@ -275,7 +249,7 @@ function moveHintDiv(el) {
     const xWidthP = el.parentElement.getBoundingClientRect().width;
     const xWidth = el.getBoundingClientRect().width;
     const win = window.innerWidth;
-    const padding = parseInt(window.getComputedStyle(document.querySelector('._3giip'), null)
+    const padding = parseInt(window.getComputedStyle(document.querySelector(father), null)
                            .getPropertyValue('padding-left').split('p')[0]);
     const error = win - (xPx + xWidth) - padding;
 
@@ -307,9 +281,9 @@ function createSlider() {
                   'scrollbar-width':'none'});
     panel.setAttribute('class','panel show');
 
-    document.querySelector('._3giip').appendChild(panel);
+    document.querySelector(father).appendChild(panel);
 
-    document.querySelector('._3giip').addEventListener('mousedown', function(event) {
+    document.querySelector(father).addEventListener('mousedown', function(event) {
         const isClickInside = document.querySelector('.panel').contains(event.target) || panel == event.target;
 
         if (!isClickInside) {
@@ -348,152 +322,95 @@ function showHidePanel(event){
     }
 }
 
-function addAnswerResultToPanel(array){
-    let background;
-    let color;
-
-    const div = document.createElement('div');
-    div.append(document.createElement('span'), // header
-               document.createElement('span'), // question
-               document.createElement('span'), // yourAnswer
-               document.createElement('span'), // correctAnswer
-               document.createElement('span'), // anotherCorrect
-               document.createElement('span'), // meaning
-               document.createElement('span') //  color
-              );
-
-    if (array[array.length-1] == 'red') {
-        background = '#ffc1c1';
-        color = '#ea2b2b';
-        div.querySelectorAll('span')[4].style.background = '#b8f28b';
-        div.querySelectorAll('span')[4].style.width = 'fit-content';
-
-    } else {
-        background = '#b8f28b';
-        color = '#58a700';
-    }
-
-    $(div).find('span').css({'display':'block'});
-    $(div).css({'box-sizing':'border-box',
-                'padding':'10px',
-                'width':'fit-content',
-                'height':'fit-content',
-                'border-radius':'10px',
-                'margin':'10px',
-                'background':background,
-                'color':color});
-
-    div.querySelectorAll('span')[0].style.fontWeight = 'bold';
-    div.querySelectorAll('span')[1].style.color = 'black';
-
-
-    const div2 = div.cloneNode(true);
-    for (let i=0; i<array.length-1; i++) {
-        if (array[i] != null)
-            div2.childNodes[i].innerHTML = array[i];
-    }
-
-    document.querySelector('.panel').appendChild(div2);
-    setTimeout(()=>{
-        if (document.querySelector('.show') != null) {
-            document.querySelector('.panel').style.left = -document.querySelector('.panel')
-                .getBoundingClientRect().width + 20 +'px';
-        }
-    },20);
-}
 
 function neco(color) {
     const promise = new Promise((resolve)=>{
-        let header;
         let question;
         let yourAnswer;
-        let ar = [null, null, null];
+        let header;
 
-        if (document.querySelector('[data-test="challenge-header"]') != null )
-            header = document.querySelector('[data-test="challenge-header"]')
-                .childNodes[document.querySelector('[data-test="challenge-header"]')
-                            .children.length-1].innerText;
+        let div = document.createElement("div");
+        div.classList.add("panelItem");
+        div.classList.add(color);
 
-        if (document.querySelector('[data-test="hint-sentence"]') != null) {
-            question = '';
-            const listOfTokens = document.querySelectorAll('[data-test="hint-token"]');
-            for (let i of listOfTokens) {
-                question += i.innerText.split("\n")[0];
-            }
-            const spanList = document.querySelectorAll('label span');
-            if (spanList.length) {
-                let append = "";
-                for (let ap of spanList) {
-                    if (ap.className == "")
-                        append += ap.innerText;
-                    else
-                        append += "____";
-                }
-                question += "<br>"+append;
-            }
+        document.querySelector('.panel').appendChild(div);
+
+        let emptyDiv = document.createElement("div");
+        if (document.querySelector('[data-test="challenge-header"]')) {
+            header = document.querySelector('[data-test="challenge-header"]').innerText;
         }
-        else if (document.querySelector('[data-prompt]') != null)
-            question = document.querySelector('[data-prompt]').getAttribute('data-prompt');
-        else if (document.querySelector('.KRKEd') != null) {
-            question = document.querySelector('.KRKEd').innerText;
+
+        if (header) {
+            const div = emptyDiv.cloneNode();
+            div.innerText = header;
+            div.style.fontWeight = "900";
+            document.querySelector('.panel').children[document.querySelector('.panel').children.length - 1].appendChild(div);
         }
-        else if (document.querySelector('[data-test="hint-token"]') != null)
-            question = document.querySelector('[data-test="hint-token"]').innerText;
-        else if (document.querySelector('div._3oJjO._1py6s._1e69E._3_NyK._1Juqt') != null)
-            question = document.querySelector('div._3oJjO._1py6s._1e69E._3_NyK._1Juqt').innerText.replace(/\n/g, "");
 
-
-
-        if ( document.querySelector('._3Ptco') != null) {
-            yourAnswer = document.querySelector('._3Ptco').innerText.replace(/\n/g, ' ');
+        if (document.querySelector('[data-test="hint-sentence"]')) {
+            question = document.querySelector('[data-test="hint-sentence"]').innerText;
         }
-        else if (document.querySelector('[data-test="challenge-translate-input"]') != null)
+
+        if (document.querySelector('._13Ae5._1JtWw._1tY-d._66Mfn._2NQKM')) {
+            question = document.querySelector('._13Ae5._1JtWw._1tY-d._66Mfn._2NQKM').innerText;
+        }
+
+        if (document.querySelector('[data-test="challenge-translate-input"]')) {
             yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').innerHTML;
-        else if (document.querySelector('[data-test="challenge-judge-text"]') != null) {
-            if (document.querySelector('._3DsW-') != null) {
-                yourAnswer = document.querySelector('._3DsW-')
-                    .querySelector('[data-test="challenge-judge-text"]').innerText;
-            } else yourAnswer = '';
         }
-        else if (document.querySelector('[data-test="challenge-text-input"]'))
-            yourAnswer = document.querySelector('[data-test="challenge-text-input"]').getAttribute('value');
-        else if (document.querySelector('[data-test="challenge-choice-card"]')) {
-            const cards = document.querySelectorAll('[data-test="challenge-choice-card"]');
-            for (let card of cards) {
-                if (!card.querySelector('.Wcbs3'))
-                    yourAnswer = card.innerText;
-            }
-        }
-        if (yourAnswer == '' && yourAnswer != null)
-            yourAnswer = 'SKIPPED';
 
-        if (document.querySelector('._75iiA')) {
-            const col = document.querySelectorAll('._75iiA');
-            for (let i = 0; i < col.length; i++) {
-                if (!col[i].querySelector('._3Fow7')) {
-                    ar[i] = col[i].innerText;
-                } else {
-                    let children = col[i].firstElementChild.children;
-                    ar[i] = '';
-                    for (let child of children) {
-                        if (child.classList.contains('_3Fow7')) {
-                            ar[i] += "<u>" + child.innerText + "</u>";
-                        } else {
-                            ar[i] += child.innerText;
-                        }
-                    }
+        if (document.querySelector('[data-test="challenge-text-input"]')) {
+            yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
+        }
+
+        if (document.querySelector('._3ysW7')) {
+            yourAnswer = document.querySelector('._3ysW7').innerText.replace('\n', ' ');
+        }
+
+        const pictures = document.querySelectorAll('[data-test="challenge-choice-card"]');
+        if (pictures) {
+            for (let i = 0; i<pictures.length; i++) {
+                if (!pictures[i].querySelector('._3IeVF.Nlbt5')) {
+                    yourAnswer = pictures[i].innerText.split('\n')[0];
                 }
             }
         }
 
-        if (color === 'green') {
-            if (ar[0])
-                tempAlert(ar[0]);
+        if (question) {
+            const div = emptyDiv.cloneNode();
+            div.innerText = question;
+            div.style.color = 'black';
+            document.querySelector('.panel').children[document.querySelector('.panel').children.length - 1].appendChild(div);
+        }
+
+        if (yourAnswer) {
+            const div = emptyDiv.cloneNode();
+            div.innerText = yourAnswer;
+            div.style.color = '#589316';
+            document.querySelector('.panel').children[document.querySelector('.panel').children.length - 1].appendChild(div);
+        }
+
+        const reviews = document.querySelectorAll('._1obm2 ._36Uyg');
+        for (let i = 0; i < reviews.length; i ++) {
+            document.querySelector('.panel')
+                .children[document.querySelector('.panel').children.length - 1]
+                .appendChild(reviews[i].cloneNode(true));
+        }
+
+         if (color === 'right') {
+            if (document.querySelector('._1obm2 .TnCw3._11xjL'))
+                tempAlert(document.querySelector('._1obm2 .TnCw3._11xjL').innerText);
             else
                 tempAlert(document.querySelector('h2').innerText);
         }
 
-        addAnswerResultToPanel([header,question,yourAnswer,ar[0],ar[2],ar[1],color]);
+
+        setTimeout(()=>{
+            if (document.querySelector('.show') != null) {
+                document.querySelector('.panel').style.left = -document.querySelector('.panel')
+                    .getBoundingClientRect().width + 20 +'px';
+            }
+        },20);
 
         resolve();
     });
@@ -588,6 +505,22 @@ const css = [".switch {",
            "}",
            ".rotmp {",
            "    grid-row-gap: unset;",
+           "}",
+           ".panelItem {",
+           "    box-sizing: border-box;",
+           "    padding: 10px;",
+           "    width: fit-content;",
+           "    height: fit-content;",
+           "    border-radius: 10px;",
+           "    margin: 10px;",
+           "}",
+           ".panelItem.right {",
+           "    background: #b8f28b;",
+           "    color: #58a700;",
+           "}",
+           ".panelItem.wrong {",
+           "    background: #ffc1c1;",
+           "    color: #ea2b2b;",
            "}",
            "@media (min-width: 700px) {",
            "    ._30i_q, ._1yghA {",
@@ -694,18 +627,20 @@ function mayISwipe(event) {
 }
 
 function hideShowKey() {
-    if (window.innerWidth>700 && window.innerWidth>window.innerHeight)
-        $('.iNLw3 span').attr("style", "display: block !important");
-    else
-        $('.iNLw3 span').attr("style", "display: none !important");
+    if (window.innerWidth>700 && window.innerWidth>window.innerHeight) {
+        document.querySelectorAll('._3uWfo button span').forEach(el => el.style.display = 'block');
+    } else {
+        document.querySelectorAll('._3uWfo button span').forEach(el => el.style.display = 'none');
+    }
+
 }
 
 (function() {
     'use strict';
 
-    if (document.querySelector('._3giip') != null) {
-        document.querySelector('._3giip').swiper("swipeLeft", swipeFunc);
-        document.querySelector('._3giip').swiper("swipeRight", showHidePanel);
+    if (document.querySelector(father) != null) {
+        document.querySelector(father).swiper("swipeLeft", swipeFunc);
+        document.querySelector(father).swiper("swipeRight", showHidePanel);
     } else if(document.querySelector('._1bfyi') != null) {
         document.querySelector('._1bfyi').swiper('swipeLeft', ()=>{
             $('._1fURZ, ._3JkvC').click()
@@ -749,14 +684,15 @@ function hideShowKey() {
                 }
 
                 if (mutation.addedNodes[0].className == "XUDC1 _2nhHI _3ZTEO") {
+                    console.log('movehint launched');
                     moveHintDiv(mutation.target.firstElementChild);
                     mutation.target.style.background = 'purple';
                     mutation.target.style.color = 'white';
                     document.querySelector('._3bFAF').style.color = 'black';
                 }
 
-                if (mutation.addedNodes[0].contains(document.querySelector('.KekRP._3Txod._1yRbM'))) {
-                    neco('green').then(()=>{
+                if (mutation.addedNodes[0].className == '_1Ag8k _1p08S _1WH_r') {
+                    neco('right').then(()=>{
                         autoClick();
                         if (counterBool)
                             changeCounter('right');
@@ -764,15 +700,15 @@ function hideShowKey() {
                             counterBool = true;
                     });
                 }
-                else if (mutation.addedNodes[0].contains(document.querySelector('.KekRP._3Txod._2KlCX'))) {
-                    neco('red').then(()=> {
+                else if (mutation.addedNodes[0].className == '_1Ag8k _1p08S _1S5ta') {
+                    neco('wrong').then(()=> {
                         if (counterBool)
                             changeCounter('bad')
                         else
                             counterBool = true;
                     });
                 }
-                else if (mutation.addedNodes[0].contains(document.querySelector('._1oLqd'))) {
+                else if (mutation.addedNodes[0].contains(document.querySelector('[data-test="challenge challenge-listenTap"]'))) {
                     draggable();
                     keyboardShortcuts();
                 }
@@ -782,13 +718,13 @@ function hideShowKey() {
                     setTimeout(()=>{$('textarea, input')[0].focus()},200);
                 }
 
-                if (mutation.addedNodes[0].contains(document.querySelector('._3giip'))) {
-                    document.querySelector('._3giip').swiper("swipeLeft", swipeFunc);
-                    document.querySelector('._3giip').swiper("swipeRight", showHidePanel);
+                if (mutation.addedNodes[0].contains(document.querySelector(father))) {
+                    document.querySelector(father).swiper("swipeLeft", swipeFunc);
+                    document.querySelector(father).swiper("swipeRight", showHidePanel);
                 }
 
-                if (mutation.addedNodes[0].classList.value == 'Mlxjr' &&
-                    mutation.addedNodes[0].contains(document.querySelector('.MAF30'))) {
+                if (mutation.addedNodes[0].classList.value == '_3-qon' &&
+                   mutation.addedNodes[0].contains(document.querySelector('._2q0iC'))) {
                     createNumber();
                     createSlider();
                 }
