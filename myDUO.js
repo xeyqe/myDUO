@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.0.3
+// @version      2.9.0.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -26,7 +26,7 @@ let label;
 const progressBar = "_1TkZD";
 const hint = "XUDC1 _2nhHI _3ZTEO";
 const coloredHint = "_1c_ny _1gjlS";
-const father = '._26xNT';
+const father = '._2vedk';
 
 //var script = document.createElement('script');script.src = "https://code.jquery.com/jquery-3.4.1.min.js";document.getElementsByTagName('head')[0].appendChild(script);
 
@@ -206,6 +206,7 @@ function draggable() {
 }
 
 function keyboardShortcuts() {
+    console.log('keyboardShortcuts launched');
     const span = document.createElement('span');
     const list = document.querySelectorAll('[data-test="challenge-tap-token"]');
 
@@ -364,7 +365,7 @@ function neco(color) {
         }
 
         if (document.querySelector('._3ysW7')) {
-            yourAnswer = document.querySelector('._3ysW7').innerText.replace('\n', ' ');
+            yourAnswer = document.querySelector('._3ysW7').innerText.replace(/\n/g, ' ');
         }
 
         const pictures = document.querySelectorAll('[data-test="challenge-choice-card"]');
@@ -619,8 +620,8 @@ function appendThemeSwitcher() {
 addThemes();
 
 function mayISwipe(event) {
-    if (event != null && document.querySelector('.CfwZx') != null &&
-        document.querySelector('.CfwZx').contains(event.target)) {
+    if (event && document.querySelector('._3vVWl') &&
+        document.querySelector('._3vVWl').contains(event.target)) {
         return false;
     } else
         return true
@@ -731,8 +732,9 @@ function hideShowKey() {
             }
 
             if (mutation.removedNodes.length) {
-                if ($(mutation.removedNodes[0]).find('._3Ptco').length) {
-                    if (document.querySelector('._3Ptco') == null) {
+                if (mutation.removedNodes[0].className === "_2NEKS") {
+                // if ($(mutation.removedNodes[0]).find('._3Ptco').length) {
+                    if (document.querySelector('[data-test="challenge challenge-listenTap"]') === null) {
                         document.onkeyup = function (e) {
                             return false;
                         }
