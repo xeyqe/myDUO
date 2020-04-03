@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.0.5
+// @version      2.9.0.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
 // @license      MIT
 // @include      http://duolingo.com/*
-// @include      https://duolingo.com/*
+// @include      https://duolingo.com/*F
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js
@@ -241,29 +241,24 @@ function keyboardShortcuts() {
 }
 
 function moveHintDiv(el) {
-    const arrowX = document.querySelector('._3h4O4').style.left;
-    const left = el.parentElement.getBoundingClientRect().width/2 - el.getBoundingClientRect().width/2;
-    el.style.left = left + "px";
-    el.style.top = el.parentElement.getBoundingClientRect().height + "px";
-    const xPx = el.getBoundingClientRect().x;
-    const xWidthP = el.parentElement.getBoundingClientRect().width;
-    const xWidth = el.getBoundingClientRect().width;
-    const win = window.innerWidth;
-    const padding = parseInt(window.getComputedStyle(document.querySelector(father), null)
-                           .getPropertyValue('padding-left').split('p')[0]);
-    const error = win - (xPx + xWidth) - padding;
+    let paddingLeft = window.getComputedStyle(document.querySelector('._2vedk')).paddingLeft;
+    paddingLeft = parseInt(paddingLeft.substring(0, paddingLeft.length - 2));
+    let paddingRight = window.getComputedStyle(document.querySelector('._2vedk')).paddingRight;
+    paddingRight = parseInt(paddingRight.substring(0, paddingRight.length - 2));
 
-    if (error<0) {
-        const positionXRight = left + error;
-        el.style.left = positionXRight +"px";
-        document.querySelector('._3h4O4').style.left = arrowX - positionXRight + "px";
-    }
-    if (xPx < padding) {
-        const positionXLeft = -el.parentElement.getBoundingClientRect().x + padding;
-        el.style.left = positionXLeft + 'px';
-        document.querySelector('._3h4O4').style.left = arrowX - positionXLeft + "px";
-    }
+    const arrow = document.querySelector('._3h4O4');
+    const bubble = document.querySelector('._37FmC._2nhHI._3ZTEO');
+    const err = (Math.floor(bubble.getBoundingClientRect().x) + Math.floor(bubble.getBoundingClientRect().width + paddingRight)) - (window.innerWidth - 5);
 
+    if (bubble.getBoundingClientRect().x < 0) {
+        const er = Math.floor((2*paddingLeft) - bubble.getBoundingClientRect().x)
+        console.log(er);
+        bubble.style.left = er + 'px';
+        arrow.style.left = -er + bubble.getBoundingClientRect().width/2 + 'px';
+    } else if (err > 0) {
+        bubble.style.left = -err + 'px';
+        document.querySelector('._3h4O4').style.left = (Math.floor(el.getBoundingClientRect().width/2) + err) + 'px';
+    }
 
 }
 
@@ -500,9 +495,6 @@ const css = [".switch {",
            ".panel {",
            "    line-height: 1.15;",
            "}",
-           ".XUDC1._2nhHI._3ZTEO {",
-           "    transform: unset;",
-           "}",
            ".rotmp {",
            "    grid-row-gap: unset;",
            "}",
@@ -686,11 +678,14 @@ function hideShowKey() {
                     appendThemeSwitcher()
                 }
 
-                if (mutation.addedNodes[0].className == "XUDC1 _2nhHI _3ZTEO") {
+
+
+                if (mutation.addedNodes[0].className == "_37FmC _2nhHI _3ZTEO") {
+                    // console.log(mutation);
                     moveHintDiv(mutation.target.firstElementChild);
                     mutation.target.style.background = 'purple';
                     mutation.target.style.color = 'white';
-                    document.querySelector('._3bFAF').style.color = 'black';
+                    // document.querySelector('._3bFAF').style.color = 'black';
                 }
 
                 if (mutation.addedNodes[0].className == '_1Ag8k _1p08S _1WH_r') {
@@ -749,7 +744,7 @@ function hideShowKey() {
                         }
                     }
                 }
-                if (mutation.removedNodes[0].className == "XUDC1 _2nhHI _3ZTEO") {
+                if (mutation.removedNodes[0].className == "_37FmC _2nhHI _3ZTEO") {
                     mutation.target.style.background = '';
                     mutation.target.style.color = '';
                 }
