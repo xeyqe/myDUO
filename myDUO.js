@@ -6,7 +6,7 @@
 // @author       xeyqe
 // @license      MIT
 // @include      http://duolingo.com/*
-// @include      https://duolingo.com/*F
+// @include      https://duolingo.com/*
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js
