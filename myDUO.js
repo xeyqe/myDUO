@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.0.8
+// @version      2.9.0.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -28,7 +28,6 @@ const father = '._2vedk';
 
 
 Node.prototype.swiper = function(direction, func) {
-    console.log('swiping to ' + direction);
     let touchstartX = 0;
     let touchstartY = 0;
     let touchendX = 0;
@@ -671,9 +670,10 @@ function mayISwipe(event) {
 
 function hideShowKey() {
     if (window.innerWidth>700 && window.innerWidth>window.innerHeight) {
-        document.querySelectorAll('._3uWfo button span').forEach(el => el.style.display = 'block');
+        console.log('height: ' + window.innerWidth + ', width:  ' + window.innerHeight);
+        document.querySelectorAll('._3uWfo button span').forEach(el => {el.style.display = 'block'});
     } else {
-        document.querySelectorAll('._3uWfo button span').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('._3uWfo button span').forEach(el => {el.style.display = 'none'});
     }
 
 }
