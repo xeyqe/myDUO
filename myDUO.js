@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.0.7
+// @version      2.9.0.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -77,12 +77,14 @@ Node.prototype.swiper = function(direction, func) {
 
 function swipeFunc(event) {
     if (mayISwipe(event)) {
-        if (document.querySelector('.hide') == null) {
-            if (document.querySelector('[data-test="player-next"]'))
+        if (!document.querySelector('.hide')) {
+            if (document.querySelector('[data-test="player-next"]')) {
                 document.querySelector('[data-test="player-next"]').click();
+            }
         }
-        else if (document.querySelector('.show') == null)
+        else if (!document.querySelector('.show')) {
             showHidePanel();
+        }
     }
 }
 
@@ -93,7 +95,7 @@ function createNumber() {
     node.innerHTML =
         "<span id=\"wrong\" style=\"color:red\">0</span>/<span id=\"right\" style=\"color:#79c822\">0</span>";
 
-    if (document.querySelector('._3-qon') != null) {
+    if (document.querySelector('._3-qon')) {
         document.querySelector('._3-qon').appendChild(node);
     }
 }
@@ -102,13 +104,15 @@ function changeCounter(whichOne) {
     const first = parseInt(document.querySelector('#right').innerText);
     const second = parseInt(document.querySelector('#wrong').innerText);
 
-    if (whichOne == 'right')
+    if (whichOne == 'right') {
         document.querySelector('#right').innerText = first + 1;
-    else
+    } else {
         document.querySelector('#wrong').innerText = second + 1;
+    }
 }
+
 let timeout;
-function tempAlert(str) {
+function tempAlert(input) {
     if (timeout) {
         clearTimeout(timeout);
     }
@@ -120,7 +124,7 @@ function tempAlert(str) {
 
     el.setAttribute('id', 'tempAlert');
 
-    el.innerHTML = str;
+    el.appendChild(input.cloneNode(true));
 
     removeTempAlert(3000);
 
@@ -147,7 +151,7 @@ function tempAlert(str) {
             removeTempAlert(0);
         }
     });
-    if (el != null) {
+    if (el) {
         document.querySelector('body').appendChild(el);
         el = null;
     }
@@ -271,15 +275,17 @@ function createSlider() {
         const isClickInside = document.querySelector('.panel').contains(event.target) || panel == event.target;
 
         if (!isClickInside) {
-            if (document.querySelector('.hide') != null)
+            if (document.querySelector('.hide')) {
                 showHidePanel();
+            }
         }
     });
 
     panel.addEventListener("click", function(e){
         e.preventDefault();
-        if (document.querySelector('.show') != null)
+        if (document.querySelector('.show')) {
             showHidePanel();
+        }
     });
 
 }
@@ -287,53 +293,40 @@ function createSlider() {
 function showHidePanel(event){
     if (mayISwipe(event)) {
         if (document.querySelector('.panel div')) {
-            myMove();
-//             if(document.querySelector('.panel.show')){
-//                 $( ".panel" ).animate({
-//                     left: "+0"
-//                 }, 700, () => {});
-//                 $('.panel').removeClass('show').addClass('hide');
-//             }
-//             else {
-//                 const num = -1*(document.querySelector('.panel').getBoundingClientRect().width-20);
-//                 $( ".panel" ).animate({
-//                     left: num+""
-//                 }, 700, function() {
-//                 });
-//                 $('.panel').removeClass('hide').addClass('show');
-//             }
-        }
-    }
-}
 
-function myMove() {
-    const el = document.querySelector('.panel');
-    let pos = Math.floor(el.getBoundingClientRect().x);
-    const hidePos = -1*(Math.floor(el.getBoundingClientRect().width)-20);
-    let interval;
-    if(document.querySelector('.panel.show')) {
-        interval = setInterval(show, 10);
-    } else {
-        interval = setInterval(hide, 10);
-    }
-    function show() {
-        if (pos >= 0) {
-            clearInterval(interval);
-            el.classList.remove("show");
-            el.classList.add("hide");
-        } else {
-            pos = pos + 10;
-            el.style.left = pos + 'px';
-        }
-    }
-    function hide() {
-        if (pos <= hidePos) {
-            clearInterval(interval);
-            el.classList.remove("hide");
-            el.classList.add("show");
-        } else {
-            pos = pos - 10;
-            el.style.left = pos + 'px';
+            const el = document.querySelector('.panel');
+            let pos = Math.floor(el.getBoundingClientRect().x);
+            const hidePos = -1*(Math.floor(el.getBoundingClientRect().width)-20);
+
+            let interval;
+            if(document.querySelector('.panel.show')) {
+                interval = setInterval(show, 10);
+            } else {
+                interval = setInterval(hide, 10);
+            }
+
+            function show() {
+                if (pos >= 0) {
+                    clearInterval(interval);
+                    el.classList.remove("show");
+                    el.classList.add("hide");
+                } else {
+                    pos = pos + 10;
+                    el.style.left = pos + 'px';
+                }
+            }
+
+            function hide() {
+                if (pos <= hidePos) {
+                    clearInterval(interval);
+                    el.classList.remove("hide");
+                    el.classList.add("show");
+                } else {
+                    pos = pos - 10;
+                    el.style.left = pos + 'px';
+                }
+            }
+
         }
     }
 }
@@ -414,15 +407,16 @@ function neco(color) {
         }
 
          if (color === 'right') {
-            if (document.querySelector('._1obm2 .TnCw3._11xjL'))
-                tempAlert(document.querySelector('._1obm2 .TnCw3._11xjL').innerText);
-            else
-                tempAlert(document.querySelector('h2').innerText);
+            if (document.querySelector('._1obm2 .TnCw3._11xjL')) {
+                tempAlert(document.querySelector('._1obm2 .TnCw3._11xjL'));
+            } else {
+                tempAlert(document.querySelector('h2'));
+            }
         }
 
 
         setTimeout(()=>{
-            if (document.querySelector('.show') != null) {
+            if (document.querySelector('.show')) {
                 document.querySelector('.panel').style.left = -document.querySelector('.panel')
                     .getBoundingClientRect().width + 20 +'px';
             }
@@ -629,8 +623,9 @@ function createThemeSwitcherButton() {
 
     input.addEventListener('click', function(e){
         if (!document.querySelector('#checkbx').checked) {
-            if (document.querySelector('#darkDUOmobile') != null)
+            if (document.querySelector('#darkDUOmobile')) {
                 document.querySelector('#darkDUOmobile').remove();
+            }
             localStorage.setItem('themed', '0');
         } else {
             head[0].appendChild(style);
@@ -646,8 +641,9 @@ function appendThemeSwitcher() {
             document.querySelector('._3F_8q').parentNode.parentNode.append(label);
             label.style.top = '4em';
         }
-        else
+        else {
             document.querySelector('._3F_8q').append(label);
+        }
         if (localStorage.getItem('themed') == '1') {
             document.querySelector('#checkbx').checked = true;
         }
@@ -668,8 +664,9 @@ function mayISwipe(event) {
     if (event && document.querySelector('._3vVWl') &&
         document.querySelector('._3vVWl').contains(event.target)) {
         return false;
-    } else
+    } else {
         return true
+    }
 }
 
 function hideShowKey() {
@@ -684,7 +681,7 @@ function hideShowKey() {
 (function() {
     'use strict';
 
-    if (document.querySelector(father) != null) {
+    if (document.querySelector(father)) {
         document.querySelector(father).swiper("swipeLeft", swipeFunc);
         document.querySelector(father).swiper("swipeRight", showHidePanel);
     } else if(document.querySelector('.story-page')) {
@@ -698,8 +695,9 @@ function hideShowKey() {
 
     if (localStorage.getItem('themed') == "1") {
         head[0].appendChild(style);
-        if (document.querySelector('#checkbx') != null)
+        if (document.querySelector('#checkbx')) {
             document.querySelector('#checkbx').checked = true;
+        }
     }
 
     const counterBool = true;
@@ -720,7 +718,7 @@ function hideShowKey() {
                 // takes care of skipping
                 if (mutation.addedNodes[0].contains(document.querySelector('[data-test="player-skip"]'))) {
                     setTimeout(()=>{
-                        if (document.querySelector('._1uJnx') != null || document.querySelector('[data-test="challenge-speak-button"]') != null) {
+                        if (document.querySelector('._1uJnx') || document.querySelector('[data-test="challenge-speak-button"]')) {
                             document.querySelector('[data-test="player-skip"]').addEventListener('click', function() {
                                 counterBool = false;
                             });
@@ -745,20 +743,22 @@ function hideShowKey() {
                 if (mutation.addedNodes[0].className == '_1Ag8k _1p08S _1WH_r') {
                     neco('right').then(()=>{
                         autoClick();
-                        if (counterBool)
+                        if (counterBool) {
                             changeCounter('right');
-                        else
+                        } else {
                             counterBool = true;
+                        }
                     });
                 } else if (mutation.addedNodes[0].className === '') {
 
                 }
                 else if (mutation.addedNodes[0].className == '_1Ag8k _1p08S _1S5ta') {
                     neco('wrong').then(()=> {
-                        if (counterBool)
-                            changeCounter('bad')
-                        else
+                        if (counterBool) {
+                            changeCounter('bad');
+                        } else {
                             counterBool = true;
+                        }
                     });
                 }
                 else if (mutation.addedNodes[0].contains(document.querySelector('._3ysW7'))) {
@@ -778,8 +778,9 @@ function hideShowKey() {
 
                 if (mutation.addedNodes[0].className === 'story-page') {
                     document.querySelector('.story-page').swiper("swipeLeft", () => {
-                        if (document.querySelector('button.continue'))
+                        if (document.querySelector('button.continue')) {
                             document.querySelector('button.continue').click();
+                        }
                     });
                 }
 
@@ -792,7 +793,7 @@ function hideShowKey() {
 
             if (mutation.removedNodes.length) {
                 if (mutation.removedNodes[0].className === "_2NEKS") {
-                    if (document.querySelector('[data-test="challenge challenge-listenTap"]') === null) {
+                    if (!document.querySelector('[data-test="challenge challenge-listenTap"]')) {
                         document.onkeyup = function (e) {
                             return false;
                         }
