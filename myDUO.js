@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.0.6
+// @version      2.9.0.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,14 +9,12 @@
 // @include      https://duolingo.com/*
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.1/Sortable.min.js
 // @resource     customCSS https://raw.githubusercontent.com/xeyqe/duolingo-style/master/darkDUO.css
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // ==/UserScript==
 
-const $ = jQuery;
 let style;
 let head;
 let myArray = [];
@@ -28,9 +26,9 @@ const hint = "XUDC1 _2nhHI _3ZTEO";
 const coloredHint = "_1c_ny _1gjlS";
 const father = '._2vedk';
 
-//var script = document.createElement('script');script.src = "https://code.jquery.com/jquery-3.4.1.min.js";document.getElementsByTagName('head')[0].appendChild(script);
 
 Node.prototype.swiper = function(direction, func) {
+    console.log('swiping to ' + direction);
     let touchstartX = 0;
     let touchstartY = 0;
     let touchendX = 0;
@@ -80,8 +78,8 @@ Node.prototype.swiper = function(direction, func) {
 function swipeFunc(event) {
     if (mayISwipe(event)) {
         if (document.querySelector('.hide') == null) {
-            if ($('button').last()[0] != null)
-                $('button').last()[0].click();
+            if (document.querySelector('[data-test="player-next"]'))
+                document.querySelector('[data-test="player-next"]').click();
         }
         else if (document.querySelector('.show') == null)
             showHidePanel();
@@ -91,13 +89,6 @@ function swipeFunc(event) {
 function createNumber() {
     let node = document.createElement("p");
     node.setAttribute("id", "counter");
-    $(node).css({'position':'relative',
-                 'right':'1%',
-                 'top':'1%',
-                 'paddingLeft':'3%',
-                 'fontSize':'2rem',
-                 'margin-left':'20px'
-                });
 
     node.innerHTML =
         "<span id=\"wrong\" style=\"color:red\">0</span>/<span id=\"right\" style=\"color:#79c822\">0</span>";
@@ -122,32 +113,27 @@ function tempAlert(str) {
         clearTimeout(timeout);
     }
 
-    if ($('#tempAlert') != null) $('#tempAlert').remove();
+    if (document.querySelector('#tempAlert')) document.querySelector('#tempAlert').remove();
+
 
     el = document.createElement("div");
 
-    el.setAttribute("style","padding:0.2rem;top:1.5rem;left:50%;transform:translateX(-50%);" +
-                    "max-width:94%;width:fit-content;overflow:visible;position:absolute;" +
-                    "color:#58a700;background:#b8f28b;z-index:900");
-    $(el).attr('id', 'tempAlert');
+    el.setAttribute('id', 'tempAlert');
 
     el.innerHTML = str;
 
-    $(el).find('span').css({'display':'block','font-weight':'lighter'});
+    removeTempAlert(3000);
 
-    removeTempAlert();
-
-    $(el)
-        .mouseenter(function() {
+    el.addEventListener("mouseenter", () => {
         if (document.querySelector('#tempAlert').style.border == "") {
             clearTimeout(timeout);
             timeout = null;
         }
+    });
 
-    })
-        .mouseleave(function() {
+    el.addEventListener("mouseleave", () => {
         if (document.querySelector('#tempAlert').style.border == "") {
-            removeTempAlert();
+            removeTempAlert(3000);
         }
     });
 
@@ -158,7 +144,7 @@ function tempAlert(str) {
         }
         else {
             document.querySelector('#tempAlert').style.border = "";
-            $('#tempAlert').fadeOut(1000, function() { $(this).remove(); });
+            removeTempAlert(0);
         }
     });
     if (el != null) {
@@ -167,19 +153,31 @@ function tempAlert(str) {
     }
 }
 
-function removeTempAlert() {
-    timeout = setTimeout(function(){
-        $('#tempAlert').fadeOut(1000, function() {
-            $(this).remove();
-            timeout = null;
-        })
-    },3000);
+function removeTempAlert(num) {
+    timeout = setTimeout(function() {
+        const fadeTarget = document.getElementById("tempAlert");
+        const fadeEffect = setInterval(function () {
+            if (!fadeTarget) clearInterval(fadeEffect);
+            else {
+                if (!fadeTarget.style.opacity) {
+                    fadeTarget.style.opacity = 1;
+                }
+                if (fadeTarget.style.opacity > 0) {
+                    fadeTarget.style.opacity -= 0.01;
+                } else {
+                    fadeTarget.remove();
+                    timeout = null;
+                    clearInterval(fadeEffect);
+                }
+            }
+        }, 20);
+    }, num);
 }
 
 function autoClick() {
-    if (document.querySelector('._1Ag8k._1p08S') != null) {
-        if ($('button').last()[0] != null) {
-            $('button').last()[0].click();
+    if (document.querySelector('._1Ag8k._1p08S')) {
+        if (document.querySelector('[data-test="player-next"]')) {
+            document.querySelector('[data-test="player-next"]').click();
         }
     }
 }
@@ -223,7 +221,11 @@ function keyboardShortcuts() {
     document.onkeyup = function(e) {
         if (listOfCode.includes(e.code)) {
             let char = e.code[3].toLowerCase();
-            $(list).find('span:contains('+char+')').click();
+            list.forEach(el => {
+                if (el.firstElementChild.innerText === char) {
+                    el.click();
+                }
+            })
         } else if (e.code == "Backspace") {
             let node = document.querySelector('._3ysW7');
             if (node.children.length > 0) {
@@ -232,10 +234,7 @@ function keyboardShortcuts() {
         }
     }
 
-    $(window).off("resize", hideShowKey);
-
-    $(window).resize(hideShowKey);
-
+    window.addEventListener('resize', hideShowKey);
     hideShowKey();
 
 }
@@ -252,7 +251,6 @@ function moveHintDiv(el) {
 
     if (bubble.getBoundingClientRect().x < 0) {
         const er = Math.floor((2*paddingLeft) - bubble.getBoundingClientRect().x)
-        console.log(er);
         bubble.style.left = er + 'px';
         arrow.style.left = -er + bubble.getBoundingClientRect().width/2 + 'px';
     } else if (err > 0) {
@@ -264,16 +262,7 @@ function moveHintDiv(el) {
 
 function createSlider() {
     const panel = document.createElement("div");
-    $(panel).css({'width':'fit-content',
-                  'max-width':'95vw',
-                  'float':'left',
-                  'height':'fit-content',
-                  'position':'absolute',
-                  'top':'8%',
-                  'overflow-y':'scroll',
-                  'max-height':'92%',
-                  'z-index':'1000',
-                  'scrollbar-width':'none'});
+
     panel.setAttribute('class','panel show');
 
     document.querySelector(father).appendChild(panel);
@@ -297,22 +286,54 @@ function createSlider() {
 
 function showHidePanel(event){
     if (mayISwipe(event)) {
-        if ($('.panel').find('div').length > 0) {
-            if($('.panel').hasClass('show')){
-                $( ".panel" ).animate({
-                    left: "+0"
-                }, 700, function() {
-                });
-                $('.panel').removeClass('show').addClass('hide');
-            }
-            else {
-                const num = -1*(document.querySelector('.panel').getBoundingClientRect().width-20);
-                $( ".panel" ).animate({
-                    left: num+""
-                }, 700, function() {
-                });
-                $('.panel').removeClass('hide').addClass('show');
-            }
+        if (document.querySelector('.panel div')) {
+            myMove();
+//             if(document.querySelector('.panel.show')){
+//                 $( ".panel" ).animate({
+//                     left: "+0"
+//                 }, 700, () => {});
+//                 $('.panel').removeClass('show').addClass('hide');
+//             }
+//             else {
+//                 const num = -1*(document.querySelector('.panel').getBoundingClientRect().width-20);
+//                 $( ".panel" ).animate({
+//                     left: num+""
+//                 }, 700, function() {
+//                 });
+//                 $('.panel').removeClass('hide').addClass('show');
+//             }
+        }
+    }
+}
+
+function myMove() {
+    const el = document.querySelector('.panel');
+    let pos = Math.floor(el.getBoundingClientRect().x);
+    const hidePos = -1*(Math.floor(el.getBoundingClientRect().width)-20);
+    let interval;
+    if(document.querySelector('.panel.show')) {
+        interval = setInterval(show, 10);
+    } else {
+        interval = setInterval(hide, 10);
+    }
+    function show() {
+        if (pos >= 0) {
+            clearInterval(interval);
+            el.classList.remove("show");
+            el.classList.add("hide");
+        } else {
+            pos = pos + 10;
+            el.style.left = pos + 'px';
+        }
+    }
+    function hide() {
+        if (pos <= hidePos) {
+            clearInterval(interval);
+            el.classList.remove("hide");
+            el.classList.add("show");
+        } else {
+            pos = pos - 10;
+            el.style.left = pos + 'px';
         }
     }
 }
@@ -514,6 +535,38 @@ const css = [".switch {",
            "    background: #ffc1c1;",
            "    color: #ea2b2b;",
            "}",
+           "#counter {",
+           "    position: relative;",
+           "    right: 1%;",
+           "    top: 1%;",
+           "    padding-left: 3%;",
+           "    font-size: 2rem;",
+           "    margin-left: 20px;",
+           "}",
+           "#tempAlert {",
+           "    padding: 0.2rem;",
+           "    top:1.5rem;",
+           "    left:50%;transform:translateX(-50%);",
+           "    max-width:94%;",
+           "    width:fit-content;",
+           "    overflow:visible;",
+           "    position:absolute;",
+           "    color:#58a700;",
+           "    background:#b8f28b;",
+           "    z-index:900",
+           "}",
+           ".panel {",
+           "    width: fit-content;",
+           "    max-width: 95vw;",
+           "    float: left;",
+           "    height: fit-content;",
+           "    position: absolute;",
+           "    top: 8%;",
+           "    overflow-y: scroll;",
+           "    max-height: 92%;",
+           "    z-index: 1000;",
+           "    scrollbar-width: none;",
+           "}",
            "@media (min-width: 700px) {",
            "    ._30i_q, ._1yghA {",
            "        display: block;",
@@ -588,7 +641,7 @@ function createThemeSwitcherButton() {
 }
 
 function appendThemeSwitcher() {
-    if (document.querySelector('._3F_8q') != null) {
+    if (document.querySelector('._3F_8q')) {
         if (window.innerWidth < 700) {
             document.querySelector('._3F_8q').parentNode.parentNode.append(label);
             label.style.top = '4em';
@@ -599,13 +652,14 @@ function appendThemeSwitcher() {
             document.querySelector('#checkbx').checked = true;
         }
     }
-    else if (document.querySelector('._31whh') != null) {
+    else if (document.querySelector('._31whh')) {
         document.querySelector('._31whh').append(label);
 
         if (localStorage.getItem('themed') == '1') {
             document.querySelector('#checkbx').checked = true;
         }
     }
+
 }
 
 addThemes();
@@ -640,7 +694,7 @@ function hideShowKey() {
     }
 
     createThemeSwitcherButton();
-    appendThemeSwitcher();
+    setTimeout(() => appendThemeSwitcher(), 2000);
 
     if (localStorage.getItem('themed') == "1") {
         head[0].appendChild(style);
@@ -659,7 +713,8 @@ function hideShowKey() {
                 }
 
                 if (mutation.addedNodes[0].contains(document.querySelector('._1bfyi'))) {
-                    document.querySelector('._1bfyi').swiper('swipeLeft', ()=>{$('._1fURZ, ._3JkvC').click()});
+                    document.querySelector('._1bfyi').swiper('swipeLeft', () => {
+                        document.querySelector('._1fURZ, ._3JkvC').click()});
                 }
 
                 // takes care of skipping
@@ -673,6 +728,7 @@ function hideShowKey() {
                     },200);
                 }
 
+
                 if (mutation.addedNodes[0].contains(document.querySelector('._3F_8q')) ||
                     mutation.addedNodes[0].contains(document.querySelector('._31whh'))) {
                     appendThemeSwitcher()
@@ -681,11 +737,9 @@ function hideShowKey() {
 
 
                 if (mutation.addedNodes[0].className == "_37FmC _2nhHI _3ZTEO") {
-                    // console.log(mutation);
                     moveHintDiv(mutation.target.firstElementChild);
                     mutation.target.style.background = 'purple';
                     mutation.target.style.color = 'white';
-                    // document.querySelector('._3bFAF').style.color = 'black';
                 }
 
                 if (mutation.addedNodes[0].className == '_1Ag8k _1p08S _1WH_r') {
@@ -707,14 +761,14 @@ function hideShowKey() {
                             counterBool = true;
                     });
                 }
-                else if (mutation.addedNodes[0].contains(document.querySelector('[data-test="challenge challenge-listenTap"]'))) {
+                else if (mutation.addedNodes[0].contains(document.querySelector('._3ysW7'))) {
                     draggable();
                     keyboardShortcuts();
                 }
 
                 if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
                     mutation.addedNodes[0].contains(document.querySelector('input'))) {
-                    setTimeout(()=>{$('textarea, input')[0].focus()},200);
+                    setTimeout(()=>{document.querySelector('textarea, input').focus()},200);
                 }
 
                 if (mutation.addedNodes[0].contains(document.querySelector(father))) {
@@ -742,6 +796,7 @@ function hideShowKey() {
                         document.onkeyup = function (e) {
                             return false;
                         }
+                        window.removeEventListener("resize", hideShowKey);
                     }
                 }
                 if (mutation.removedNodes[0].className == "_37FmC _2nhHI _3ZTEO") {
