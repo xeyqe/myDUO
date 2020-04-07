@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.0.9
+// @version      2.9.1.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -706,6 +706,8 @@ function hideShowKey() {
         for(let mutation of mutationsList) {
 
             if (mutation.addedNodes.length && mutation.addedNodes[0].className) {
+                // console.log(mutation.addedNodes[0].className);
+
                 if (document.querySelector('.blame-wrap.grade-correct-footer')) {
                     document.querySelector('button.continue').click();
                 }
@@ -740,7 +742,7 @@ function hideShowKey() {
                     mutation.target.style.color = 'white';
                 }
 
-                if (mutation.addedNodes[0].className == '_1Ag8k _1p08S _1WH_r') {
+                if (mutation.addedNodes[0].className == '_3yGet _1p08S _1Ag8k _1WH_r') {
                     neco('right').then(()=>{
                         autoClick();
                         if (counterBool) {
@@ -752,7 +754,7 @@ function hideShowKey() {
                 } else if (mutation.addedNodes[0].className === '') {
 
                 }
-                else if (mutation.addedNodes[0].className == '_1Ag8k _1p08S _1S5ta') {
+                else if (mutation.addedNodes[0].className == '_3yGet _1p08S _1Ag8k _1S5ta') {
                     neco('wrong').then(()=> {
                         if (counterBool) {
                             changeCounter('bad');
