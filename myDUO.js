@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.1.0
+// @version      2.9.1.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -238,7 +238,7 @@ function keyboardShortcuts() {
     }
 
     window.addEventListener('resize', hideShowKey);
-    hideShowKey();
+    setTimeout(_ => hideShowKey(), 100);
 
 }
 
@@ -700,7 +700,7 @@ function hideShowKey() {
         }
     }
 
-    const counterBool = true;
+    let counterBool = true;
 
     const callback = function(mutationsList, observer) {
         for(let mutation of mutationsList) {
@@ -795,7 +795,7 @@ function hideShowKey() {
 
             if (mutation.removedNodes.length) {
                 if (mutation.removedNodes[0].className === "_2NEKS") {
-                    if (!document.querySelector('[data-test="challenge challenge-listenTap"]')) {
+                    if (!document.querySelector('[data-test="word-bank"]')) {
                         document.onkeyup = function (e) {
                             return false;
                         }
