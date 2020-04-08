@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.1.1
+// @version      2.9.1.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -207,7 +207,6 @@ function draggable() {
 }
 
 function keyboardShortcuts() {
-    const span = document.createElement('span');
     const list = document.querySelectorAll('[data-test="challenge-tap-token"]');
 
     const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
@@ -215,20 +214,14 @@ function keyboardShortcuts() {
                       "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyZ", "KeyX",
                       "KeyC", "KeyV", "KeyB", "KeyN", "KeyM"];
 
-    for (let i=0; i<list.length; i++) {
-        list[i].appendChild(span.cloneNode());
-        list[i].querySelector('span').innerText = listOfCode[i][3].toLowerCase();
-        list[i].querySelector('span').style.display = 'block';
-    }
-
     document.onkeyup = function(e) {
         if (listOfCode.includes(e.code)) {
             let char = e.code[3].toLowerCase();
             list.forEach(el => {
-                if (el.firstElementChild.innerText === char) {
+                if (el.innerText.includes('\n') && el.innerText.split('\n')[0] === char) {
                     el.click();
                 }
-            })
+            });
         } else if (e.code == "Backspace") {
             let node = document.querySelector('._3ysW7');
             if (node.children.length > 0) {
@@ -239,8 +232,30 @@ function keyboardShortcuts() {
 
     window.addEventListener('resize', hideShowKey);
     setTimeout(_ => hideShowKey(), 100);
-
 }
+
+function hideShowKey() {
+    const list = document.querySelectorAll('[data-test="challenge-tap-token"]');
+
+    const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
+                      "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
+                      "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyZ", "KeyX",
+                      "KeyC", "KeyV", "KeyB", "KeyN", "KeyM"];
+
+    if (window.innerWidth>700 && window.innerWidth>window.innerHeight) {
+        console.log('height: ' + window.innerWidth + ', width:  ' + window.innerHeight);
+        for (let i=0; i<list.length; i++) {
+            list[i].innerText = listOfCode[i][3].toLowerCase() + '\n' + list[i].innerText;
+        }
+    } else {
+        list.forEach(el => {
+            if (el.innerText.includes('\n')) {
+                el.innerText = el.innerText.split('\n')[1];
+            }
+        });
+    }
+}
+
 
 function moveHintDiv(el) {
     let paddingLeft = window.getComputedStyle(document.querySelector('._2vedk')).paddingLeft;
@@ -560,6 +575,9 @@ const css = [".switch {",
            "    z-index: 1000;",
            "    scrollbar-width: none;",
            "}",
+           "[data-test=challenge-tap-token] {",
+           "    text-align: center;",
+           "}",
            "@media (min-width: 700px) {",
            "    ._30i_q, ._1yghA {",
            "        display: block;",
@@ -668,15 +686,6 @@ function mayISwipe(event) {
     }
 }
 
-function hideShowKey() {
-    if (window.innerWidth>700 && window.innerWidth>window.innerHeight) {
-        console.log('height: ' + window.innerWidth + ', width:  ' + window.innerHeight);
-        document.querySelectorAll('._3uWfo button span').forEach(el => {el.style.display = 'block'});
-    } else {
-        document.querySelectorAll('._3uWfo button span').forEach(el => {el.style.display = 'none'});
-    }
-
-}
 
 (function() {
     'use strict';
