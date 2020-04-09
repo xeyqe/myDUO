@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.1.2
+// @version      2.9.1.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -65,7 +65,7 @@ Node.prototype.swiper = function(direction, func) {
                 func(event);
             }
         }
-        else if (direction == "swipeUp") {
+        else if (direction == "swipeDown") {
             if (touchstartY - touchendY > 25 &&
                 absY > absX) {
                 func(event);
@@ -689,140 +689,144 @@ function mayISwipe(event) {
 
 (function() {
     'use strict';
-
-    if (document.querySelector(father)) {
-        document.querySelector(father).swiper("swipeLeft", swipeFunc);
-        document.querySelector(father).swiper("swipeRight", showHidePanel);
-    } else if(document.querySelector('.story-page')) {
-        document.querySelector('.story-page').swiper('swipeLeft', ()=>{
-            document.querySelector('button.continue').click();
-        });
-    }
-
-    createThemeSwitcherButton();
-    setTimeout(() => appendThemeSwitcher(), 2000);
-
-    if (localStorage.getItem('themed') == "1") {
-        head[0].appendChild(style);
-        if (document.querySelector('#checkbx')) {
-            document.querySelector('#checkbx').checked = true;
+    window.addEventListener('load', function() {
+        if (document.querySelector(father)) {
+            document.querySelector(father).swiper("swipeLeft", swipeFunc);
+            document.querySelector(father).swiper("swipeRight", showHidePanel);
+        } else if(document.querySelector('.story-page')) {
+            document.querySelector('.story-page').swiper('swipeDown', ()=>{
+                document.querySelector('button.continue').click();
+            });
         }
-    }
 
-    let counterBool = true;
+        createThemeSwitcherButton();
+        // setTimeout(() => appendThemeSwitcher(), 2000);
+        appendThemeSwitcher();
 
-    const callback = function(mutationsList, observer) {
-        for(let mutation of mutationsList) {
-
-            if (mutation.addedNodes.length && mutation.addedNodes[0].className) {
-                // console.log(mutation.addedNodes[0].className);
-
-                if (document.querySelector('.blame-wrap.grade-correct-footer')) {
-                    document.querySelector('button.continue').click();
-                }
-
-                if (mutation.addedNodes[0].contains(document.querySelector('._1bfyi'))) {
-                    document.querySelector('._1bfyi').swiper('swipeLeft', () => {
-                        document.querySelector('._1fURZ, ._3JkvC').click()});
-                }
-
-                // takes care of skipping
-                if (mutation.addedNodes[0].contains(document.querySelector('[data-test="player-skip"]'))) {
-                    setTimeout(()=>{
-                        if (document.querySelector('._1uJnx') || document.querySelector('[data-test="challenge-speak-button"]')) {
-                            document.querySelector('[data-test="player-skip"]').addEventListener('click', function() {
-                                counterBool = false;
-                            });
-                        }
-                    },200);
-                }
-
-
-                if (mutation.addedNodes[0].contains(document.querySelector('._3F_8q')) ||
-                    mutation.addedNodes[0].contains(document.querySelector('._31whh'))) {
-                    appendThemeSwitcher()
-                }
-
-
-
-                if (mutation.addedNodes[0].className == "_37FmC _2nhHI _3ZTEO") {
-                    moveHintDiv(mutation.target.firstElementChild);
-                    mutation.target.style.background = 'purple';
-                    mutation.target.style.color = 'white';
-                }
-
-                if (mutation.addedNodes[0].className == '_3yGet _1p08S _1Ag8k _1WH_r') {
-                    neco('right').then(()=>{
-                        autoClick();
-                        if (counterBool) {
-                            changeCounter('right');
-                        } else {
-                            counterBool = true;
-                        }
-                    });
-                } else if (mutation.addedNodes[0].className === '') {
-
-                }
-                else if (mutation.addedNodes[0].className == '_3yGet _1p08S _1Ag8k _1S5ta') {
-                    neco('wrong').then(()=> {
-                        if (counterBool) {
-                            changeCounter('bad');
-                        } else {
-                            counterBool = true;
-                        }
-                    });
-                }
-                else if (mutation.addedNodes[0].contains(document.querySelector('._3ysW7'))) {
-                    draggable();
-                    keyboardShortcuts();
-                }
-
-                if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
-                    mutation.addedNodes[0].contains(document.querySelector('input'))) {
-                    setTimeout(()=>{document.querySelector('textarea, input').focus()},200);
-                }
-
-                if (mutation.addedNodes[0].contains(document.querySelector(father))) {
-                    document.querySelector(father).swiper("swipeLeft", swipeFunc);
-                    document.querySelector(father).swiper("swipeRight", showHidePanel);
-                }
-
-                if (mutation.addedNodes[0].className === 'story-page') {
-                    document.querySelector('.story-page').swiper("swipeLeft", () => {
-                        if (document.querySelector('button.continue')) {
-                            document.querySelector('button.continue').click();
-                        }
-                    });
-                }
-
-                if (mutation.addedNodes[0].classList.value == '_3-qon' &&
-                   mutation.addedNodes[0].contains(document.querySelector('._2q0iC'))) {
-                    createNumber();
-                    createSlider();
-                }
+        if (localStorage.getItem('themed') == "1") {
+            head[0].appendChild(style);
+            if (document.querySelector('#checkbx')) {
+                document.querySelector('#checkbx').checked = true;
             }
+        }
 
-            if (mutation.removedNodes.length) {
-                if (mutation.removedNodes[0].className === "_2NEKS") {
-                    if (!document.querySelector('[data-test="word-bank"]')) {
-                        document.onkeyup = function (e) {
-                            return false;
-                        }
-                        window.removeEventListener("resize", hideShowKey);
+        let counterBool = true;
+
+        const callback = function(mutationsList, observer) {
+            for(let mutation of mutationsList) {
+
+                if (mutation.addedNodes.length) {
+                    // console.log(mutation.addedNodes[0]);
+
+                    if (document.querySelector('.blame-wrap.grade-correct-footer')) {
+                        document.querySelector('button.continue').click();
+                    }
+
+                    if (mutation.addedNodes[0].contains(document.querySelector('._1bfyi'))) {
+                        document.querySelector('._1bfyi').swiper('swipeLeft', () => {
+                            document.querySelector('._1fURZ, ._3JkvC').click()});
+                    }
+
+                    // takes care of skipping
+                    if (mutation.addedNodes[0].contains(document.querySelector('[data-test="player-skip"]'))) {
+                        setTimeout(()=>{
+                            if (document.querySelector('._1uJnx') || document.querySelector('[data-test="challenge-speak-button"]')) {
+                                document.querySelector('[data-test="player-skip"]').addEventListener('click', function() {
+                                    counterBool = false;
+                                });
+                            }
+                        },200);
+                    }
+
+
+                    if (mutation.addedNodes[0].contains(document.querySelector('._3F_8q')) ||
+                        mutation.addedNodes[0].contains(document.querySelector('._31whh'))) {
+                        console.log('theme switcher');
+                        appendThemeSwitcher();
+                    }
+
+
+
+                    if (mutation.addedNodes[0].className == "_37FmC _2nhHI _3ZTEO") {
+                        moveHintDiv(mutation.target.firstElementChild);
+                        mutation.target.style.background = 'purple';
+                        mutation.target.style.color = 'white';
+                    }
+
+                    if (mutation.addedNodes[0].className == '_3yGet _1p08S _1Ag8k _1WH_r') {
+                        neco('right').then(()=>{
+                            autoClick();
+                            if (counterBool) {
+                                changeCounter('right');
+                            } else {
+                                counterBool = true;
+                            }
+                        });
+                    } else if (mutation.addedNodes[0].className === '') {
+
+                    }
+                    else if (mutation.addedNodes[0].className == '_3yGet _1p08S _1Ag8k _1S5ta') {
+                        neco('wrong').then(()=> {
+                            if (counterBool) {
+                                changeCounter('bad');
+                            } else {
+                                counterBool = true;
+                            }
+                        });
+                    }
+                    else if (mutation.addedNodes[0].contains(document.querySelector('._3ysW7'))) {
+                        draggable();
+                        keyboardShortcuts();
+                    }
+
+                    if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
+                        mutation.addedNodes[0].contains(document.querySelector('input'))) {
+                        setTimeout(()=>{document.querySelector('textarea, input').focus()},200);
+                    }
+
+                    if (mutation.addedNodes[0].contains(document.querySelector(father))) {
+                        document.querySelector(father).swiper("swipeLeft", swipeFunc);
+                        document.querySelector(father).swiper("swipeRight", showHidePanel);
+                    }
+
+                    if (mutation.addedNodes[0].className === 'story-page') {
+                        document.querySelector('.story-page').swiper("swipeDown", () => {
+                            if (document.querySelector('button.continue')) {
+                                document.querySelector('button.continue').click();
+                            }
+                        });
+                    }
+
+                    if (mutation.addedNodes[0].classList.value == '_3-qon' &&
+                        mutation.addedNodes[0].contains(document.querySelector('._2q0iC'))) {
+                        createNumber();
+                        createSlider();
                     }
                 }
-                if (mutation.removedNodes[0].className == "_37FmC _2nhHI _3ZTEO") {
-                    mutation.target.style.background = '';
-                    mutation.target.style.color = '';
+
+                if (mutation.removedNodes.length) {
+                    if (mutation.removedNodes[0].className === "_2NEKS") {
+                        if (!document.querySelector('[data-test="word-bank"]')) {
+                            document.onkeyup = function (e) {
+                                return false;
+                            }
+                            window.removeEventListener("resize", hideShowKey);
+                        }
+                    }
+                    if (mutation.removedNodes[0].className == "_37FmC _2nhHI _3ZTEO") {
+                        mutation.target.style.background = '';
+                        mutation.target.style.color = '';
+                    }
                 }
             }
         }
-    }
 
-    const targetNode = document.querySelector('body');
-    const config = { attributes: true, childList: true, subtree: true, characterData: true };
-    const observer = new MutationObserver(callback);
+        const targetNode = document.querySelector('body');
+        const config = { attributes: true, childList: true, subtree: true, characterData: true };
+        const observer = new MutationObserver(callback);
 
-    observer.observe(targetNode, config);
+        observer.observe(targetNode, config);
+
+    }, false);
 
 })();
