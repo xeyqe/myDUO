@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.1.3
+// @version      2.9.1.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -700,7 +700,6 @@ function mayISwipe(event) {
         }
 
         createThemeSwitcherButton();
-        // setTimeout(() => appendThemeSwitcher(), 2000);
         appendThemeSwitcher();
 
         if (localStorage.getItem('themed') == "1") {
@@ -716,7 +715,7 @@ function mayISwipe(event) {
             for(let mutation of mutationsList) {
 
                 if (mutation.addedNodes.length) {
-                    // console.log(mutation.addedNodes[0]);
+                    console.log(mutation.addedNodes[0].className);
 
                     if (document.querySelector('.blame-wrap.grade-correct-footer')) {
                         document.querySelector('button.continue').click();
@@ -797,7 +796,7 @@ function mayISwipe(event) {
                         });
                     }
 
-                    if (mutation.addedNodes[0].classList.value == '_3-qon' &&
+                    if (mutation.addedNodes[0].className === '_3-qon' &&
                         mutation.addedNodes[0].contains(document.querySelector('._2q0iC'))) {
                         createNumber();
                         createSlider();
