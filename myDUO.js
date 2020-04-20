@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.1.4
+// @version      2.9.1.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -191,8 +191,15 @@ function reclick() {
 
     for (let i = 0; i < clickedBtt.length; i++) {
         clickedBtt[i].click();
-        let el2Click = unclickedBtt.find(el => el.innerText.split('\n')[0] === clickedBtt[i].innerText);
-        el2Click.click();
+        let el2Click;
+
+        if (window.innerWidth>700 && window.innerWidth>window.innerHeight) {
+            el2Click = unclickedBtt.find(el => el.innerText.split('\n')[1] === clickedBtt[i].innerText && !el.disabled);
+        } else {
+            el2Click = unclickedBtt.find(el => el.innerText.split('\n')[0] === clickedBtt[i].innerText && !el.disabled);
+        }
+
+        if (el2Click) el2Click.click();
     }
 
 }
@@ -235,7 +242,7 @@ function keyboardShortcuts() {
 }
 
 function hideShowKey() {
-    const list = document.querySelectorAll('[data-test="challenge-tap-token"]');
+    const list = document.querySelectorAll('._3uWfo [data-test="challenge-tap-token"]');
 
     const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
                       "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
@@ -245,7 +252,9 @@ function hideShowKey() {
     if (window.innerWidth>700 && window.innerWidth>window.innerHeight) {
         console.log('height: ' + window.innerWidth + ', width:  ' + window.innerHeight);
         for (let i=0; i<list.length; i++) {
-            list[i].innerText = listOfCode[i][3].toLowerCase() + '\n' + list[i].innerText;
+            if (!list[i].innerText.includes('\n')) {
+                list[i].innerText = listOfCode[i][3].toLowerCase() + '\n' + list[i].innerText;
+            }
         }
     } else {
         list.forEach(el => {
@@ -715,7 +724,7 @@ function mayISwipe(event) {
             for(let mutation of mutationsList) {
 
                 if (mutation.addedNodes.length) {
-                    console.log(mutation.addedNodes[0].className);
+                    // console.log(mutation.addedNodes[0].className);
 
                     if (document.querySelector('.blame-wrap.grade-correct-footer')) {
                         document.querySelector('button.continue').click();
