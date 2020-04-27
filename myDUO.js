@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.1.5
+// @version      2.9.1.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -12,7 +12,6 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.1/Sortable.min.js
 // @resource     customCSS https://raw.githubusercontent.com/xeyqe/duolingo-style/master/darkDUO.css
 // @grant        GM_getResourceText
-// @grant        GM_addStyle
 // ==/UserScript==
 
 let style;
@@ -47,25 +46,25 @@ Node.prototype.swiper = function(direction, func) {
         const absX = Math.abs(touchstartX - touchendX);
         const absY = Math.abs(touchstartY - touchendY);
 
-        if (direction == "swipeRight") {
+        if (direction === "swipeRight") {
             if (touchstartX - touchendX < -25 &&
                 absY < absX) {
                 func(event);
             }
         }
-        else if (direction == "swipeLeft") {
+        else if (direction === "swipeLeft") {
             if (touchstartX - touchendX > 25 &&
                 absY < absX) {
                 func(event);
             }
         }
-        else if (direction == "swipeUp") {
+        else if (direction === "swipeUp") {
             if (touchstartY - touchendY < -25 &&
                 absY > absX) {
                 func(event);
             }
         }
-        else if (direction == "swipeDown") {
+        else if (direction === "swipeDown") {
             if (touchstartY - touchendY > 25 &&
                 absY > absX) {
                 func(event);
@@ -94,8 +93,8 @@ function createNumber() {
     node.innerHTML =
         "<span id=\"wrong\" style=\"color:red\">0</span>/<span id=\"right\" style=\"color:#79c822\">0</span>";
 
-    if (document.querySelector('._3-qon')) {
-        document.querySelector('._3-qon').appendChild(node);
+    if (document.querySelector('._36yeu')) {
+        document.querySelector('._36yeu').appendChild(node);
     }
 }
 
@@ -103,7 +102,7 @@ function changeCounter(whichOne) {
     const first = parseInt(document.querySelector('#right').innerText);
     const second = parseInt(document.querySelector('#wrong').innerText);
 
-    if (whichOne == 'right') {
+    if (whichOne === 'right') {
         document.querySelector('#right').innerText = first + 1;
     } else {
         document.querySelector('#wrong').innerText = second + 1;
@@ -128,20 +127,20 @@ function tempAlert(input) {
     removeTempAlert(3000);
 
     el.addEventListener("mouseenter", () => {
-        if (document.querySelector('#tempAlert').style.border == "") {
+        if (document.querySelector('#tempAlert').style.border === "") {
             clearTimeout(timeout);
             timeout = null;
         }
     });
 
     el.addEventListener("mouseleave", () => {
-        if (document.querySelector('#tempAlert').style.border == "") {
+        if (document.querySelector('#tempAlert').style.border === "") {
             removeTempAlert(3000);
         }
     });
 
     el.addEventListener("click", ()=>{
-        if (document.querySelector('#tempAlert').style.border == "") {
+        if (document.querySelector('#tempAlert').style.border === "") {
             document.querySelector('#tempAlert').style.border = "3px solid white";
             clearTimeout(timeout);
         }
@@ -229,7 +228,7 @@ function keyboardShortcuts() {
                     el.click();
                 }
             });
-        } else if (e.code == "Backspace") {
+        } else if (e.code === "Backspace") {
             let node = document.querySelector('._3ysW7');
             if (node.children.length > 0) {
                 node.childNodes[node.childNodes.length-1].firstElementChild.click();
@@ -295,7 +294,7 @@ function createSlider() {
     document.querySelector(father).appendChild(panel);
 
     document.querySelector(father).addEventListener('mousedown', function(event) {
-        const isClickInside = document.querySelector('.panel').contains(event.target) || panel == event.target;
+        const isClickInside = document.querySelector('.panel').contains(event.target) || panel === event.target;
 
         if (!isClickInside) {
             if (document.querySelector('.hide')) {
@@ -559,6 +558,7 @@ const css = [".switch {",
            "    padding-left: 3%;",
            "    font-size: 2rem;",
            "    margin-left: 20px;",
+           "    grid-column: 3 / 3;",
            "}",
            "#tempAlert {",
            "    padding: 0.2rem;",
@@ -606,26 +606,19 @@ const css = [".switch {",
           ].join("\n");
 
 function addThemes() {
-    if (typeof GM_addStyle != "undefined") {
-        GM_addStyle(css);
-    } else if (typeof PRO_addStyle != "undefined") {
-        PRO_addStyle(css);
-    } else if (typeof addStyle != "undefined") {
-        addStyle(css);
+
+    const node = document.createElement("style");
+    node.type = "text/css";
+    node.appendChild(document.createTextNode(css));
+    const heads = document.getElementsByTagName("head");
+    if (heads.length > 0) {
+        heads[0].appendChild(node);
     } else {
-        const node = document.createElement("style");
-        node.type = "text/css";
-        node.appendChild(document.createTextNode(css));
-        const heads = document.getElementsByTagName("head");
-        if (heads.length > 0) {
-            heads[0].appendChild(node);
-        } else {
-            document.documentElement.appendChild(node);
-        }
+        document.documentElement.appendChild(node);
     }
 
     const newCSS = GM_getResourceText("customCSS");
-
+    
     style = document.createElement("style");
     style.type = "text/css";
     style.appendChild(document.createTextNode(newCSS));
@@ -670,14 +663,14 @@ function appendThemeSwitcher() {
         else {
             document.querySelector('._3F_8q').append(label);
         }
-        if (localStorage.getItem('themed') == '1') {
+        if (localStorage.getItem('themed') === '1') {
             document.querySelector('#checkbx').checked = true;
         }
     }
     else if (document.querySelector('._31whh')) {
         document.querySelector('._31whh').append(label);
 
-        if (localStorage.getItem('themed') == '1') {
+        if (localStorage.getItem('themed') === '1') {
             document.querySelector('#checkbx').checked = true;
         }
     }
@@ -711,7 +704,7 @@ function mayISwipe(event) {
         createThemeSwitcherButton();
         appendThemeSwitcher();
 
-        if (localStorage.getItem('themed') == "1") {
+        if (localStorage.getItem('themed') === "1") {
             head[0].appendChild(style);
             if (document.querySelector('#checkbx')) {
                 document.querySelector('#checkbx').checked = true;
@@ -749,19 +742,18 @@ function mayISwipe(event) {
 
                     if (mutation.addedNodes[0].contains(document.querySelector('._3F_8q')) ||
                         mutation.addedNodes[0].contains(document.querySelector('._31whh'))) {
-                        console.log('theme switcher');
                         appendThemeSwitcher();
                     }
 
 
 
-                    if (mutation.addedNodes[0].className == "_37FmC _2nhHI _3ZTEO") {
+                    if (mutation.addedNodes[0].className === "_37FmC _2nhHI _3ZTEO") {
                         moveHintDiv(mutation.target.firstElementChild);
                         mutation.target.style.background = 'purple';
                         mutation.target.style.color = 'white';
                     }
 
-                    if (mutation.addedNodes[0].className == '_3yGet _1p08S _1Ag8k _1WH_r') {
+                    if (mutation.addedNodes[0].className === '_3yGet _1p08S _1Ag8k _1WH_r') {
                         neco('right').then(()=>{
                             autoClick();
                             if (counterBool) {
@@ -770,10 +762,8 @@ function mayISwipe(event) {
                                 counterBool = true;
                             }
                         });
-                    } else if (mutation.addedNodes[0].className === '') {
-
                     }
-                    else if (mutation.addedNodes[0].className == '_3yGet _1p08S _1Ag8k _1S5ta') {
+                    else if (mutation.addedNodes[0].className === '_3yGet _1p08S _1Ag8k _1S5ta') {
                         neco('wrong').then(()=> {
                             if (counterBool) {
                                 changeCounter('bad');
@@ -805,7 +795,7 @@ function mayISwipe(event) {
                         });
                     }
 
-                    if (mutation.addedNodes[0].className === '_3-qon' &&
+                    if (mutation.addedNodes[0].className === '_3F62c' &&
                         mutation.addedNodes[0].contains(document.querySelector('._2q0iC'))) {
                         createNumber();
                         createSlider();
@@ -821,7 +811,7 @@ function mayISwipe(event) {
                             window.removeEventListener("resize", hideShowKey);
                         }
                     }
-                    if (mutation.removedNodes[0].className == "_37FmC _2nhHI _3ZTEO") {
+                    if (mutation.removedNodes[0].className === "_37FmC _2nhHI _3ZTEO") {
                         mutation.target.style.background = '';
                         mutation.target.style.color = '';
                     }
