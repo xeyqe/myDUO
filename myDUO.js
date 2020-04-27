@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.1.6
+// @version      2.9.1.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -552,13 +552,8 @@ const css = [".switch {",
            "    color: #ea2b2b;",
            "}",
            "#counter {",
-           "    position: relative;",
-           "    right: 1%;",
-           "    top: 1%;",
-           "    padding-left: 3%;",
            "    font-size: 2rem;",
-           "    margin-left: 20px;",
-           "    grid-column: 3 / 3;",
+           "    grid-column-end: end;",
            "}",
            "#tempAlert {",
            "    padding: 0.2rem;",
@@ -618,7 +613,8 @@ function addThemes() {
     }
 
     const newCSS = GM_getResourceText("customCSS");
-    
+    console.log("customCSS");
+
     style = document.createElement("style");
     style.type = "text/css";
     style.appendChild(document.createTextNode(newCSS));
