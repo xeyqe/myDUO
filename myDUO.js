@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.1.7
+// @version      2.9.1.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -711,6 +711,12 @@ function mayISwipe(event) {
 
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
+
+                if (mutation.attributeName === "disabled" &&
+                    mutation.target === document.querySelector('button.continue') &&
+                    document.querySelector('.story-page')) {
+                    setTimeout(() => document.querySelector('button.continue').click(), 500);
+                }
 
                 if (mutation.addedNodes.length) {
                     // console.log(mutation.addedNodes[0].className);
