@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.2.0
+// @version      2.9.2.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -715,6 +715,7 @@ function mayISwipe(event) {
         }
 
         let counterBool = true;
+        let storyContinueButtonTimeout;
 
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
@@ -722,7 +723,11 @@ function mayISwipe(event) {
                 if (mutation.attributeName === "disabled" &&
                     mutation.target === document.querySelector('button.continue') &&
                     document.querySelector('.story-page') && !document.querySelector('.graded-text-input')) {
-                    setTimeout(() => document.querySelector('button.continue').click(), 500);
+                    if (storyContinueButtonTimeout) {
+                        clearTimeout(storyContinueButtonTimeout);
+                        storyContinueButtonTimeout = null;
+                    }
+                    storyContinueButtonTimeout = setTimeout(() => document.querySelector('button.continue').click(), 1300);
                 }
 
                 if (mutation.addedNodes.length) {
