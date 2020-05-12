@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.2.1
+// @version      2.9.2.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -95,6 +95,8 @@ function createNumber() {
 
     if (document.querySelector('._36yeu')) {
         document.querySelector('._36yeu').appendChild(node);
+    } else {
+        console.log('HELP. place for counter is missing!');
     }
 }
 
@@ -249,7 +251,6 @@ function hideShowKey() {
                       "KeyC", "KeyV", "KeyB", "KeyN", "KeyM"];
 
     if (window.innerWidth>700 && window.innerWidth>window.innerHeight) {
-        console.log('height: ' + window.innerWidth + ', width:  ' + window.innerHeight);
         for (let i=0; i<list.length; i++) {
             if (!list[i].innerText.includes('\n')) {
                 list[i].innerText = listOfCode[i][3].toLowerCase() + '\n' + list[i].innerText;
@@ -613,7 +614,6 @@ function addThemes() {
     }
 
     const newCSS = GM_getResourceText("customCSS");
-    console.log("customCSS");
 
     style = document.createElement("style");
     style.type = "text/css";
@@ -809,8 +809,7 @@ function mayISwipe(event) {
                         });
                     }
 
-                    if (mutation.addedNodes[0].className === '_3F62c' &&
-                        mutation.addedNodes[0].contains(document.querySelector('._2q0iC'))) {
+                    if (mutation.addedNodes[0].className === '_3F62c') {
                         createNumber();
                         createSlider();
                     }
