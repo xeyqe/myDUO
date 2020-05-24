@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.2.3
+// @version      2.9.2.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -272,17 +272,21 @@ function moveHintDiv(el) {
     let paddingRight = window.getComputedStyle(document.querySelector('._2vedk')).paddingRight;
     paddingRight = parseInt(paddingRight.substring(0, paddingRight.length - 2));
 
-    const arrow = document.querySelector('._3h4O4');
-    const bubble = document.querySelector('._37FmC._2nhHI._3ZTEO');
-    const err = (Math.floor(bubble.getBoundingClientRect().x) + Math.floor(bubble.getBoundingClientRect().width + paddingRight)) - (window.innerWidth - 5);
+    const arrow = document.querySelector('.YVhFK');
+    const bubble = document.querySelector('div._37FmC._1iVZc._1e4JI');
+    const bubbleLeft = Math.floor(bubble.parentElement.getBoundingClientRect().width/2);
+    const arrowLeft = Math.floor(bubble.getBoundingClientRect().width/2 - arrow.getBoundingClientRect().width/2);
+    const errRight = (Math.floor(bubble.getBoundingClientRect().x) + Math.floor(bubble.getBoundingClientRect().width + paddingRight)) - (window.innerWidth - 5);
+    const errLeft = Math.floor(bubble.getBoundingClientRect().x) - 16;
 
-    if (bubble.getBoundingClientRect().x < 0) {
-        const er = Math.floor((2*paddingLeft) - bubble.getBoundingClientRect().x)
-        bubble.style.left = er + 'px';
-        arrow.style.left = -er + bubble.getBoundingClientRect().width/2 + 'px';
-    } else if (err > 0) {
-        bubble.style.left = -err + 'px';
-        document.querySelector('._3h4O4').style.left = (Math.floor(el.getBoundingClientRect().width/2) + err) + 'px';
+
+    if (errLeft < 0) {
+        bubble.style.left = (bubbleLeft - errLeft) + 'px';
+        arrow.style.left = (arrowLeft + errLeft) + 'px';
+    } else if (errRight > 0) {
+        bubble.style.left = (bubbleLeft - errRight + 5) + 'px';
+        arrow.style.left = (arrowLeft + errRight - 5) + 'px';
+
     }
 
 }
@@ -757,7 +761,7 @@ function mayISwipe(event) {
 
 
 
-                    if (mutation.addedNodes[0].className === "_37FmC _2nhHI _3ZTEO") {
+                    if (mutation.addedNodes[0].className === "_37FmC _1iVZc _1e4JI") {
                         moveHintDiv(mutation.target.firstElementChild);
                         mutation.target.style.background = 'purple';
                         mutation.target.style.color = 'white';
@@ -820,7 +824,7 @@ function mayISwipe(event) {
                             window.removeEventListener("resize", hideShowKey);
                         }
                     }
-                    if (mutation.removedNodes[0].className === "_37FmC _2nhHI _3ZTEO") {
+                    if (mutation.removedNodes[0].className === "_37FmC _1iVZc _1e4JI") {
                         mutation.target.style.background = '';
                         mutation.target.style.color = '';
                     }
