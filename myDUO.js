@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.2.4
+// @version      2.9.2.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -691,6 +691,22 @@ function mayISwipe(event) {
     }
 }
 
+let storyContinueButtonTimeout;
+function storiesAutoClick() {
+    let lastWord = 1;
+    const selected = document.querySelector('.selected');
+    if (selected) {
+        if (selected.innerText.includes(' ')) {
+            lastWord = selected.innerText.match(' +[^ ]+$')[0];
+        } else {
+            lastWord = selected.innerText;
+        }
+    }
+    storyContinueButtonTimeout = setTimeout(() => {
+        document.querySelector('button.continue').click()
+    }, lastWord.length*100);
+}
+
 
 (function() {
     'use strict';
@@ -715,19 +731,18 @@ function mayISwipe(event) {
         }
 
         let counterBool = true;
-        let storyContinueButtonTimeout;
 
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
 
                 if (mutation.attributeName === "disabled" &&
-                    mutation.target === document.querySelector('button.continue') &&
+                    mutation.target === document.querySelector('button.continue:enabled') &&
                     document.querySelector('.story-page') && !document.querySelector('.graded-text-input')) {
                     if (storyContinueButtonTimeout) {
                         clearTimeout(storyContinueButtonTimeout);
                         storyContinueButtonTimeout = null;
                     }
-                    storyContinueButtonTimeout = setTimeout(() => document.querySelector('button.continue').click(), 1300);
+                    storiesAutoClick();
                 }
 
                 if (mutation.addedNodes.length) {
