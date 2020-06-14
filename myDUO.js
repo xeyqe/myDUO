@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.2.6
+// @version      2.9.2.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -24,6 +24,180 @@ const progressBar = "_1TkZD";
 const hint = "XUDC1 _2nhHI _3ZTEO";
 const coloredHint = "_1c_ny _1gjlS";
 const father = '._2vedk';
+
+const css = [".switch {",
+           "    position: relative;",
+           "    display: inline-block;",
+           "    width: 60px;",
+           "    height: 34px;",
+           "}",
+           "",
+           ".switch input { ",
+           "    opacity: 0;",
+           "    width: 0;",
+           "    height: 0;",
+           "}",
+           "",
+           ".slider {",
+           "    position: absolute;",
+           "    cursor: pointer;",
+           "    top: 0;",
+           "    left: 0;",
+           "    right: 0;",
+           "    bottom: 0;",
+           "    background-color: #ccc;",
+           "    -webkit-transition: .4s;",
+           "    transition: .4s;",
+           "}",
+           "",
+           ".slider:before {",
+           "    position: absolute;",
+           "    content: '';",
+           "    height: 26px;",
+           "    width: 26px;",
+           "    left: 4px;",
+           "    bottom: 4px;",
+           "    background-color: white;",
+           "    -webkit-transition: .4s;",
+           "    transition: .4s;",
+           "}",
+           "",
+           "input:checked + .slider {",
+           "    background-color: #2196F3;",
+           "}",
+           "",
+           "input:focus + .slider {",
+           "    box-shadow: 0 0 1px #2196F3;",
+           "}",
+           "",
+           "input:checked + .slider:before {",
+           "    -webkit-transform: translateX(26px);",
+           "    -ms-transform: translateX(26px);",
+           "    transform: translateX(26px);",
+           "}",
+           "",
+           ".slider.round {",
+           "    border-radius: 34px;",
+           "}",
+           "",
+           ".slider.round:before {",
+           "    border-radius: 50%;",
+           "}",
+           ".panel::-webkit-scrollbar {",
+           "	width:0 !important",
+           "}",
+           "",
+           "._3B1cY:after, ._3B1cY:before {",
+           "	display:none",
+           "}",
+           "",
+           "textarea, input {",
+           "	-moz-user-select: text;",
+           "	direction: ltr;",
+           "}",
+           ".lnZE0 {",
+           "    height: unset;",
+           "}",
+           "._1ttrU.Au17D._2CBTu {",
+           "    margin-top: 0;",
+           "}",
+           "._1Y5M_ {",
+           "    flex-grow: unset;",
+           "}",
+           ".panel {",
+           "    line-height: 1.15;",
+           "}",
+           ".rotmp {",
+           "    grid-row-gap: unset;",
+           "}",
+           ".panelItem {",
+           "    box-sizing: border-box;",
+           "    padding: 10px;",
+           "    width: fit-content;",
+           "    height: fit-content;",
+           "    border-radius: 10px;",
+           "    margin: 10px;",
+           "}",
+           ".panelItem.right {",
+           "    background: #b8f28b;",
+           "    color: #58a700;",
+           "}",
+           ".panelItem.wrong {",
+           "    background: #ffc1c1;",
+           "    color: #ea2b2b;",
+           "}",
+           "#counter {",
+           "    font-size: 2rem;",
+           "    grid-column-end: end;",
+           "}",
+           "#tempAlert {",
+           "    padding: 0.2rem;",
+           "    top:1.5rem;",
+           "    left:50%;transform:translateX(-50%);",
+           "    max-width:94%;",
+           "    width:fit-content;",
+           "    overflow:visible;",
+           "    position:absolute;",
+           "    color:#58a700;",
+           "    background:#b8f28b;",
+           "    z-index:900",
+           "}",
+           ".panel {",
+           "    width: fit-content;",
+           "    max-width: 95vw;",
+           "    float: left;",
+           "    height: fit-content;",
+           "    position: absolute;",
+           "    top: 8%;",
+           "    overflow-y: scroll;",
+           "    max-height: 92%;",
+           "    z-index: 1000;",
+           "    scrollbar-width: none;",
+           "}",
+           "[data-test=challenge-tap-token] {",
+           "    text-align: center;",
+           "}",
+           "@media (min-width: 700px) {",
+           "    ._30i_q, ._1yghA {",
+           "        display: block;",
+           "    }",
+           "}",
+           "@media only screen and (orientation: portrait) {",
+           "    @media (min-width: 700px) {",
+           "        #tempAlert {",
+           "            font-size: 2.5rem;",
+           "            line-height: 1;",
+           "        }",
+           "        .panel * {",
+           "            font-size: 2.5rem !important;",
+           "        }",
+           "    }",
+           "}"
+          ].join("\n");
+
+function addThemes() {
+    if (!document.querySelector('#darkDUOmobile')) {
+        const node = document.createElement("style");
+        node.type = "text/css";
+        node.appendChild(document.createTextNode(css));
+        const heads = document.getElementsByTagName("head");
+        if (heads.length > 0) {
+            heads[0].appendChild(node);
+        } else {
+            document.documentElement.appendChild(node);
+        }
+
+        const newCSS = GM_getResourceText("customCSS");
+
+        style = document.createElement("style");
+        style.type = "text/css";
+        style.appendChild(document.createTextNode(newCSS));
+        head = document.getElementsByTagName("head");
+        style.id = 'darkDUOmobile';
+    }
+}
+
+addThemes();
 
 
 Node.prototype.swiper = function(direction, func) {
@@ -463,176 +637,7 @@ function neco(color) {
 
 }
 
-const css = [".switch {",
-           "    position: relative;",
-           "    display: inline-block;",
-           "    width: 60px;",
-           "    height: 34px;",
-           "}",
-           "",
-           ".switch input { ",
-           "    opacity: 0;",
-           "    width: 0;",
-           "    height: 0;",
-           "}",
-           "",
-           ".slider {",
-           "    position: absolute;",
-           "    cursor: pointer;",
-           "    top: 0;",
-           "    left: 0;",
-           "    right: 0;",
-           "    bottom: 0;",
-           "    background-color: #ccc;",
-           "    -webkit-transition: .4s;",
-           "    transition: .4s;",
-           "}",
-           "",
-           ".slider:before {",
-           "    position: absolute;",
-           "    content: '';",
-           "    height: 26px;",
-           "    width: 26px;",
-           "    left: 4px;",
-           "    bottom: 4px;",
-           "    background-color: white;",
-           "    -webkit-transition: .4s;",
-           "    transition: .4s;",
-           "}",
-           "",
-           "input:checked + .slider {",
-           "    background-color: #2196F3;",
-           "}",
-           "",
-           "input:focus + .slider {",
-           "    box-shadow: 0 0 1px #2196F3;",
-           "}",
-           "",
-           "input:checked + .slider:before {",
-           "    -webkit-transform: translateX(26px);",
-           "    -ms-transform: translateX(26px);",
-           "    transform: translateX(26px);",
-           "}",
-           "",
-           ".slider.round {",
-           "    border-radius: 34px;",
-           "}",
-           "",
-           ".slider.round:before {",
-           "    border-radius: 50%;",
-           "}",
-           ".panel::-webkit-scrollbar {",
-           "	width:0 !important",
-           "}",
-           "",
-           "._3B1cY:after, ._3B1cY:before {",
-           "	display:none",
-           "}",
-           "",
-           "textarea, input {",
-           "	-moz-user-select: text;",
-           "	direction: ltr;",
-           "}",
-           ".lnZE0 {",
-           "    height: unset;",
-           "}",
-           "._1ttrU.Au17D._2CBTu {",
-           "    margin-top: 0;",
-           "}",
-           "._1Y5M_ {",
-           "    flex-grow: unset;",
-           "}",
-           ".panel {",
-           "    line-height: 1.15;",
-           "}",
-           ".rotmp {",
-           "    grid-row-gap: unset;",
-           "}",
-           ".panelItem {",
-           "    box-sizing: border-box;",
-           "    padding: 10px;",
-           "    width: fit-content;",
-           "    height: fit-content;",
-           "    border-radius: 10px;",
-           "    margin: 10px;",
-           "}",
-           ".panelItem.right {",
-           "    background: #b8f28b;",
-           "    color: #58a700;",
-           "}",
-           ".panelItem.wrong {",
-           "    background: #ffc1c1;",
-           "    color: #ea2b2b;",
-           "}",
-           "#counter {",
-           "    font-size: 2rem;",
-           "    grid-column-end: end;",
-           "}",
-           "#tempAlert {",
-           "    padding: 0.2rem;",
-           "    top:1.5rem;",
-           "    left:50%;transform:translateX(-50%);",
-           "    max-width:94%;",
-           "    width:fit-content;",
-           "    overflow:visible;",
-           "    position:absolute;",
-           "    color:#58a700;",
-           "    background:#b8f28b;",
-           "    z-index:900",
-           "}",
-           ".panel {",
-           "    width: fit-content;",
-           "    max-width: 95vw;",
-           "    float: left;",
-           "    height: fit-content;",
-           "    position: absolute;",
-           "    top: 8%;",
-           "    overflow-y: scroll;",
-           "    max-height: 92%;",
-           "    z-index: 1000;",
-           "    scrollbar-width: none;",
-           "}",
-           "[data-test=challenge-tap-token] {",
-           "    text-align: center;",
-           "}",
-           "@media (min-width: 700px) {",
-           "    ._30i_q, ._1yghA {",
-           "        display: block;",
-           "    }",
-           "}",
-           "@media only screen and (orientation: portrait) {",
-           "    @media (min-width: 700px) {",
-           "        #tempAlert {",
-           "            font-size: 2.5rem;",
-           "            line-height: 1;",
-           "        }",
-           "        .panel * {",
-           "            font-size: 2.5rem !important;",
-           "        }",
-           "    }",
-           "}"
-          ].join("\n");
 
-function addThemes() {
-
-    const node = document.createElement("style");
-    node.type = "text/css";
-    node.appendChild(document.createTextNode(css));
-    const heads = document.getElementsByTagName("head");
-    if (heads.length > 0) {
-        heads[0].appendChild(node);
-    } else {
-        document.documentElement.appendChild(node);
-    }
-
-    const newCSS = GM_getResourceText("customCSS");
-
-    style = document.createElement("style");
-    style.type = "text/css";
-    style.appendChild(document.createTextNode(newCSS));
-    head = document.getElementsByTagName("head");
-    style.id = 'darkDUOmobile';
-}
 
 function createThemeSwitcherButton() {
     label = document.createElement('label');
@@ -688,8 +693,6 @@ function appendThemeSwitcher() {
 
 }
 
-addThemes();
-
 function mayISwipe(event) {
     if (event && document.querySelector('._3vVWl') &&
         document.querySelector('._3vVWl').contains(event.target)) {
@@ -702,7 +705,8 @@ function mayISwipe(event) {
 let storyContinueButtonTimeout;
 function storiesAutoClick() {
     let lastWord = 1;
-    const selected = document.querySelector('.selected');
+    const array = document.querySelectorAll('._3Ohvj.D43IF:not(._1-kT5)');
+    const selected = array[array.length - 1];
     if (selected) {
         if (selected.innerText.includes(' ')) {
             lastWord = selected.innerText.match(' +[^ ]+$')[0];
@@ -710,9 +714,11 @@ function storiesAutoClick() {
             lastWord = selected.innerText;
         }
     }
+    let delay;
+    lastWord.length < 5 ? delay = (lastWord.length*100) + 300 : delay = lastWord.length*100;
     storyContinueButtonTimeout = setTimeout(() => {
-        document.querySelector('button.continue').click()
-    }, lastWord.length*100);
+        document.querySelector('button[autofocus]').click()
+    }, delay);
 }
 
 
@@ -728,6 +734,7 @@ function storiesAutoClick() {
             });
         }
 
+        addThemes();
         createThemeSwitcherButton();
         appendThemeSwitcher();
 
@@ -743,15 +750,16 @@ function storiesAutoClick() {
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
 
-                if (mutation.attributeName === "disabled" &&
-                    mutation.target === document.querySelector('button.continue:enabled') &&
-                    document.querySelector('.story-page') && !document.querySelector('.graded-text-input')) {
+                if (mutation.attributeName === "autofocus" &&
+                    mutation.target === document.querySelector('button[autofocus]') &&
+                    document.querySelector('.essF2') && !document.querySelector('textarea')) {
                     if (storyContinueButtonTimeout) {
                         clearTimeout(storyContinueButtonTimeout);
                         storyContinueButtonTimeout = null;
                     }
                     storiesAutoClick();
                 }
+
 
                 if (mutation.addedNodes.length) {
                     // console.log(mutation.addedNodes[0].className);
