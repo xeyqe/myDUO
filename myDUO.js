@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.2.7
+// @version      2.9.2.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -180,7 +180,7 @@ function addThemes() {
         const node = document.createElement("style");
         node.type = "text/css";
         node.appendChild(document.createTextNode(css));
-        const heads = document.getElementsByTagName("head");
+        const heads = document.getElementsByTagName("html");
         if (heads.length > 0) {
             heads[0].appendChild(node);
         } else {
@@ -192,13 +192,10 @@ function addThemes() {
         style = document.createElement("style");
         style.type = "text/css";
         style.appendChild(document.createTextNode(newCSS));
-        head = document.getElementsByTagName("head");
+        head = document.getElementsByTagName("html");
         style.id = 'darkDUOmobile';
     }
 }
-
-addThemes();
-
 
 Node.prototype.swiper = function(direction, func) {
     let touchstartX = 0;
