@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.2.8
+// @version      2.9.2.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -444,31 +444,31 @@ function hideShowKey() {
     }
 }
 
+// not needed anymore
+// function moveHintDiv(el) {
+//     let paddingLeft = window.getComputedStyle(document.querySelector('._2vedk')).paddingLeft;
+//     paddingLeft = parseInt(paddingLeft.substring(0, paddingLeft.length - 2));
+//     let paddingRight = window.getComputedStyle(document.querySelector('._2vedk')).paddingRight;
+//     paddingRight = parseInt(paddingRight.substring(0, paddingRight.length - 2));
 
-function moveHintDiv(el) {
-    let paddingLeft = window.getComputedStyle(document.querySelector('._2vedk')).paddingLeft;
-    paddingLeft = parseInt(paddingLeft.substring(0, paddingLeft.length - 2));
-    let paddingRight = window.getComputedStyle(document.querySelector('._2vedk')).paddingRight;
-    paddingRight = parseInt(paddingRight.substring(0, paddingRight.length - 2));
-
-    const arrow = document.querySelector('.YVhFK');
-    const bubble = document.querySelector('div._37FmC._1iVZc._1e4JI');
-    const bubbleLeft = Math.floor(bubble.parentElement.getBoundingClientRect().width/2);
-    const arrowLeft = Math.floor(bubble.getBoundingClientRect().width/2 - arrow.getBoundingClientRect().width/2);
-    const errRight = (Math.floor(bubble.getBoundingClientRect().x) + Math.floor(bubble.getBoundingClientRect().width + paddingRight)) - (window.innerWidth - 5);
-    const errLeft = Math.floor(bubble.getBoundingClientRect().x) - 16;
+//     const arrow = document.querySelector('.YVhFK');
+//     const bubble = document.querySelector('div._37FmC._1iVZc._1e4JI');
+//     const bubbleLeft = Math.floor(bubble.parentElement.getBoundingClientRect().width/2);
+//     const arrowLeft = Math.floor(bubble.getBoundingClientRect().width/2 - arrow.getBoundingClientRect().width/2);
+//     const errRight = (Math.floor(bubble.getBoundingClientRect().x) + Math.floor(bubble.getBoundingClientRect().width + paddingRight)) - (window.innerWidth - 5);
+//     const errLeft = Math.floor(bubble.getBoundingClientRect().x) - 16;
 
 
-    if (errLeft < 0) {
-        bubble.style.left = (bubbleLeft - errLeft) + 'px';
-        arrow.style.left = (arrowLeft + errLeft) + 'px';
-    } else if (errRight > 0) {
-        bubble.style.left = (bubbleLeft - errRight + 5) + 'px';
-        arrow.style.left = (arrowLeft + errRight - 5) + 'px';
+//     if (errLeft < 0) {
+//         bubble.style.left = (bubbleLeft - errLeft) + 'px';
+//         arrow.style.left = (arrowLeft + errLeft) + 'px';
+//     } else if (errRight > 0) {
+//         bubble.style.left = (bubbleLeft - errRight + 5) + 'px';
+//         arrow.style.left = (arrowLeft + errRight - 5) + 'px';
 
-    }
+//     }
 
-}
+// }
 
 function createSlider() {
     const panel = document.createElement("div");
@@ -789,11 +789,11 @@ function storiesAutoClick() {
 
 
 
-                    if (mutation.addedNodes[0].className === "_37FmC _1iVZc _1e4JI") {
-                        moveHintDiv(mutation.target.firstElementChild);
-                        mutation.target.style.background = 'purple';
-                        mutation.target.style.color = 'white';
-                    }
+//                     if (mutation.addedNodes[0].className === "_37FmC _1iVZc _1e4JI") {
+//                         moveHintDiv(mutation.target.firstElementChild);
+//                         mutation.target.style.background = 'purple';
+//                         mutation.target.style.color = 'white';
+//                     }
 
                     if (mutation.addedNodes[0].className === '_3yGet _1p08S _1Ag8k _1WH_r') {
                         neco('right').then(()=>{
@@ -837,7 +837,7 @@ function storiesAutoClick() {
                         });
                     }
 
-                    if (mutation.addedNodes[0].className === '_3F62c') {
+                    if (mutation.addedNodes[0].className === '_26xNT') {
                         createNumber();
                         createSlider();
                     }
@@ -852,10 +852,10 @@ function storiesAutoClick() {
                             window.removeEventListener("resize", hideShowKey);
                         }
                     }
-                    if (mutation.removedNodes[0].className === "_37FmC _1iVZc _1e4JI") {
-                        mutation.target.style.background = '';
-                        mutation.target.style.color = '';
-                    }
+//                     if (mutation.removedNodes[0].className === "_37FmC _1iVZc _1e4JI") {
+//                         mutation.target.style.background = '';
+//                         mutation.target.style.color = '';
+//                     }
                 }
             }
         }
