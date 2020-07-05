@@ -613,9 +613,7 @@ function neco(color) {
 
         const reviews = document.querySelectorAll('._1obm2 ._36Uyg');
         for (let i = 0; i < reviews.length; i ++) {
-            document.querySelector('.panel')
-                .children[document.querySelector('.panel').children.length - 1]
-                .appendChild(reviews[i].cloneNode(true));
+            divMain.appendChild(reviews[i].cloneNode(true));
         }
 
          if (color === 'right') {
