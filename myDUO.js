@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.2.9
+// @version      2.9.3.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,7 +9,7 @@
 // @include      https://duolingo.com/*
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.1/Sortable.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js
 // @resource     customCSS https://raw.githubusercontent.com/xeyqe/duolingo-style/master/darkDUO.css
 // @grant        GM_getResourceText
 // ==/UserScript==
@@ -838,8 +838,10 @@ function storiesAutoClick() {
                     }
 
                     if (mutation.addedNodes[0].className === '_26xNT') {
-                        createNumber();
                         createSlider();
+                    }
+                    if (mutation.addedNodes[0].className === '_3F62c') {
+                        createNumber();
                     }
                 }
 
