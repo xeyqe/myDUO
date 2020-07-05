@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.3.0
+// @version      2.9.3.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -544,11 +544,17 @@ function neco(color) {
         let yourAnswer;
         let header;
 
-        let div = document.createElement("div");
-        div.classList.add("panelItem");
-        div.classList.add(color);
+        const divMain = document.createElement("div");
+        divMain.classList.add("panelItem");
+        divMain.classList.add(color);
 
-        document.querySelector('.panel').appendChild(div);
+        if (color === 'wrong') {
+            const firstNode = document.querySelector('.panel').firstChild;
+            document.querySelector('.panel').insertBefore(divMain, firstNode);
+        } else {
+            document.querySelector('.panel').appendChild(divMain);
+        }
+
 
         let emptyDiv = document.createElement("div");
         if (document.querySelector('[data-test="challenge-header"]')) {
@@ -559,7 +565,7 @@ function neco(color) {
             const div = emptyDiv.cloneNode();
             div.innerText = header;
             div.style.fontWeight = "900";
-            document.querySelector('.panel').children[document.querySelector('.panel').children.length - 1].appendChild(div);
+            divMain.appendChild(div);
         }
 
         if (document.querySelector('[data-test="hint-sentence"]')) {
@@ -595,14 +601,14 @@ function neco(color) {
             const div = emptyDiv.cloneNode();
             div.innerText = question;
             div.style.color = 'black';
-            document.querySelector('.panel').children[document.querySelector('.panel').children.length - 1].appendChild(div);
+            divMain.appendChild(div);
         }
 
         if (yourAnswer) {
             const div = emptyDiv.cloneNode();
             div.innerText = yourAnswer;
             div.style.color = '#589316';
-            document.querySelector('.panel').children[document.querySelector('.panel').children.length - 1].appendChild(div);
+            divMain.appendChild(div);
         }
 
         const reviews = document.querySelectorAll('._1obm2 ._36Uyg');
