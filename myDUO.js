@@ -841,7 +841,7 @@ function storiesAutoClick() {
                         });
                     }
 
-                    if (mutation.addedNodes[0].className === '_1JwI_') {
+                    if (mutation.addedNodes[0].className === '_1JwI_' || mutation.addedNodes[0].querySelector('._1JwI_')) {
                         createNumber();
                         createSlider();
                     }
