@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.3.4
+// @version      2.9.3.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -10,7 +10,7 @@
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js
-// @resource     customCSS https://raw.githubusercontent.com/xeyqe/duolingo-style/master/darkDUO.css
+// @resource     customCSS https://raw.githubusercontent.com/m-khvoinitsky/dark-background-light-text-extension/master/methods/invert.css
 // @grant        GM_getResourceText
 // ==/UserScript==
 
@@ -294,6 +294,10 @@ function tempAlert(input) {
     el = document.createElement("div");
 
     el.setAttribute('id', 'tempAlert');
+
+    for (const a of input.querySelectorAll('a')) {
+        a.remove();
+    }
 
     el.appendChild(input.cloneNode(true));
 
@@ -622,10 +626,8 @@ function neco(color) {
         }
 
         if (color === 'right') {
-            if (document.querySelector('._1obm2 .TnCw3._11xjL')) {
-                tempAlert(document.querySelector('._1obm2 .TnCw3._11xjL'));
-            } else {
-                tempAlert(document.querySelector('h2'));
+            if (document.querySelector('[data-test="blame blame-correct"]')) {
+                tempAlert(document.querySelector('[data-test="blame blame-correct"]').children[1]);
             }
         }
 
@@ -738,6 +740,11 @@ function storiesAutoClick() {
 
 (function() {
     'use strict';
+
+    var el = document.createElement('DIV');
+    el.id = 'mybpwaycfxccmnp-dblt-backdrop-filter'
+    document.querySelector('html').insertBefore(el, document.querySelector('body'))
+
     window.addEventListener('load', function() {
         if (document.querySelector(father)) {
             document.querySelector(father).swiper("swipeLeft", swipeFunc);
