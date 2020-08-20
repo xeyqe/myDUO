@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.3.5
+// @version      2.9.3.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -10,7 +10,7 @@
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js
-// @resource     customCSS https://raw.githubusercontent.com/m-khvoinitsky/dark-background-light-text-extension/master/methods/invert.css
+// @resource     customCSS https://raw.githubusercontent.com/xeyqe/dark-background-light-text-extension/master/methods/invert.css
 // @grant        GM_getResourceText
 // ==/UserScript==
 
@@ -361,35 +361,32 @@ function autoClick() {
     }
 
     if (localStorage.getItem('autoclick') === 'yes') {
-        if (document.querySelector('._1Ag8k._1p08S')) {
-            if (document.querySelector('[data-test="player-next"]')) {
-                document.querySelector('[data-test="player-next"]').click();
-            }
+        if (document.querySelector('[data-test="player-next"]')) {
+            document.querySelector('[data-test="player-next"]').click();
         }
+
     }
 }
 
 function reclick() {
-    let clickedBtt = document.querySelectorAll('._3ysW7 button');
-    let unclickedBtt = Array.from(document.querySelectorAll('._3OG7A button:disabled'));
+    let clickedBtt = document.querySelectorAll('._1uasP button');
+    let unclickedBtt = Array.from(document.querySelectorAll('[data-test="word-bank"] button:disabled'));
 
     for (let i = 0; i < clickedBtt.length; i++) {
         clickedBtt[i].click();
-        let el2Click;
 
-        if (window.innerWidth>700 && window.innerWidth>window.innerHeight) {
-            el2Click = unclickedBtt.find(el => el.innerText.split('\n')[1] === clickedBtt[i].innerText && !el.disabled);
-        } else {
-            el2Click = unclickedBtt.find(el => el.innerText.split('\n')[0] === clickedBtt[i].innerText && !el.disabled);
+        for (const bu of unclickedBtt) {
+            if (!bu.disabled) {
+                bu.click();
+                continue;
+            }
         }
-
-        if (el2Click) el2Click.click();
     }
 
 }
 
 function draggable() {
-    const output = document.querySelector('._3ysW7');
+    const output = document.querySelector('.PcKtj');
 
     Sortable.create(output, {
         onEnd: function (evt){ reclick() },
@@ -414,9 +411,10 @@ function keyboardShortcuts() {
                 }
             });
         } else if (e.code === "Backspace") {
-            let node = document.querySelector('._3ysW7');
-            if (node && node.children) {
-                node.childNodes[node.childNodes.length-1].querySelector('button').click();
+            let node = document.querySelectorAll('._1uasP button');
+
+            if (node[node.length - 1]) {
+                node[node.length - 1].click();
             }
         }
     }
@@ -426,7 +424,7 @@ function keyboardShortcuts() {
 }
 
 function hideShowKey() {
-    const list = document.querySelectorAll('._3uWfo [data-test="challenge-tap-token"]');
+    const list = document.querySelectorAll('[data-test="word-bank"] button');
 
     const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
                         "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
@@ -580,6 +578,26 @@ function neco(color) {
             question = document.querySelector('._13Ae5._1JtWw._1tY-d._66Mfn._2NQKM').innerText;
         }
 
+        if (document.querySelector('[data-test="challenge-translate-prompt"]')) {
+            question = document.querySelector('[data-test="challenge-translate-prompt"]').textContent;
+        }
+
+        if (document.querySelector('[data-test="challenge challenge-judge"]')) {
+            if (document.querySelector('._3-JBe')) {
+                question = document.querySelector('._3-JBe').textContent;
+            }
+            if (document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]')) {
+                yourAnswer = document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]').textContent;
+            }
+        }
+
+        if (document.querySelector('[data-test="challenge challenge-form"]')) {
+            question = document.querySelector('[data-test="challenge-form-prompt"]').getAttribute('data-prompt');
+            yourAnswer = document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]').textContent;
+        }
+
+
+
         if (document.querySelector('[data-test="challenge-translate-input"]')) {
             yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').innerHTML;
         }
@@ -590,6 +608,15 @@ function neco(color) {
 
         if (document.querySelector('._3ysW7')) {
             yourAnswer = document.querySelector('._3ysW7').innerText.replace(/\n/g, ' ');
+        }
+
+        // draggable
+        const buttons = document.querySelectorAll('._1uasP button');
+        if (buttons && buttons.length) {
+            yourAnswer = '';
+            for (const bu of buttons) {
+                yourAnswer = yourAnswer + ' ' + bu.textContent;
+            }
         }
 
         const pictures = document.querySelectorAll('[data-test="challenge-choice-card"]');
@@ -615,19 +642,24 @@ function neco(color) {
             divMain.appendChild(div);
         }
 
-        const review = document.querySelector('[data-test="blame blame-incorrect"]'); // document.querySelectorAll('._1obm2 ._36Uyg');
+        const review = document.querySelector('[data-test="blame blame-incorrect"]');
         if (review && color === 'wrong') {
             const ass = review.querySelectorAll('a');
             for (const a of ass) {
-                console.log(a);
                 a.remove();
             }
-            divMain.appendChild(review.cloneNode(true));
+
+            divMain.appendChild(review.lastElementChild.cloneNode(true));
         }
 
         if (color === 'right') {
             if (document.querySelector('[data-test="blame blame-correct"]')) {
                 tempAlert(document.querySelector('[data-test="blame blame-correct"]').children[1]);
+                if (document.querySelector('[data-test="challenge challenge-listen"]') ||
+                    document.querySelector('[data-test="challenge challenge-listenTap"]') ||
+                    document.querySelectorAll('[data-test="challenge challenge-speak"]')) {
+                    divMain.appendChild(document.querySelector('[data-test="blame blame-correct"]').children[1].cloneNode(true));
+                }
             }
         }
 
@@ -676,8 +708,6 @@ function createThemeSwitcherButton() {
 }
 
 function appendThemeSwitcher() {
-    console.log('appendThemeSwitcher');
-    console.log(document);
 
     if (document.querySelector('._3F_8q')) {
         if (window.innerWidth < 700) {
@@ -731,7 +761,6 @@ function storiesAutoClick() {
     }
     let delay;
     lastWord.length < 5 ? delay = (lastWord.length*100) + 300 : delay = lastWord.length*100;
-    console.log(delay);
     storyContinueButtonTimeout = setTimeout(() => {
         document.querySelector('button[autofocus]').click()
     }, delay);
@@ -782,41 +811,30 @@ function storiesAutoClick() {
                 }
 
                 if (mutation.target === document.querySelector('button:enabled[data-test=player-next]') && mutation.type === 'childList') {
-                    console.log(mutation);
-                    setTimeout(() => {
-                        const bgColor = window.getComputedStyle(mutation.target, null).getPropertyValue("background-color");
-                        console.log(bgColor);
-                        if (bgColor === 'rgb(88, 167, 0)') {
-                            neco('right').then(() => {
-                                autoClick();
-                                if (counterBool) {
-                                    changeCounter('right');
-                                } else {
-                                    counterBool = true;
-                                }
-                            });
-                            mutation.target.click();
-                        } else {
-                            neco('wrong').then(() => {
-                                if (counterBool) {
-                                    changeCounter('bad');
-                                } else {
-                                    counterBool = true;
-                                }
-                            });
-
-                        }
-                    }, 100);
+                    //                         const bgColor = window.getComputedStyle(mutation.target, null).getPropertyValue("background-color");
+                    //                         if (bgColor === 'rgb(88, 167, 0)') {
+                    if (document.querySelector('[data-test="blame blame-correct"]')) {
+                        neco('right').then(() => {
+                            autoClick();
+                            if (counterBool) {
+                                changeCounter('right');
+                            } else {
+                                counterBool = true;
+                            }
+                        });
+                    } else {
+                        neco('wrong').then(() => {
+                            if (counterBool) {
+                                changeCounter('bad');
+                            } else {
+                                counterBool = true;
+                            }
+                        });
+                    }
                 }
-                //                 if (mutation.attributeName === '')
 
 
                 if (mutation.addedNodes[0] && mutation.addedNodes[0].tagName === 'DIV') {
-                    console.log(mutation.addedNodes[0]);
-
-                    //                     if (document.querySelector('.blame-wrap.grade-correct-footer')) {
-                    //                         document.querySelector('button.continue').click();
-                    //                     }
 
                     if (mutation.addedNodes[0].contains(document.querySelector('._1bfyi'))) {
                         document.querySelector('._1bfyi').swiper('swipeLeft', () => {
@@ -840,34 +858,7 @@ function storiesAutoClick() {
                         appendThemeSwitcher();
                     }
 
-
-
-                    //                     if (mutation.addedNodes[0].className === "_37FmC _1iVZc _1e4JI") {
-                    //                         moveHintDiv(mutation.target.firstElementChild);
-                    //                         mutation.target.style.background = 'purple';
-                    //                         mutation.target.style.color = 'white';
-                    //                     }
-
-                    //                     if (mutation.addedNodes[0].className === '_3yGet _1p08S _1Ag8k _1WH_r') {
-                    //                         neco('right').then(()=>{
-                    //                             autoClick();
-                    //                             if (counterBool) {
-                    //                                 changeCounter('right');
-                    //                             } else {
-                    //                                 counterBool = true;
-                    //                             }
-                    //                         });
-                    //                     }
-                    //                     else if (mutation.addedNodes[0].className === '_3yGet _1p08S _1Ag8k _1S5ta') {
-                    //                         neco('wrong').then(()=> {
-                    //                             if (counterBool) {
-                    //                                 changeCounter('bad');
-                    //                             } else {
-                    //                                 counterBool = true;
-                    //                             }
-                    //                         });
-                    //                     }
-                    else if (mutation.addedNodes[0].contains(document.querySelector('._3ysW7'))) {
+                    else if (mutation.addedNodes[0].contains(document.querySelector('[data-test="challenge challenge-listenTap"]'))) {
                         draggable();
                         keyboardShortcuts();
                     }
@@ -906,10 +897,6 @@ function storiesAutoClick() {
                             window.removeEventListener("resize", hideShowKey);
                         }
                     }
-                    //                     if (mutation.removedNodes[0].className === "_37FmC _1iVZc _1e4JI") {
-                    //                         mutation.target.style.background = '';
-                    //                         mutation.target.style.color = '';
-                    //                     }
                 }
             }
         }
