@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.3.6
+// @version      2.9.3.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -810,10 +810,9 @@ function storiesAutoClick() {
                     storiesAutoClick();
                 }
 
-                if (mutation.target === document.querySelector('button:enabled[data-test=player-next]') && mutation.type === 'childList') {
-                    //                         const bgColor = window.getComputedStyle(mutation.target, null).getPropertyValue("background-color");
-                    //                         if (bgColor === 'rgb(88, 167, 0)') {
-                    if (document.querySelector('[data-test="blame blame-correct"]')) {
+                if (mutation.addedNodes[0] && mutation.addedNodes[0].tagName === 'DIV') {
+
+                    if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-correct"]'))) {
                         neco('right').then(() => {
                             autoClick();
                             if (counterBool) {
@@ -822,7 +821,9 @@ function storiesAutoClick() {
                                 counterBool = true;
                             }
                         });
-                    } else {
+                    }
+
+                    if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-incorrect"]'))) {
                         neco('wrong').then(() => {
                             if (counterBool) {
                                 changeCounter('bad');
@@ -831,10 +832,7 @@ function storiesAutoClick() {
                             }
                         });
                     }
-                }
 
-
-                if (mutation.addedNodes[0] && mutation.addedNodes[0].tagName === 'DIV') {
 
                     if (mutation.addedNodes[0].contains(document.querySelector('._1bfyi'))) {
                         document.querySelector('._1bfyi').swiper('swipeLeft', () => {
