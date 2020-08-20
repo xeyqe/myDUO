@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.3.7
+// @version      2.9.3.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -156,6 +156,9 @@ const css = [".switch {",
              "}",
              "[data-test=challenge-tap-token] {",
              "    text-align: center;",
+             "}",
+             "._2LMXW:after {",
+             "    height: 0;",
              "}",
              "@media (min-width: 700px) {",
              "    ._30i_q, ._1yghA {",
