@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.3.9
+// @version      2.9.4.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -160,6 +160,14 @@ const css = [".switch {",
              "._2LMXW:after {",
              "    height: 0;",
              "}",
+             ".panel.hide {",
+             "    transform: translateX(calc(-100% + 1.2rem));",
+             "    transition: .5s ease-in-out;",
+             "}",
+             ".panel.show {",
+             "    transform: translateX(0%);",
+             "    transition: .5s ease-in-out;",
+             "}",
              "@media (min-width: 700px) {",
              "    ._30i_q, ._1yghA {",
              "        display: block;",
@@ -249,12 +257,12 @@ Node.prototype.swiper = function(direction, func) {
 
 function swipeFunc(event) {
     if (mayISwipe(event)) {
-        if (!document.querySelector('.hide')) {
+        if (!document.querySelector('.show')) {
             if (document.querySelector('[data-test="player-next"]')) {
                 document.querySelector('[data-test="player-next"]').click();
             }
         }
-        else if (!document.querySelector('.show')) {
+        else if (!document.querySelector('.hide')) {
             showHidePanel();
         }
     }
@@ -478,7 +486,7 @@ function hideShowKey() {
 function createSlider() {
     const panel = document.createElement("div");
 
-    panel.setAttribute('class','panel show');
+    panel.setAttribute('class','panel hide');
 
     document.querySelector(father).appendChild(panel);
 
@@ -486,7 +494,7 @@ function createSlider() {
         const isClickInside = document.querySelector('.panel').contains(event.target) || panel === event.target;
 
         if (!isClickInside) {
-            if (document.querySelector('.hide')) {
+            if (document.querySelector('.show')) {
                 showHidePanel();
             }
         }
@@ -503,41 +511,13 @@ function createSlider() {
 
 function showHidePanel(event){
     if (mayISwipe(event)) {
-        if (document.querySelector('.panel div')) {
-
-            const el = document.querySelector('.panel');
-            let pos = Math.floor(el.getBoundingClientRect().x);
-            const hidePos = -1*(Math.floor(el.getBoundingClientRect().width)-20);
-
-            let interval;
-            if(document.querySelector('.panel.show')) {
-                interval = setInterval(show, 10);
-            } else {
-                interval = setInterval(hide, 10);
-            }
-
-            function show() {
-                if (pos >= 0) {
-                    clearInterval(interval);
-                    el.classList.remove("show");
-                    el.classList.add("hide");
-                } else {
-                    pos = pos + 10;
-                    el.style.left = pos + 'px';
-                }
-            }
-
-            function hide() {
-                if (pos <= hidePos) {
-                    clearInterval(interval);
-                    el.classList.remove("hide");
-                    el.classList.add("show");
-                } else {
-                    pos = pos - 10;
-                    el.style.left = pos + 'px';
-                }
-            }
-
+        const panel = document.querySelector('.panel');
+        if (panel.classList.contains('show')) {
+            panel.classList.remove('show');
+            panel.classList.add('hide');
+        } else {
+            panel.classList.add('show');
+            panel.classList.remove('hide');
         }
     }
 }
@@ -667,10 +647,13 @@ function neco(color) {
         }
 
 
+        const panel = document.querySelector('.panel.show');
         setTimeout(()=>{
-            if (document.querySelector('.show')) {
-                document.querySelector('.panel').style.left = -document.querySelector('.panel')
-                    .getBoundingClientRect().width + 20 +'px';
+            if (panel) {
+//                 document.querySelector('.panel').style.left = -document.querySelector('.panel')
+//                     .getBoundingClientRect().width + 20 +'px';
+                panel.classList.remove('show');
+                panel.classList.add('hide');
             }
         },20);
 
