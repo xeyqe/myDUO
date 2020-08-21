@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.4.0
+// @version      2.9.4.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -153,6 +153,13 @@ const css = [".switch {",
              "    max-height: 92%;",
              "    z-index: 1000;",
              "    scrollbar-width: none;",
+             "}",
+             "#my-stories-bu {",
+             "    z-index: 100000;",
+             "    position: fixed;",
+             "    left: 50%;",
+             "    top: 0rem;",
+             "    transform: translateX(-50%);",
              "}",
              "[data-test=challenge-tap-token] {",
              "    text-align: center;",
@@ -457,31 +464,6 @@ function hideShowKey() {
     }
 }
 
-// not needed anymore
-// function moveHintDiv(el) {
-//     let paddingLeft = window.getComputedStyle(document.querySelector('._2vedk')).paddingLeft;
-//     paddingLeft = parseInt(paddingLeft.substring(0, paddingLeft.length - 2));
-//     let paddingRight = window.getComputedStyle(document.querySelector('._2vedk')).paddingRight;
-//     paddingRight = parseInt(paddingRight.substring(0, paddingRight.length - 2));
-
-//     const arrow = document.querySelector('.YVhFK');
-//     const bubble = document.querySelector('div._37FmC._1iVZc._1e4JI');
-//     const bubbleLeft = Math.floor(bubble.parentElement.getBoundingClientRect().width/2);
-//     const arrowLeft = Math.floor(bubble.getBoundingClientRect().width/2 - arrow.getBoundingClientRect().width/2);
-//     const errRight = (Math.floor(bubble.getBoundingClientRect().x) + Math.floor(bubble.getBoundingClientRect().width + paddingRight)) - (window.innerWidth - 5);
-//     const errLeft = Math.floor(bubble.getBoundingClientRect().x) - 16;
-
-
-//     if (errLeft < 0) {
-//         bubble.style.left = (bubbleLeft - errLeft) + 'px';
-//         arrow.style.left = (arrowLeft + errLeft) + 'px';
-//     } else if (errRight > 0) {
-//         bubble.style.left = (bubbleLeft - errRight + 5) + 'px';
-//         arrow.style.left = (arrowLeft + errRight - 5) + 'px';
-
-//     }
-
-// }
 
 function createSlider() {
     const panel = document.createElement("div");
@@ -650,8 +632,6 @@ function neco(color) {
         const panel = document.querySelector('.panel.show');
         setTimeout(()=>{
             if (panel) {
-//                 document.querySelector('.panel').style.left = -document.querySelector('.panel')
-//                     .getBoundingClientRect().width + 20 +'px';
                 panel.classList.remove('show');
                 panel.classList.add('hide');
             }
@@ -694,26 +674,6 @@ function createThemeSwitcherButton() {
 }
 
 function appendThemeSwitcher() {
-
-//     if (document.querySelector('._3F_8q')) {
-//         if (window.innerWidth < 700) {
-//             document.querySelector('._3F_8q').parentNode.parentNode.append(label);
-//             label.style.top = '4em';
-//         }
-//         else {
-//             document.querySelector('._3F_8q').append(label);
-//         }
-//     }
-//     else if (document.querySelector('._31whh')) {
-//         document.querySelector('._31whh').append(label);
-
-//         if (localStorage.getItem('themed') === '1') {
-//             document.querySelector('#checkbx').checked = true;
-//         }
-//     } else if (document.querySelector('._1frzL')) {
-//         document.querySelector('._1frzL').append(label);
-//     }
-
     if (document.querySelector('._3TwVI')) {
         document.querySelector('._3TwVI').append(label);
         if (localStorage.getItem('themed') === '1' && document.querySelector('#checkbx')) {
@@ -733,29 +693,49 @@ function mayISwipe(event) {
     }
 }
 
+let storiesAuto = true;
 let storyContinueButtonTimeout;
+let storiesHiddenLength;
 function storiesAutoClick() {
-    let lastWord = 1;
-    const array = document.querySelectorAll('._3sNGF._3j32v:not(._2n3Ta)');
-    const selected = array[array.length - 1];
-    if (selected) {
-        if (selected.innerText.includes(' ')) {
-            lastWord = selected.innerText.match(' +[^ ]+$')[0];
-        } else {
-            lastWord = selected.innerText;
-        }
-    }
     let delay;
-    lastWord.length < 5 ? delay = (lastWord.length*100) + 300 : delay = lastWord.length*100;
+
+    if (!storiesHiddenLength) {
+
+        const array = document.querySelectorAll('._3sNGF._3j32v:not(._2n3Ta)');
+        const selected = array[array.length - 1];
+        if (selected) {
+            let myLength;
+            const phrases = selected.querySelectorAll('.phrase');
+            if (phrases[phrases.length - 1] && phrases[phrases.length - 1].textContent && phrases[phrases.length - 1].textContent.length > 1) {
+                myLength = phrases[phrases.length - 1].textContent.length;
+            } else if (phrases[phrases.length - 2] && phrases[phrases.length - 2].textContent && phrases[phrases.length - 2].textContent.length > 1) {
+                myLength = phrases[phrases.length - 2].textContent.length;
+            } else if (document.querySelector('button[autofocus]')) {
+                document.querySelector('button[autofocus]').click();
+                return;
+            }
+            delay = myLength < 5 ? (myLength*150) + 300 : myLength*150;
+        }
+
+    } else {
+        delay = storiesHiddenLength < 5 ? (storiesHiddenLength*150) + 300 : storiesHiddenLength*150;
+    }
     storyContinueButtonTimeout = setTimeout(() => {
-        document.querySelector('button[autofocus]').click()
+        if (document.querySelector('button[autofocus]')) {
+            document.querySelector('button[autofocus]').click();
+        }
+        if (storiesHiddenLength) {
+            storiesHiddenLength = null;
+            setTimeout(() => {
+                document.querySelector('button[autofocus]').click();
+            }, 100);
+        }
     }, delay);
 }
 
 
 (function() {
     'use strict';
-    console.log('hovno z: ' + window.location);
 
     var el = document.createElement('DIV');
     el.id = 'mybpwaycfxccmnp-dblt-backdrop-filter'
@@ -787,17 +767,43 @@ function storiesAutoClick() {
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
 
+
                 if (mutation.attributeName === "autofocus" &&
-                    mutation.target === document.querySelector('button[autofocus]') &&
                     !document.querySelector('textarea')) {
                     if (storyContinueButtonTimeout) {
                         clearTimeout(storyContinueButtonTimeout);
                         storyContinueButtonTimeout = null;
                     }
-                    storiesAutoClick();
+                    if (storiesAuto) {
+                        storiesAutoClick();
+                    }
                 }
 
-                if (mutation.addedNodes[0] && mutation.addedNodes[0].tagName === 'DIV') {
+                if (mutation.addedNodes[0]) {
+
+                    if (mutation.addedNodes[0].contains(document.querySelector('._3gjcv'))) {
+                        const bu = document.createElement('BUTTON');
+                        bu.innerText = 'A';
+                        bu.id = 'my-stories-bu';
+                        bu.style.zIndex = 10000;
+                        bu.addEventListener('click', () => {
+                            storiesAuto = !storiesAuto;
+                            document.querySelector('#my-stories-bu').innerText = storiesAuto ? 'A' : 'M';
+                        });
+                        document.querySelector('._3gjcv').appendChild(bu);
+                    }
+
+                    if (mutation.addedNodes[0].contains(document.querySelector('[data-test="stories-choice"]'))) {
+                        const storiesEll = document.querySelectorAll('._3sNGF._3j32v:not(._2n3Ta)');
+                        const storiesEl = storiesEll[storiesEll.length - 1];
+                        const el = storiesEl.querySelector('._2igzU._1xWrt._2P5W7');
+                        if (el) {
+                            const phrases = storiesEl.querySelectorAll('.phrase');
+                            if (phrases && phrases[phrases.length - 1]) {
+                                storiesHiddenLength = phrases[phrases.length - 1].textContent.length
+                            }
+                        }
+                    }
 
                     if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-correct"]'))) {
                         neco('right').then(() => {
