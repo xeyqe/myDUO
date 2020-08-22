@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.4.1
+// @version      2.9.4.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -706,7 +706,11 @@ function storiesAutoClick() {
         if (selected) {
             let myLength;
             const phrases = selected.querySelectorAll('.phrase');
-            if (phrases[phrases.length - 1] && phrases[phrases.length - 1].textContent && phrases[phrases.length - 1].textContent.length > 1) {
+            const regex = /^\W+$/;
+            if (phrases[phrases.length - 1] &&
+                phrases[phrases.length - 1].textContent &&
+                phrases[phrases.length - 1].textContent.length > 1 &&
+                !regex.test(phrases[phrases.length - 1].textContent)) {
                 myLength = phrases[phrases.length - 1].textContent.length;
             } else if (phrases[phrases.length - 2] && phrases[phrases.length - 2].textContent && phrases[phrases.length - 2].textContent.length > 1) {
                 myLength = phrases[phrases.length - 2].textContent.length;
@@ -714,11 +718,14 @@ function storiesAutoClick() {
                 document.querySelector('button[autofocus]').click();
                 return;
             }
-            delay = myLength < 5 ? (myLength*150) + 300 : myLength*150;
+            delay = myLength < 5 ? (myLength*100) + 300 : myLength*100;
+            if (selected.querySelector('._2ufQI')) {
+                delay += selected.querySelector('._2ufQI').textContent.length * 100;
+            }
         }
 
     } else {
-        delay = storiesHiddenLength < 5 ? (storiesHiddenLength*150) + 300 : storiesHiddenLength*150;
+        delay = storiesHiddenLength < 5 ? (storiesHiddenLength*100) + 300 : storiesHiddenLength*100;
     }
     storyContinueButtonTimeout = setTimeout(() => {
         if (document.querySelector('button[autofocus]')) {
@@ -726,9 +733,6 @@ function storiesAutoClick() {
         }
         if (storiesHiddenLength) {
             storiesHiddenLength = null;
-            setTimeout(() => {
-                document.querySelector('button[autofocus]').click();
-            }, 100);
         }
     }, delay);
 }
