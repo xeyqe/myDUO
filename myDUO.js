@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.4.4
+// @version      2.9.4.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -597,9 +597,9 @@ function neco(color) {
             divMain.appendChild(div);
         }
 
-        const review = document.querySelector('[data-test="blame blame-incorrect"]').cloneNode(true);
+        const review = document.querySelector('[data-test="blame blame-incorrect"]');
         if (review && color === 'wrong') {
-            const ass = review.querySelectorAll('a');
+            const ass = review.cloneNode(true).querySelectorAll('a');
             for (const a of ass) {
                 a.remove();
             }
