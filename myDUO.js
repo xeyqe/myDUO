@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.4.2
+// @version      2.9.4.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -154,7 +154,7 @@ const css = [".switch {",
              "    z-index: 1000;",
              "    scrollbar-width: none;",
              "}",
-             "#my-stories-bu {",
+             "#my-autoclick-bu {",
              "    z-index: 100000;",
              "    position: fixed;",
              "    left: 50%;",
@@ -372,13 +372,7 @@ function removeTempAlert(num) {
 }
 
 function autoClick() {
-    let mayI;
-    if (!localStorage.getItem('autoclick')) {
-        mayI = confirm('Do you want to enable autoClick? (you are correct dialog will be skipped)');
-        mayI ? localStorage.setItem('autoclick', 'yes') : localStorage.setItem('autoclick', 'no');
-    }
-
-    if (localStorage.getItem('autoclick') === 'yes') {
+    if (testingAuto) {
         if (document.querySelector('[data-test="player-next"]')) {
             document.querySelector('[data-test="player-next"]').click();
         }
@@ -693,7 +687,6 @@ function mayISwipe(event) {
     }
 }
 
-let storiesAuto = true;
 let storyContinueButtonTimeout;
 let storiesHiddenLength;
 function storiesAutoClick() {
@@ -735,6 +728,32 @@ function storiesAutoClick() {
             storiesHiddenLength = null;
         }
     }, delay);
+}
+
+let storiesAuto = localStorage.getItem('stories_autoclick') && localStorage.getItem('stories_autoclick') === 'yes';
+let testingAuto = localStorage.getItem('autoclick') && localStorage.getItem('autoclick') === 'yes';
+function createAutoClickButton(isStories) {
+    const bu = document.createElement('BUTTON');
+    bu.id = 'my-autoclick-bu';
+    bu.style.zIndex = isStories ? 10000 : 10;
+
+    if (isStories) {
+        bu.innerText = storiesAuto ? 'A' : 'M';
+        bu.addEventListener('click', () => {
+            storiesAuto = !storiesAuto;
+            document.querySelector('#my-autoclick-bu').innerText = storiesAuto ? 'A' : 'M';
+            localStorage.setItem('stories_autoclick', storiesAuto ? 'yes' : 'no');
+        });
+        document.querySelector('._3gjcv').appendChild(bu);
+    } else {
+        bu.innerText = testingAuto ? 'A' : 'M';
+        bu.addEventListener('click', () => {
+            testingAuto = !testingAuto;
+            document.querySelector('#my-autoclick-bu').innerText = testingAuto ? 'A' : 'M';
+            localStorage.setItem('autoclick', testingAuto ? 'yes' : 'no');
+        });
+        document.querySelector('.nP82K').appendChild(bu);
+    }
 }
 
 
@@ -786,15 +805,16 @@ function storiesAutoClick() {
                 if (mutation.addedNodes[0]) {
 
                     if (mutation.addedNodes[0].contains(document.querySelector('._3gjcv'))) {
-                        const bu = document.createElement('BUTTON');
-                        bu.innerText = 'A';
-                        bu.id = 'my-stories-bu';
-                        bu.style.zIndex = 10000;
-                        bu.addEventListener('click', () => {
-                            storiesAuto = !storiesAuto;
-                            document.querySelector('#my-stories-bu').innerText = storiesAuto ? 'A' : 'M';
-                        });
-                        document.querySelector('._3gjcv').appendChild(bu);
+//                         const bu = document.createElement('BUTTON');
+//                         bu.innerText = 'A';
+//                         bu.id = 'my-autoclick-bu';
+//                         bu.style.zIndex = 10000;
+//                         bu.addEventListener('click', () => {
+//                             storiesAuto = !storiesAuto;
+//                             document.querySelector('#my-autoclick-bu').innerText = storiesAuto ? 'A' : 'M';
+//                         });
+//                         document.querySelector('._3gjcv').appendChild(bu);
+                        createAutoClickButton(true);
                     }
 
                     if (mutation.addedNodes[0].contains(document.querySelector('[data-test="stories-choice"]'))) {
@@ -878,6 +898,7 @@ function storiesAutoClick() {
                     if (mutation.addedNodes[0].className === '_3FiYg' && document.querySelector('.nP82K')) {
                         createNumber();
                         createSlider();
+                        createAutoClickButton(false);
                     }
 
                 }
