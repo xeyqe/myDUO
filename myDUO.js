@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.4.3
+// @version      2.9.4.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -178,19 +178,19 @@ const css = [".switch {",
              "@media (min-width: 700px) {",
              "    ._30i_q, ._1yghA {",
              "        display: block;",
-             "    }",
-             "}",
-             "@media only screen and (orientation: portrait) {",
-             "    @media (min-width: 700px) {",
-             "        #tempAlert {",
-             "            font-size: 2.5rem;",
-             "            line-height: 1;",
-             "        }",
-             "        .panel * {",
-             "            font-size: 2.5rem !important;",
-             "        }",
-             "    }",
-             "}"
+             "    }"//,
+//              "}",
+//              "@media only screen and (orientation: portrait) {",
+//              "    @media (min-width: 700px) {",
+//              "        #tempAlert {",
+//              "            font-size: 2.5rem;",
+//              "            line-height: 1;",
+//              "        }",
+//              "        .panel * {",
+//              "            font-size: 2.5rem !important;",
+//              "        }",
+//              "    }",
+//              "}"
             ].join("\n");
 
 function addThemes() {
@@ -473,16 +473,12 @@ function createSlider() {
             if (document.querySelector('.show')) {
                 showHidePanel();
             }
+        } else {
+            if (document.querySelector('.hide')) {
+                showHidePanel();
+            }
         }
     });
-
-    panel.addEventListener("click", function(e){
-        e.preventDefault();
-        if (document.querySelector('.show')) {
-            showHidePanel();
-        }
-    });
-
 }
 
 function showHidePanel(event){
@@ -601,7 +597,7 @@ function neco(color) {
             divMain.appendChild(div);
         }
 
-        const review = document.querySelector('[data-test="blame blame-incorrect"]');
+        const review = document.querySelector('[data-test="blame blame-incorrect"]').cloneNode(true);
         if (review && color === 'wrong') {
             const ass = review.querySelectorAll('a');
             for (const a of ass) {
