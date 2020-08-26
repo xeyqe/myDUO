@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.4.5
+// @version      2.9.4.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -10,7 +10,6 @@
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js
-// @resource     customCSS https://raw.githubusercontent.com/xeyqe/dark-background-light-text-extension/master/methods/invert.css
 // @grant        GM_getResourceText
 // ==/UserScript==
 
@@ -119,12 +118,12 @@ const css = [".switch {",
              "    margin: 10px;",
              "}",
              ".panelItem.right {",
-             "    background: #b8f28b;",
-             "    color: #58a700;",
+             "    background-color: #003500;",
+             "    color: #439200;",
              "}",
              ".panelItem.wrong {",
-             "    background: #ffc1c1;",
-             "    color: #ea2b2b;",
+             "    background-color: #622424;",
+             "    color: #ff8383;",
              "}",
              "#counter {",
              "    font-size: 2rem;",
@@ -178,20 +177,67 @@ const css = [".switch {",
              "@media (min-width: 700px) {",
              "    ._30i_q, ._1yghA {",
              "        display: block;",
-             "    }"//,
-//              "}",
-//              "@media only screen and (orientation: portrait) {",
-//              "    @media (min-width: 700px) {",
-//              "        #tempAlert {",
-//              "            font-size: 2.5rem;",
-//              "            line-height: 1;",
-//              "        }",
-//              "        .panel * {",
-//              "            font-size: 2.5rem !important;",
-//              "        }",
-//              "    }",
-//              "}"
-            ].join("\n");
+             "    }"
+          ].join("\n");
+const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
+             "@supports (backdrop-filter: invert(100%)) {",
+             "    #mybpwaycfxccmnp-dblt-backdrop-filter {",
+             "        display: block !important;",
+             "        position: fixed !important;",
+             "        top: 0 !important;",
+             "        bottom: 0 !important;",
+             "        left: 0 !important;",
+             "        right: 0 !important;",
+             "        margin: 0 !important;",
+             "        pointer-events: none !important;",
+             "        z-index: 2147483647 !important;",
+             "        backdrop-filter: invert(100%) hue-rotate(180deg) !important;",
+             "    }",
+             "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"]),",
+             "    video,",
+             "    ins,    /* duolingo google ads */",
+             "    ._2LODM._25rn4, /* duolingo flags */",
+             "    ._3BevS._1fpAw, /* duolingo flags my profile*/",
+             "    .panel > *,",
+             "    svg {",
+             "        filter: invert(100%) hue-rotate(180deg) !important;",
+             "    }",
+             "}",
+             "@supports not (backdrop-filter: invert(100%)) {",
+             "    html,",
+             "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"])",
+             "    embed[type=\"application/x-shockwave-flash\"],",
+             "    object[type=\"application/x-shockwave-flash\"],",
+             "    video,",
+             "    svg,",
+             "    ins,",
+             "    ._2LODM._25rn4,",
+             "    ._3BevS._1fpAw,",
+             "    .panel > *,",
+             "    div#viewer.pdfViewer div.page",
+             "    {",
+             "        filter: invert(100%) hue-rotate(180deg) !important;",
+             "    }",
+             "    /* #28 */",
+             "    :fullscreen video,",
+             "    video:fullscreen",
+             "    {",
+             "        filter: none !important;",
+             "    }",
+             "",
+             "    html {",
+             "        background-color: black !important;",
+             "    }",
+             "}",
+             "",
+             "button,",
+             "input,",
+             "optgroup,",
+             "select,",
+             "textarea {",
+             "    background-color: white;",
+             "    color: black;",
+             "}"].join("\n");
 
 function addThemes() {
     if (!document.querySelector('#darkDUOmobile')) {
@@ -205,11 +251,9 @@ function addThemes() {
             document.documentElement.appendChild(node);
         }
 
-        const newCSS = GM_getResourceText("customCSS");
-
         style = document.createElement("style");
         style.type = "text/css";
-        style.appendChild(document.createTextNode(newCSS));
+        style.appendChild(document.createTextNode(css2));
         head = document.getElementsByTagName("html");
         style.id = 'darkDUOmobile';
     }
@@ -313,11 +357,12 @@ function tempAlert(input) {
 
     el.setAttribute('id', 'tempAlert');
 
-    for (const a of input.querySelectorAll('a')) {
+    const node = input.cloneNode();
+    for (const a of node.querySelectorAll('a')) {
         a.remove();
     }
 
-    el.appendChild(input.cloneNode(true));
+    el.appendChild(node);
 
     removeTempAlert(3000);
 
@@ -586,35 +631,40 @@ function neco(color) {
         if (question) {
             const div = emptyDiv.cloneNode();
             div.innerText = question;
-            div.style.color = 'black';
+            div.style.color = '#d3d3d3';
             divMain.appendChild(div);
         }
 
         if (yourAnswer) {
             const div = emptyDiv.cloneNode();
             div.innerText = yourAnswer;
-            div.style.color = '#589316';
+            div.style.color = color === 'right' ? '#00FF77': '#ff69b4';
             divMain.appendChild(div);
         }
 
-        const review = document.querySelector('[data-test="blame blame-incorrect"]');
-        if (review && color === 'wrong') {
-            const ass = review.cloneNode(true).querySelectorAll('a');
-            for (const a of ass) {
+        const review = document.querySelector('.panel')
+        .previousElementSibling
+        .querySelector('[data-test="blame blame-incorrect"]') ||
+              document.querySelector('.panel')
+        .previousElementSibling
+        .querySelector('[data-test="blame blame-correct"]');
+        if (review) {
+            const node = review.cloneNode(true);
+            for (const a of node.querySelectorAll('a')) {
                 a.remove();
             }
 
-            divMain.appendChild(review.lastElementChild.cloneNode(true));
+            divMain.appendChild(node);
         }
 
         if (color === 'right') {
-            if (document.querySelector('[data-test="blame blame-correct"]')) {
-                tempAlert(document.querySelector('[data-test="blame blame-correct"]').children[1]);
-                if (document.querySelector('[data-test="challenge challenge-listen"]') ||
-                    document.querySelector('[data-test="challenge challenge-listenTap"]') ||
-                    document.querySelectorAll('[data-test="challenge challenge-speak"]')) {
-                    divMain.appendChild(document.querySelector('[data-test="blame blame-correct"]').children[1].cloneNode(true));
-                }
+            if (document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-correct"]')) {
+                tempAlert(document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-correct"]').children[1]);
+                //                 if (document.querySelector('[data-test="challenge challenge-listen"]') ||
+                //                     document.querySelector('[data-test="challenge challenge-listenTap"]') ||
+                //                     document.querySelectorAll('[data-test="challenge challenge-speak"]')) {
+                //                     divMain.appendChild(document.querySelector('[data-test="blame blame-correct"]').children[1].cloneNode(true));
+                //                 }
             }
         }
 
@@ -801,15 +851,15 @@ function createAutoClickButton(isStories) {
                 if (mutation.addedNodes[0]) {
 
                     if (mutation.addedNodes[0].contains(document.querySelector('._3gjcv'))) {
-//                         const bu = document.createElement('BUTTON');
-//                         bu.innerText = 'A';
-//                         bu.id = 'my-autoclick-bu';
-//                         bu.style.zIndex = 10000;
-//                         bu.addEventListener('click', () => {
-//                             storiesAuto = !storiesAuto;
-//                             document.querySelector('#my-autoclick-bu').innerText = storiesAuto ? 'A' : 'M';
-//                         });
-//                         document.querySelector('._3gjcv').appendChild(bu);
+                        //                         const bu = document.createElement('BUTTON');
+                        //                         bu.innerText = 'A';
+                        //                         bu.id = 'my-autoclick-bu';
+                        //                         bu.style.zIndex = 10000;
+                        //                         bu.addEventListener('click', () => {
+                        //                             storiesAuto = !storiesAuto;
+                        //                             document.querySelector('#my-autoclick-bu').innerText = storiesAuto ? 'A' : 'M';
+                        //                         });
+                        //                         document.querySelector('._3gjcv').appendChild(bu);
                         createAutoClickButton(true);
                     }
 
