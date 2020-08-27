@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.4.8
+// @version      2.9.4.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -178,66 +178,66 @@ const css = [".switch {",
              "    ._30i_q, ._1yghA {",
              "        display: block;",
              "    }"
-          ].join("\n");
+            ].join("\n");
 const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
-             "@supports (backdrop-filter: invert(100%)) {",
-             "    #mybpwaycfxccmnp-dblt-backdrop-filter {",
-             "        display: block !important;",
-             "        position: fixed !important;",
-             "        top: 0 !important;",
-             "        bottom: 0 !important;",
-             "        left: 0 !important;",
-             "        right: 0 !important;",
-             "        margin: 0 !important;",
-             "        pointer-events: none !important;",
-             "        z-index: 2147483647 !important;",
-             "        backdrop-filter: invert(100%) hue-rotate(180deg) !important;",
-             "    }",
-             "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"]),",
-             "    video,",
-             "    ins,    /* duolingo google ads */",
-             "    ._2LODM._25rn4, /* duolingo flags */",
-             "    ._3BevS._1fpAw, /* duolingo flags my profile*/",
-             "    .panel > *,",
-             "    svg {",
-             "        filter: invert(100%) hue-rotate(180deg) !important;",
-             "    }",
-             "}",
-             "@supports not (backdrop-filter: invert(100%)) {",
-             "    html,",
-             "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"])",
-             "    embed[type=\"application/x-shockwave-flash\"],",
-             "    object[type=\"application/x-shockwave-flash\"],",
-             "    video,",
-             "    svg,",
-             "    ins,",
-             "    ._2LODM._25rn4,",
-             "    ._3BevS._1fpAw,",
-             "    .panel > *,",
-             "    div#viewer.pdfViewer div.page",
-             "    {",
-             "        filter: invert(100%) hue-rotate(180deg) !important;",
-             "    }",
-             "    /* #28 */",
-             "    :fullscreen video,",
-             "    video:fullscreen",
-             "    {",
-             "        filter: none !important;",
-             "    }",
-             "",
-             "    html {",
-             "        background-color: black !important;",
-             "    }",
-             "}",
-             "",
-             "button,",
-             "input,",
-             "optgroup,",
-             "select,",
-             "textarea {",
-             "    background-color: white;",
-             "    color: black;",
-             "}"].join("\n");
+              "@supports (backdrop-filter: invert(100%)) {",
+              "    #mybpwaycfxccmnp-dblt-backdrop-filter {",
+              "        display: block !important;",
+              "        position: fixed !important;",
+              "        top: 0 !important;",
+              "        bottom: 0 !important;",
+              "        left: 0 !important;",
+              "        right: 0 !important;",
+              "        margin: 0 !important;",
+              "        pointer-events: none !important;",
+              "        z-index: 2147483647 !important;",
+              "        backdrop-filter: invert(100%) hue-rotate(180deg) !important;",
+              "    }",
+              "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"]),",
+              "    video,",
+              "    ins,    /* duolingo google ads */",
+              "    ._2LODM._25rn4, /* duolingo flags */",
+              "    ._3BevS._1fpAw, /* duolingo flags my profile*/",
+              "    .panel > *,",
+              "    svg {",
+              "        filter: invert(100%) hue-rotate(180deg) !important;",
+              "    }",
+              "}",
+              "@supports not (backdrop-filter: invert(100%)) {",
+              "    html,",
+              "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"])",
+              "    embed[type=\"application/x-shockwave-flash\"],",
+              "    object[type=\"application/x-shockwave-flash\"],",
+              "    video,",
+              "    svg,",
+              "    ins,",
+              "    ._2LODM._25rn4,",
+              "    ._3BevS._1fpAw,",
+              "    .panel > *,",
+              "    div#viewer.pdfViewer div.page",
+              "    {",
+              "        filter: invert(100%) hue-rotate(180deg) !important;",
+              "    }",
+              "    /* #28 */",
+              "    :fullscreen video,",
+              "    video:fullscreen",
+              "    {",
+              "        filter: none !important;",
+              "    }",
+              "",
+              "    html {",
+              "        background-color: black !important;",
+              "    }",
+              "}",
+              "",
+              "button,",
+              "input,",
+              "optgroup,",
+              "select,",
+              "textarea {",
+              "    background-color: white;",
+              "    color: black;",
+              "}"].join("\n");
 
 function addThemes() {
     if (!document.querySelector('#darkDUOmobile')) {
@@ -259,6 +259,7 @@ function addThemes() {
     }
 }
 
+// function touchendFun() {
 Node.prototype.swiper = function(direction, func) {
     let touchstartX = 0;
     let touchstartY = 0;
@@ -305,6 +306,7 @@ Node.prototype.swiper = function(direction, func) {
         }
     });
 }
+// }
 
 function swipeFunc(event) {
     if (mayISwipe(event)) {
@@ -649,7 +651,7 @@ function neco(color) {
         .previousElementSibling
         .querySelector('[data-test="blame blame-correct"]');
         if (review) {
-            const node = review.cloneNode(true);
+            const node = review.children[1].cloneNode(true);
             for (const a of node.querySelectorAll('a')) {
                 a.remove();
             }
@@ -811,6 +813,7 @@ function createAutoClickButton(isStories) {
     document.querySelector('html').insertBefore(el, document.querySelector('body'))
 
     window.addEventListener('load', function() {
+        window.removeEventListener('touchend', removeTouchEndEvent, true);
         if (document.querySelector(father)) {
             document.querySelector(father).swiper("swipeLeft", swipeFunc);
             document.querySelector(father).swiper("swipeRight", showHidePanel);
@@ -832,10 +835,15 @@ function createAutoClickButton(isStories) {
         }
 
         let counterBool = true;
+        const aaa = (event) => {
+            event.stopPropagation;
+        }
 
-        window.addEventListener('touchend', function (event) {
-            event.stopPropagation();
-        }, true);
+        function removeTouchEndEvent(e) {
+            e.stopPropagation();
+        }
+
+        window.addEventListener('touchend', removeTouchEndEvent, true);
 
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
@@ -853,10 +861,9 @@ function createAutoClickButton(isStories) {
                 }
 
                 if (mutation.addedNodes[0]) {
+
                     if (mutation.addedNodes[0].contains(document.querySelector('[data-test="skill"]'))) {
-                        window.addEventListener('touchend', function (event) {
-                            event.stopPropagation();
-                        }, true);
+                        window.addEventListener('touchend', removeTouchEndEvent, true);
                     }
 
                     if (mutation.addedNodes[0].contains(document.querySelector('._3gjcv'))) {
@@ -898,6 +905,7 @@ function createAutoClickButton(isStories) {
 
 
                     if (mutation.addedNodes[0].contains(document.querySelector('._1bfyi'))) {
+                        window.removeEventListener('touchend', removeTouchEndEvent, true);
                         document.querySelector('._1bfyi').swiper('swipeLeft', () => {
                             document.querySelector('._1fURZ, ._3JkvC').click()});
                     }
@@ -929,11 +937,13 @@ function createAutoClickButton(isStories) {
                     }
 
                     if (mutation.addedNodes[0].contains(document.querySelector(father))) {
+                        window.removeEventListener('touchend', removeTouchEndEvent, true);
                         document.querySelector(father).swiper("swipeLeft", swipeFunc);
                         document.querySelector(father).swiper("swipeRight", showHidePanel);
                     }
 
                     if (mutation.addedNodes[0].className === 'story-page') {
+                        window.removeEventListener('touchend', removeTouchEndEvent, true);
                         document.querySelector('.story-page').swiper("swipeDown", () => {
                             if (document.querySelector('button.continue')) {
                                 document.querySelector('button.continue').click();
