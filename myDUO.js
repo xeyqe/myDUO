@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.4.7
+// @version      2.9.4.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -849,17 +849,13 @@ function createAutoClickButton(isStories) {
                 }
 
                 if (mutation.addedNodes[0]) {
+                    if (mutation.addedNodes[0].contains(document.querySelector('[data-test="skill"]'))) {
+                        window.addEventListener('touchend', function (event) {
+                            event.stopPropagation();
+                        }, true);
+                    }
 
                     if (mutation.addedNodes[0].contains(document.querySelector('._3gjcv'))) {
-                        //                         const bu = document.createElement('BUTTON');
-                        //                         bu.innerText = 'A';
-                        //                         bu.id = 'my-autoclick-bu';
-                        //                         bu.style.zIndex = 10000;
-                        //                         bu.addEventListener('click', () => {
-                        //                             storiesAuto = !storiesAuto;
-                        //                             document.querySelector('#my-autoclick-bu').innerText = storiesAuto ? 'A' : 'M';
-                        //                         });
-                        //                         document.querySelector('._3gjcv').appendChild(bu);
                         createAutoClickButton(true);
                     }
 
