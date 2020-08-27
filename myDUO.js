@@ -833,6 +833,10 @@ function createAutoClickButton(isStories) {
 
         let counterBool = true;
 
+        window.addEventListener('touchend', function (event) {
+            event.stopPropagation();
+        }, true);
+
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
 
