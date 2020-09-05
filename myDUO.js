@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.4.9
+// @version      2.9.5.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -743,7 +743,8 @@ function storiesAutoClick() {
     if (!storiesHiddenLength) {
 
         const array = document.querySelectorAll('._3sNGF._3j32v:not(._2n3Ta)');
-        const selected = array[array.length - 1];
+        const selected = Array.from(array).pop();
+
         if (selected) {
             let myLength;
             const phrases = selected.querySelectorAll('.phrase');
@@ -753,6 +754,9 @@ function storiesAutoClick() {
                 phrases[phrases.length - 1].textContent.length > 1 &&
                 !regex.test(phrases[phrases.length - 1].textContent)) {
                 myLength = phrases[phrases.length - 1].textContent.length;
+                if (selected.querySelector('._3jGFa') && document.querySelector('._3jGFa').lastChild) {
+                    myLength += document.querySelector('._3jGFa').lastChild.textContent.length;
+                }
             } else if (phrases[phrases.length - 2] && phrases[phrases.length - 2].textContent && phrases[phrases.length - 2].textContent.length > 1) {
                 myLength = phrases[phrases.length - 2].textContent.length;
             } else if (document.querySelector('button[autofocus]')) {
@@ -784,6 +788,7 @@ function createAutoClickButton(isStories) {
     const bu = document.createElement('BUTTON');
     bu.id = 'my-autoclick-bu';
     bu.style.zIndex = isStories ? 10000 : 10;
+    bu.style.cursor = 'pointer';
 
     if (isStories) {
         bu.innerText = storiesAuto ? 'A' : 'M';
@@ -793,6 +798,7 @@ function createAutoClickButton(isStories) {
             localStorage.setItem('stories_autoclick', storiesAuto ? 'yes' : 'no');
         });
         document.querySelector('._3gjcv').appendChild(bu);
+        createStoriesProgressShower();
     } else {
         bu.innerText = testingAuto ? 'A' : 'M';
         bu.addEventListener('click', () => {
@@ -802,6 +808,15 @@ function createAutoClickButton(isStories) {
         });
         document.querySelector('.nP82K').appendChild(bu);
     }
+}
+
+function createStoriesProgressShower() {
+    const progressEl = document.createElement('SPAN');
+    progressEl.innerText = document.querySelector('._2Z5hP._14nh2').style.width;
+    progressEl.style.zIndex = 10000;
+    progressEl.style.marginLeft = '.5rem';
+    progressEl.id = 'bugibugi';
+    document.querySelector('._2Z5hP._14nh2').parentNode.parentNode.appendChild(progressEl);
 }
 
 
@@ -849,15 +864,20 @@ function createAutoClickButton(isStories) {
             for(let mutation of mutationsList) {
 
 
-                if (mutation.attributeName === "autofocus" &&
-                    !document.querySelector('textarea')) {
+                if (mutation.attributeName === "autofocus" && mutation.target.disabled === false &&
+                    (!document.querySelector('textarea') || document.querySelector('textarea').disabled)) {
                     if (storyContinueButtonTimeout) {
                         clearTimeout(storyContinueButtonTimeout);
                         storyContinueButtonTimeout = null;
                     }
+
                     if (storiesAuto) {
                         storiesAutoClick();
                     }
+                }
+
+                if (mutation.target === document.querySelector('._2Z5hP._14nh2')) {
+                    document.querySelector('#bugibugi').innerText = document.querySelector('._2Z5hP._14nh2').style.width;
                 }
 
                 if (mutation.addedNodes[0]) {
