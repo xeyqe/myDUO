@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.5.0
+// @version      2.9.5.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -422,6 +422,12 @@ function autoClick() {
     if (testingAuto) {
         if (document.querySelector('[data-test="player-next"]')) {
             document.querySelector('[data-test="player-next"]').click();
+        } else {
+            setTimeout(() => {
+                if (document.querySelector('[data-test="player-next"]')) {
+                    document.querySelector('[data-test="player-next"]').click();
+                }
+            }, 100);
         }
 
     }
@@ -662,11 +668,6 @@ function neco(color) {
         if (color === 'right') {
             if (document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-correct"]')) {
                 tempAlert(document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-correct"]').children[1].firstChild.firstChild);
-                //                 if (document.querySelector('[data-test="challenge challenge-listen"]') ||
-                //                     document.querySelector('[data-test="challenge challenge-listenTap"]') ||
-                //                     document.querySelectorAll('[data-test="challenge challenge-speak"]')) {
-                //                     divMain.appendChild(document.querySelector('[data-test="blame blame-correct"]').children[1].cloneNode(true));
-                //                 }
             }
         }
 
@@ -862,8 +863,6 @@ function createStoriesProgressShower() {
 
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
-
-
                 if (mutation.attributeName === "autofocus" && mutation.target.disabled === false &&
                     (!document.querySelector('textarea') || document.querySelector('textarea').disabled)) {
                     if (storyContinueButtonTimeout) {
@@ -881,7 +880,6 @@ function createStoriesProgressShower() {
                 }
 
                 if (mutation.addedNodes[0]) {
-
                     if (mutation.addedNodes[0].contains(document.querySelector('[data-test="skill"]'))) {
                         window.addEventListener('touchend', removeTouchEndEvent, true);
                     }
@@ -902,26 +900,39 @@ function createStoriesProgressShower() {
                         }
                     }
 
-                    if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-correct"]'))) {
-                        neco('right').then(() => {
-                            autoClick();
-                            if (counterBool) {
-                                changeCounter('right');
+                    // if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-correct"]'))) {
+                    if (mutation.addedNodes[0].contains(document.querySelector('.vnENI._1MoE-'))) {
+                        setTimeout(() => {
+                            if (document.querySelector('[data-test="blame blame-correct"]')) {
+                                neco('right').then(() => {
+                                    if (counterBool) {
+                                        changeCounter('right');
+                                    } else {
+                                        counterBool = true;
+                                    }
+                                    autoClick();
+                                });
                             } else {
-                                counterBool = true;
+                                neco('wrong').then(() => {
+                                    if (counterBool) {
+                                        changeCounter('bad');
+                                    } else {
+                                        counterBool = true;
+                                    }
+                                });
                             }
-                        });
+                        }, 1);
                     }
 
-                    if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-incorrect"]'))) {
-                        neco('wrong').then(() => {
-                            if (counterBool) {
-                                changeCounter('bad');
-                            } else {
-                                counterBool = true;
-                            }
-                        });
-                    }
+                    //                     if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-incorrect"]'))) {
+                    //                         neco('wrong').then(() => {
+                    //                             if (counterBool) {
+                    //                                 changeCounter('bad');
+                    //                             } else {
+                    //                                 counterBool = true;
+                    //                             }
+                    //                         });
+                    //                     }
 
 
                     if (mutation.addedNodes[0].contains(document.querySelector('._1bfyi'))) {
