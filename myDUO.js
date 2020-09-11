@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.5.3
+// @version      2.9.5.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -904,29 +904,37 @@ function createStoriesProgressShower() {
                         }
                     }
 
-                    // if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-correct"]'))) {
-                    if (mutation.addedNodes[0].contains(document.querySelector('.vnENI._1MoE-'))) {
-                        setTimeout(() => {
-                            if (document.querySelector('[data-test="blame blame-correct"]')) {
-                                neco('right').then(() => {
-                                    if (counterBool) {
-                                        changeCounter('right');
-                                    } else {
-                                        counterBool = true;
-                                    }
-                                    autoClick();
-                                });
-                            } else if (document.querySelector('[data-test="blame blame-incorrect"]')) {
-                                neco('wrong').then(() => {
-                                    if (counterBool) {
-                                        changeCounter('bad');
-                                    } else {
-                                        counterBool = true;
-                                    }
-                                });
-                            }
-                        }, 1);
-                    }
+                    setTimeout(() => {
+                        if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-correct"]'))) {
+                            //                     if (mutation.addedNodes[0].contains(document.querySelector('.vnENI._1MoE-'))) {
+                            //                             if (document.querySelector('[data-test="blame blame-correct"]')) {
+                            neco('right').then(() => {
+                                if (counterBool) {
+                                    changeCounter('right');
+                                } else {
+                                    counterBool = true;
+                                }
+                                autoClick();
+                            });
+                            //                             } else if (document.querySelector('[data-test="blame blame-incorrect"]')) {
+                            //                                 neco('wrong').then(() => {
+                            //                                     if (counterBool) {
+                            //                                         changeCounter('bad');
+                            //                                     } else {
+                            //                                         counterBool = true;
+                            //                                     }
+                            //                                 });
+                            //                             }
+                        } else if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-incorrect"]'))) {
+                            neco('wrong').then(() => {
+                                if (counterBool) {
+                                    changeCounter('bad');
+                                } else {
+                                    counterBool = true;
+                                }
+                            });
+                        }
+                    }, 1);
 
                     //                     if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-incorrect"]'))) {
                     //                         neco('wrong').then(() => {
