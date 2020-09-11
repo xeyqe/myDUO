@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.5.2
+// @version      2.9.5.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -177,11 +177,11 @@ const css = [".switch {",
              "@media (min-width: 700px) {",
              "    ._30i_q, ._1yghA {",
              "        display: block;",
+             "    }",
              "}",
              ".panel * {",
              "    min-width: unset;",
-             "}"
-            ].join("\n");
+             "}"].join("\n");
 const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
               "@supports (backdrop-filter: invert(100%)) {",
               "    #mybpwaycfxccmnp-dblt-backdrop-filter {",
@@ -959,10 +959,7 @@ function createStoriesProgressShower() {
 
                     if (mutation.addedNodes[0].contains(document.querySelector('._3TwVI'))) {
                         appendThemeSwitcher();
-                    }
-
-                    //                     else if (mutation.addedNodes[0].contains(document.querySelector('._1uasP'))) {
-                    else if (mutation.addedNodes[0].contains(document.querySelectorAll('[data-test="challenge-tap-token"]'))) {
+                    } else if (mutation.addedNodes[0].contains(document.querySelector('[data-test="challenge-tap-token"]'))) {
                         draggable();
                         keyboardShortcuts();
                     }
@@ -987,7 +984,7 @@ function createStoriesProgressShower() {
                         });
                     }
 
-                    if (mutation.addedNodes[0].className === '_3FiYg' && document.querySelector('.nP82K')) {
+                    if (mutation.addedNodes[0].className === '_3x0ok' && document.querySelector('.nP82K')) {
                         createNumber();
                         createSlider();
                         createAutoClickButton(false);
