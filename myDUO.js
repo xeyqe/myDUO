@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.5.4
+// @version      2.9.5.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,7 +9,8 @@
 // @include      https://duolingo.com/*
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/dragula/3.0.3/dragula.min.js
+// @require      https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
 
@@ -456,10 +457,18 @@ function reclick() {
 function draggable() {
     const output = document.querySelector('.PcKtj');
 
-    Sortable.create(output, {
-        onEnd: function (evt){ reclick() },
-        animation: 150
-    });
+    if ('ontouchstart' in window) {
+        dragula([output]).on('drop', function () {
+            reclick()
+        });
+    } else {
+        Sortable.create(output, {
+            onEnd: function (evt){ reclick() },
+            animation: 150,
+            delayOnTouchOnly: false,
+            touchStartThreshold: 0
+        });
+    }
 }
 
 function keyboardShortcuts() {
