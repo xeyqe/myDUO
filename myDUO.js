@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.5.1
+// @version      2.9.5.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -177,7 +177,10 @@ const css = [".switch {",
              "@media (min-width: 700px) {",
              "    ._30i_q, ._1yghA {",
              "        display: block;",
-             "    }"
+             "}",
+             ".panel * {",
+             "    min-width: unset;",
+             "}"
             ].join("\n");
 const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
               "@supports (backdrop-filter: invert(100%)) {",
@@ -863,6 +866,7 @@ function createStoriesProgressShower() {
 
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
+
                 if (mutation.attributeName === "autofocus" && mutation.target.disabled === false &&
                     (!document.querySelector('textarea') || document.querySelector('textarea').disabled)) {
                     if (storyContinueButtonTimeout) {
@@ -875,11 +879,11 @@ function createStoriesProgressShower() {
                     }
                 }
 
-                if (mutation.target === document.querySelector('._2Z5hP._14nh2')) {
+                if (mutation.target === document.querySelector('._2Z5hP._14nh2') && document.querySelector('#bugibugi')) {
                     document.querySelector('#bugibugi').innerText = document.querySelector('._2Z5hP._14nh2').style.width;
                 }
 
-                if (mutation.addedNodes[0]) {
+                if (mutation.addedNodes[0] && mutation.addedNodes[0].tagName === 'DIV') {
                     if (mutation.addedNodes[0].contains(document.querySelector('[data-test="skill"]'))) {
                         window.addEventListener('touchend', removeTouchEndEvent, true);
                     }
@@ -912,7 +916,7 @@ function createStoriesProgressShower() {
                                     }
                                     autoClick();
                                 });
-                            } else {
+                            } else if (document.querySelector('[data-test="blame blame-incorrect"]')) {
                                 neco('wrong').then(() => {
                                     if (counterBool) {
                                         changeCounter('bad');
@@ -957,7 +961,8 @@ function createStoriesProgressShower() {
                         appendThemeSwitcher();
                     }
 
-                    else if (mutation.addedNodes[0].contains(document.querySelector('[data-test="challenge challenge-listenTap"]'))) {
+                    //                     else if (mutation.addedNodes[0].contains(document.querySelector('._1uasP'))) {
+                    else if (mutation.addedNodes[0].contains(document.querySelectorAll('[data-test="challenge-tap-token"]'))) {
                         draggable();
                         keyboardShortcuts();
                     }
