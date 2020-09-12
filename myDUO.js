@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.5.6
+// @version      2.9.5.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,8 +9,7 @@
 // @include      https://duolingo.com/*
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/dragula/3.0.3/dragula.min.js
-// @require      https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
 
@@ -457,18 +456,48 @@ function reclick() {
 function draggable() {
     const output = document.querySelector('.PcKtj');
 
-    if ('ontouchstart' in window) {
-        dragula([output]).on('drop', function () {
-            reclick()
+    Sortable.create(output, {
+        onEnd: function (evt){ reclick() },
+        animation: 150,
+    });
+    const container = document.querySelector('.PcKtj')
+    const words = document.querySelectorAll('[data-test="word-bank"] > *');
+
+    words.forEach(word => {
+        word.addEventListener('click', () => {
+            setTimeout(() => {
+                const draggables = document.querySelectorAll('.PcKtj > div:not(.sortable-chosen)')
+                draggables.forEach(draggable => {
+
+                    if (!draggable.getAttributeNames().includes('draggable')) {
+
+                        draggable.addEventListener('touchend', (e) => {
+                            let before = false;
+                            const array = Array.from(draggables).filter(item => {
+                                const xy = item.getBoundingClientRect();
+                                if (xy.x < e.changedTouches[0].pageX && xy.x + xy.width > e.changedTouches[0].pageX &&
+                                    xy.y < e.changedTouches[0].pageY && xy.y + xy.height > e.changedTouches[0].pageY) {
+                                    if (e.changedTouches[0].pageX < (xy.x + (xy.width/2))) {
+                                        before = true;
+                                    }
+                                    return item;
+                                }
+                            });
+                            const target = array && array[0] ? array[0] : null;
+                            if (target) {
+                                if (before) {
+                                    container.insertBefore(draggable, target);
+                                } else {
+                                    container.insertBefore(draggable, target.nextSibling);
+                                }
+                            }
+
+                        });
+                    }
+                });
+            }, 10);
         });
-    } else {
-        Sortable.create(output, {
-            onEnd: function (evt){ reclick() },
-            animation: 150,
-            delayOnTouchOnly: false,
-            touchStartThreshold: 0
-        });
-    }
+    });
 }
 
 function keyboardShortcuts() {
@@ -1001,7 +1030,6 @@ function createStoriesProgressShower() {
                         });
                     }
 
-                    console.log(mutation.addedNodes[0])
                     if (mutation.addedNodes[0].className === '_3FiYg' && document.querySelector('.nP82K')) {
                         createNumber();
                         createSlider();
