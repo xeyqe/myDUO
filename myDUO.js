@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.5.7
+// @version      2.9.5.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,6 +9,7 @@
 // @include      https://duolingo.com/*
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
+// @require      https://cdnjs.cloudflare.com/ajax/libs/dragula/3.0.3/dragula.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
@@ -698,11 +699,7 @@ function neco(color) {
         .previousElementSibling
         .querySelector('[data-test="blame blame-correct"]');
         if (review) {
-            const node = review.children[1].cloneNode(true);
-            for (const a of node.querySelectorAll('a')) {
-                a.remove();
-            }
-
+            const node = review.children[1].children[0].cloneNode(true);
             divMain.appendChild(node);
         }
 
