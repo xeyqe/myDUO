@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.5.9
+// @version      2.9.6.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,7 +9,6 @@
 // @include      https://duolingo.com/*
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/dragula/3.0.3/dragula.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
@@ -119,12 +118,12 @@ const css = [".switch {",
              "    margin: 10px;",
              "}",
              ".panelItem.right {",
-             "    background-color: #003500;",
-             "    color: #439200;",
+             "    background-color: #b8f28b;",
+             "    color: #58a700;",
              "}",
              ".panelItem.wrong {",
-             "    background-color: #622424;",
-             "    color: #ff8383;",
+             "    background-color: #ffc1c1;",
+             "    color: #ea2b2b;",
              "}",
              "#counter {",
              "    font-size: 2rem;",
@@ -200,9 +199,8 @@ const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark
               "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"]),",
               "    video,",
               "    ins,    /* duolingo google ads */",
-              "    ._2LODM._25rn4, /* duolingo flags */",
+              "    ._3-gOT._3FaG8.LBIqX, /* duolingo flags */",
               "    ._3BevS._1fpAw, /* duolingo flags my profile*/",
-              "    .panel > *,",
               "    svg {",
               "        filter: invert(100%) hue-rotate(180deg) !important;",
               "    }",
@@ -215,9 +213,8 @@ const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark
               "    video,",
               "    svg,",
               "    ins,",
-              "    ._2LODM._25rn4,",
+              "    ._3-gOT._3FaG8.LBIqX,",
               "    ._3BevS._1fpAw,",
-              "    .panel > *,",
               "    div#viewer.pdfViewer div.page",
               "    {",
               "        filter: invert(100%) hue-rotate(180deg) !important;",
@@ -685,14 +682,14 @@ function neco(color) {
         if (question) {
             const div = emptyDiv.cloneNode();
             div.innerText = question;
-            div.style.color = '#d3d3d3';
+            div.style.color = 'black';
             divMain.appendChild(div);
         }
 
         if (yourAnswer) {
             const div = emptyDiv.cloneNode();
             div.innerText = yourAnswer;
-            div.style.color = color === 'right' ? '#00FF77': '#ff69b4';
+            div.style.color = color === 'right' ? '#279f09': '#e7559e';
             divMain.appendChild(div);
         }
 
@@ -759,8 +756,8 @@ function createThemeSwitcherButton() {
 }
 
 function appendThemeSwitcher() {
-    if (document.querySelector('._3TwVI')) {
-        document.querySelector('._3TwVI').append(label);
+    if (document.querySelector('.eFS_r')) {
+        document.querySelector('.eFS_r').append(label);
         if (localStorage.getItem('themed') === '1' && document.querySelector('#checkbx')) {
             document.querySelector('#checkbx').checked = true;
         }
