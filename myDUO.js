@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.6.1
+// @version      2.9.6.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -758,14 +758,10 @@ function createThemeSwitcherButton() {
     });
 }
 
-function appendThemeSwitcher() {
-    if (document.querySelector('.eFS_r')) {
-        document.querySelector('.eFS_r').append(label);
-        if (localStorage.getItem('themed') === '1' && document.querySelector('#checkbx')) {
-            document.querySelector('#checkbx').checked = true;
-        }
-    } else {
-        console.log('unable to append theme switcher');
+function appendThemeSwitcher(element) {
+    element.append(label);
+    if (localStorage.getItem('themed') === '1' && document.querySelector('#checkbx')) {
+        document.querySelector('#checkbx').checked = true;
     }
 }
 
@@ -883,7 +879,10 @@ function createStoriesProgressShower() {
 
         addThemes();
         createThemeSwitcherButton();
-        appendThemeSwitcher();
+        const el = document.querySelector('.eFS_r, ._19SCP, ._1OHEh');
+        if (el) {
+            appendThemeSwitcher(el);
+        }
 
         if (localStorage.getItem('themed') === "1") {
             head[0].appendChild(style);
@@ -1007,8 +1006,8 @@ function createStoriesProgressShower() {
                         draggable();
                         keyboardShortcuts();
                     }
-                    if (mutation.addedNodes[0].querySelector('._3TwVI')) {
-                        appendThemeSwitcher();
+                    if (mutation.addedNodes[0].querySelector('.eFS_r, ._19SCP, ._1OHEh')) {
+                        appendThemeSwitcher(mutation.addedNodes[0].querySelector('.eFS_r, ._19SCP, ._1OHEh'));
                     }
 
                     if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
