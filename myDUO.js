@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.6.0
+// @version      2.9.6.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,7 +9,7 @@
 // @include      https://duolingo.com/*
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.13.0/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
 
@@ -435,18 +435,21 @@ function autoClick() {
 }
 
 function reclick() {
-    let clickedBtt = document.querySelectorAll('._1uasP button');
-    let unclickedBtt = Array.from(document.querySelectorAll('[data-test="word-bank"] button:disabled'));
-
-    for (let i = 0; i < clickedBtt.length; i++) {
-        clickedBtt[i].click();
-
-        for (const bu of unclickedBtt) {
-            if (!bu.disabled) {
-                bu.click();
-                continue;
+    const clickedBtt = document.querySelectorAll('._1uasP button');
+    const unclickedBtt = Array.from(document.querySelectorAll('[data-test="word-bank"] button:disabled'));
+    const strs = [];
+    for (const selectedBu of clickedBtt) {
+        strs.push(selectedBu.innerText);
+        selectedBu.click();
+        setTimeout(() => {
+            for (const str of strs) {
+                const btn = unclickedBtt.find(bu => {
+                    const text = bu.innerText.includes('\n') ? bu.innerText.split('\n')[1] : bu.innerText;
+                    return str === text;
+                })
+                btn.click();
             }
-        }
+        }, 300)
     }
 
 }
@@ -461,45 +464,45 @@ function draggable() {
     const container = document.querySelector('.PcKtj')
     const words = document.querySelectorAll('[data-test="word-bank"] > *');
 
-    words.forEach(word => {
-        word.addEventListener('click', () => {
-            setTimeout(() => {
-                const draggables = document.querySelectorAll('.PcKtj > div:not(.sortable-chosen)')
-                draggables.forEach(draggable => {
+//     words.forEach(word => {
+//         word.addEventListener('click', () => {
+//             setTimeout(() => {
+//                 const draggables = document.querySelectorAll('.PcKtj > div:not(.sortable-chosen)')
+//                 draggables.forEach(draggable => {
 
-                    if (!draggable.getAttributeNames().includes('draggable')) {
+//                     if (!draggable.getAttributeNames().includes('draggable')) {
 
-                        draggable.addEventListener('touchend', (e) => {
-                            let before = false;
-                            const array = Array.from(draggables).filter(item => {
-                                const xy = item.getBoundingClientRect();
-                                if (xy.x < e.changedTouches[0].pageX && xy.x + xy.width > e.changedTouches[0].pageX &&
-                                    xy.y < e.changedTouches[0].pageY && xy.y + xy.height > e.changedTouches[0].pageY) {
-                                    if (e.changedTouches[0].pageX < (xy.x + (xy.width/2))) {
-                                        before = true;
-                                    }
-                                    return item;
-                                }
-                            });
-                            const target = array && array[0] ? array[0] : null;
-                            if (target) {
-                                if (before) {
-                                    container.insertBefore(draggable, target);
-                                } else {
-                                    if (target.nextSibling) {
-                                        container.insertBefore(draggable, target.nextSibling);
-                                    } else {
-                                        container.appendChild(draggable);
-                                    }
-                                }
-                            }
+//                         draggable.addEventListener('touchend', (e) => {
+//                             let before = false;
+//                             const array = Array.from(draggables).filter(item => {
+//                                 const xy = item.getBoundingClientRect();
+//                                 if (xy.x < e.changedTouches[0].pageX && xy.x + xy.width > e.changedTouches[0].pageX &&
+//                                     xy.y < e.changedTouches[0].pageY && xy.y + xy.height > e.changedTouches[0].pageY) {
+//                                     if (e.changedTouches[0].pageX < (xy.x + (xy.width/2))) {
+//                                         before = true;
+//                                     }
+//                                     return item;
+//                                 }
+//                             });
+//                             const target = array && array[0] ? array[0] : null;
+//                             if (target) {
+//                                 if (before) {
+//                                     container.insertBefore(draggable, target);
+//                                 } else {
+//                                     if (target.nextSibling) {
+//                                         container.insertBefore(draggable, target.nextSibling);
+//                                     } else {
+//                                         container.appendChild(draggable);
+//                                     }
+//                                 }
+//                             }
 
-                        });
-                    }
-                });
-            }, 10);
-        });
-    });
+//                         });
+//                     }
+//                 });
+//             }, 10);
+//         });
+//     });
 }
 
 function keyboardShortcuts() {
@@ -1000,12 +1003,12 @@ function createStoriesProgressShower() {
                         },200);
                     }
 
-
-                    if (mutation.addedNodes[0].contains(document.querySelector('._3TwVI'))) {
-                        appendThemeSwitcher();
-                    } else if (mutation.addedNodes[0].contains(document.querySelector('[data-test="challenge-tap-token"]'))) {
+                    if (mutation.addedNodes[0].querySelector('[data-test="word-bank"]')) {
                         draggable();
                         keyboardShortcuts();
+                    }
+                    if (mutation.addedNodes[0].querySelector('._3TwVI')) {
+                        appendThemeSwitcher();
                     }
 
                     if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
@@ -1028,7 +1031,7 @@ function createStoriesProgressShower() {
                         });
                     }
 
-                    if (mutation.addedNodes[0].className === '_3FiYg' && document.querySelector('.nP82K')) {
+                    if (mutation.addedNodes[0].querySelector('.nP82K')) {
                         createNumber();
                         createSlider();
                         createAutoClickButton(false);
