@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.6.2
+// @version      2.9.6.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -174,6 +174,9 @@ const css = [".switch {",
              "    transform: translateX(0%);",
              "    transition: .5s ease-in-out;",
              "}",
+             ".hidden-item {",
+             "    display: none;",
+             "}",
              "@media (min-width: 700px) {",
              "    ._30i_q, ._1yghA {",
              "        display: block;",
@@ -199,7 +202,8 @@ const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark
               "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"]),",
               "    video,",
               "    ins,    /* duolingo google ads */",
-              "    ._3-gOT._3FaG8.LBIqX, /* duolingo flags */",
+              "    ._3-gOT.LBIqX, /* duolingo flags */",
+              "    ._3BevS.PA4Av._3I8oV, /* another duolingo flags */",
               "    ._3BevS._1fpAw, /* duolingo flags my profile*/",
               "    svg {",
               "        filter: invert(100%) hue-rotate(180deg) !important;",
@@ -213,7 +217,8 @@ const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark
               "    video,",
               "    svg,",
               "    ins,",
-              "    ._3-gOT._3FaG8.LBIqX,",
+              "    ._3-gOT.LBIqX,",
+              "    ._3BevS.PA4Av._3I8oV,",
               "    ._3BevS._1fpAw,",
               "    div#viewer.pdfViewer div.page",
               "    {",
@@ -858,7 +863,61 @@ function createStoriesProgressShower() {
     document.querySelector('._2Z5hP._14nh2').parentNode.parentNode.appendChild(progressEl);
 }
 
+function hideUnhideComplete(initial) {
+    const bu = document.querySelector('#hide-show-bu');
+    const minus = bu.innerText === '-';
+    if (initial && minus) return;
 
+    const containers = Array.from(document.querySelectorAll('._3f9ou'));
+    containers.forEach(container => {
+        const skills = Array.from(container.querySelectorAll('[data-test="skill"]'));
+        const toHide = skills.filter(skill => {
+            if (skill.querySelector('._1JPPG') && !skill.querySelector('._1m7gz')) {
+                return skill;
+            }
+        });
+        toHide.forEach(item => {
+            if (initial) {
+                item.style.display = minus ? null : 'none';
+            } else {
+                item.style.display = minus ? 'none': null;
+            }
+        });
+        if (Array.from(container.querySelectorAll('[data-test="skill"]')).find(i => i.style.display !== 'none')) {
+            container.style.display = null;
+        } else {
+             if (initial) {
+                container.style.display = minus ? null : 'none';
+            } else {
+                container.style.display = minus ? 'none' : null;
+            }
+        }
+    });
+    if (!initial) bu.innerText = minus ? '+' : '-';
+    localStorage.setItem('hide', bu.innerText);
+}
+
+function createHideButton() {
+    const bu = document.createElement('BUTTON');
+    bu.style.cssText = "background: #ffd900; border-radius: 50%; width: 3rem; height: 3rem; margin: auto;";
+    bu.id = 'hide-show-bu';
+    let text = localStorage.getItem('hide');
+    if (!text) {
+        localStorage.setItem('hide', '+');
+        text = '-';
+    }
+    bu.innerText = text;
+    bu.addEventListener('click', () => {
+        hideUnhideComplete();
+    });
+    const sibling = document.querySelector('._3f9ou')
+    sibling.parentElement.insertBefore(bu, sibling);
+    if (text === '+') {
+        hideUnhideComplete('initial');
+    }
+}
+
+let interval;
 (function() {
     'use strict';
 
@@ -882,6 +941,9 @@ function createStoriesProgressShower() {
         const el = document.querySelector('.eFS_r, ._19SCP, ._1OHEh');
         if (el) {
             appendThemeSwitcher(el);
+        }
+        if (document.querySelector('[data-test="skill"]')) {
+            createHideButton();
         }
 
         if (localStorage.getItem('themed') === "1") {
@@ -974,16 +1036,6 @@ function createStoriesProgressShower() {
                         }
                     }, 1);
 
-                    //                     if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-incorrect"]'))) {
-                    //                         neco('wrong').then(() => {
-                    //                             if (counterBool) {
-                    //                                 changeCounter('bad');
-                    //                             } else {
-                    //                                 counterBool = true;
-                    //                             }
-                    //                         });
-                    //                     }
-
 
                     if (mutation.addedNodes[0].contains(document.querySelector('._1bfyi'))) {
                         window.removeEventListener('touchend', removeTouchEndEvent, true);
@@ -1008,6 +1060,16 @@ function createStoriesProgressShower() {
                     }
                     if (mutation.addedNodes[0].querySelector('.eFS_r, ._19SCP, ._1OHEh')) {
                         appendThemeSwitcher(mutation.addedNodes[0].querySelector('.eFS_r, ._19SCP, ._1OHEh'));
+                    }
+
+                    if (mutation.addedNodes[0].querySelector('[data-test="skill-tree"]')) {
+                        createHideButton();
+                    }
+                    if (mutation.addedNodes[0].classList.value === "_9O-0s _1888P") {
+                        clearTimeout(interval);
+                        interval = setTimeout(() => {
+                            hideUnhideComplete('initial')
+                        }, 250);
                     }
 
                     if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
@@ -1035,7 +1097,6 @@ function createStoriesProgressShower() {
                         createSlider();
                         createAutoClickButton(false);
                     }
-
                 }
 
                 if (mutation.removedNodes.length) {
