@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.6.3
+// @version      2.9.6.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -265,7 +265,6 @@ function addThemes() {
     }
 }
 
-// function touchendFun() {
 Node.prototype.swiper = function(direction, func) {
     let touchstartX = 0;
     let touchstartY = 0;
@@ -312,7 +311,6 @@ Node.prototype.swiper = function(direction, func) {
         }
     });
 }
-// }
 
 function swipeFunc(event) {
     if (mayISwipe(event)) {
@@ -468,46 +466,6 @@ function draggable() {
     });
     const container = document.querySelector('.PcKtj')
     const words = document.querySelectorAll('[data-test="word-bank"] > *');
-
-//     words.forEach(word => {
-//         word.addEventListener('click', () => {
-//             setTimeout(() => {
-//                 const draggables = document.querySelectorAll('.PcKtj > div:not(.sortable-chosen)')
-//                 draggables.forEach(draggable => {
-
-//                     if (!draggable.getAttributeNames().includes('draggable')) {
-
-//                         draggable.addEventListener('touchend', (e) => {
-//                             let before = false;
-//                             const array = Array.from(draggables).filter(item => {
-//                                 const xy = item.getBoundingClientRect();
-//                                 if (xy.x < e.changedTouches[0].pageX && xy.x + xy.width > e.changedTouches[0].pageX &&
-//                                     xy.y < e.changedTouches[0].pageY && xy.y + xy.height > e.changedTouches[0].pageY) {
-//                                     if (e.changedTouches[0].pageX < (xy.x + (xy.width/2))) {
-//                                         before = true;
-//                                     }
-//                                     return item;
-//                                 }
-//                             });
-//                             const target = array && array[0] ? array[0] : null;
-//                             if (target) {
-//                                 if (before) {
-//                                     container.insertBefore(draggable, target);
-//                                 } else {
-//                                     if (target.nextSibling) {
-//                                         container.insertBefore(draggable, target.nextSibling);
-//                                     } else {
-//                                         container.appendChild(draggable);
-//                                     }
-//                                 }
-//                             }
-
-//                         });
-//                     }
-//                 });
-//             }, 10);
-//         });
-//     });
 }
 
 function keyboardShortcuts() {
@@ -868,38 +826,35 @@ function hideUnhideComplete(initial) {
     const minus = bu.innerText === '-';
     if (initial && minus) return;
 
-    const containers = Array.from(document.querySelectorAll('._3f9ou'));
-    containers.forEach(container => {
-        const skills = Array.from(container.querySelectorAll('[data-test="skill"]'));
-        const toHide = skills.filter(skill => {
-            if (skill.querySelector('._1JPPG') && !skill.querySelector('._1m7gz')) {
-                return skill;
+    if (minus || initial) {
+        const containers = Array.from(document.querySelectorAll('._3f9ou'));
+        containers.forEach(container => {
+            const skills = Array.from(container.querySelectorAll('[data-test="skill"]'));
+            const toHide = skills.filter(skill => {
+                if (skill.querySelector('._1JPPG') && !skill.querySelector('._1m7gz')) {
+                    return skill;
+                }
+            });
+            toHide.forEach(item => {
+                item.classList.add('hidden-item');
+            });
+            if (!container.querySelectorAll('[data-test="skill"]:not(.hidden-item)').length) {
+                container.classList.add('hidden-item');
             }
         });
-        toHide.forEach(item => {
-            if (initial) {
-                item.style.display = minus ? null : 'none';
-            } else {
-                item.style.display = minus ? 'none': null;
-            }
+    } else {
+        const hidden = Array.from(document.querySelectorAll('.hidden-item'));
+        hidden.forEach(item => {
+            item.classList.remove('hidden-item');
         });
-        if (Array.from(container.querySelectorAll('[data-test="skill"]')).find(i => i.style.display !== 'none')) {
-            container.style.display = null;
-        } else {
-             if (initial) {
-                container.style.display = minus ? null : 'none';
-            } else {
-                container.style.display = minus ? 'none' : null;
-            }
-        }
-    });
+    }
     if (!initial) bu.innerText = minus ? '+' : '-';
     localStorage.setItem('hide', bu.innerText);
 }
 
 function createHideButton() {
     const bu = document.createElement('BUTTON');
-    bu.style.cssText = "background: #ffd900; border-radius: 50%; width: 3rem; height: 3rem; margin: auto;";
+    bu.style.cssText = "background: #ffd900; border-radius: 50%; width: 3rem; height: 3rem; margin: auto; font-size: 2rem;";
     bu.id = 'hide-show-bu';
     let text = localStorage.getItem('hide');
     if (!text) {
@@ -1006,8 +961,6 @@ let interval;
 
                     setTimeout(() => {
                         if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-correct"]'))) {
-                            //                     if (mutation.addedNodes[0].contains(document.querySelector('.vnENI._1MoE-'))) {
-                            //                             if (document.querySelector('[data-test="blame blame-correct"]')) {
                             neco('right').then(() => {
                                 if (counterBool) {
                                     changeCounter('right');
@@ -1016,15 +969,6 @@ let interval;
                                 }
                                 autoClick();
                             });
-                            //                             } else if (document.querySelector('[data-test="blame blame-incorrect"]')) {
-                            //                                 neco('wrong').then(() => {
-                            //                                     if (counterBool) {
-                            //                                         changeCounter('bad');
-                            //                                     } else {
-                            //                                         counterBool = true;
-                            //                                     }
-                            //                                 });
-                            //                             }
                         } else if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-incorrect"]'))) {
                             neco('wrong').then(() => {
                                 if (counterBool) {
