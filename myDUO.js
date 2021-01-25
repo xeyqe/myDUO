@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.6.4
+// @version      2.9.6.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -448,9 +448,9 @@ function reclick() {
             for (const str of strs) {
                 const btn = unclickedBtt.find(bu => {
                     const text = bu.innerText.includes('\n') ? bu.innerText.split('\n')[1] : bu.innerText;
-                    return str === text;
+                    return str === text && !bu.disabled;
                 })
-                btn.click();
+                btn?.click();
             }
         }, 300)
     }
