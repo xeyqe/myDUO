@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.6.5
+// @version      2.9.6.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -831,7 +831,7 @@ function hideUnhideComplete(initial) {
         containers.forEach(container => {
             const skills = Array.from(container.querySelectorAll('[data-test="skill"]'));
             const toHide = skills.filter(skill => {
-                if (skill.querySelector('._1JPPG') && !skill.querySelector('._1m7gz')) {
+                if (skill.querySelector('._3dqWQ') && !skill.querySelector('._1m7gz')) {
                     return skill;
                 }
             });
