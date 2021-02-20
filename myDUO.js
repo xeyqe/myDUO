@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.6.8
+// @version      2.9.6.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -1054,6 +1054,10 @@ let interval;
                                 document.querySelector('._3fuMA').style.left = null;
                             }
                         }, 250);
+                    }
+                    // I don't want to use the latest features with the Duolingo app!
+                    if (mutation.addedNodes[0].querySelector('._3ivLU._2kfEr._1nlVc._2fOC9.UCrz7.t5wFJ')) {
+                        document.querySelector('._3ivLU._2kfEr._1nlVc._2fOC9.UCrz7.t5wFJ').click();
                     }
                 }
 
