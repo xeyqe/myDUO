@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.6.9
+// @version      2.9.7.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -814,7 +814,7 @@ function createAutoClickButton(isStories) {
 
 function createStoriesProgressShower() {
     const progressEl = document.createElement('SPAN');
-    progressEl.innerText = document.querySelector('._1EGDF').style.width;
+    progressEl.innerText = document.querySelector('[role="progressbar"]').firstChild.style.width;
     progressEl.style.cssText = "z-index: 10; right: 0; position: absolute; top: 0;"
     progressEl.id = 'bugibugi';
     const target = document.querySelector('._2QKoe');
@@ -893,7 +893,7 @@ let interval;
 
         addThemes();
         createThemeSwitcherButton();
-        const el = document.querySelector('.eFS_r, ._19SCP, ._1OHEh');
+        const el = document.querySelector('._1bdcY');
         if (el) {
             appendThemeSwitcher(el);
         }
@@ -934,8 +934,8 @@ let interval;
                     }
                 }
 
-                if (mutation.target === document.querySelector('._1EGDF') && document.querySelector('#bugibugi')) {
-                    document.querySelector('#bugibugi').innerText = document.querySelector('._1EGDF').style.width;
+                if (mutation.target === document.querySelector('[role="progressbar"]') && document.querySelector('#bugibugi')) {
+                    document.querySelector('#bugibugi').innerText = document.querySelector('[role="progressbar"]').firstChild.style.width;
                 }
 
                 if (mutation.addedNodes[0] && mutation.addedNodes[0].tagName === 'DIV') {
