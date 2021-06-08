@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.7.0
+// @version      2.9.7.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -38,6 +38,7 @@ const css = [".switch {",
              "}",
              "",
              ".slider {",
+             "    display: flex;",
              "    position: absolute;",
              "    cursor: pointer;",
              "    top: 0;",
@@ -49,16 +50,15 @@ const css = [".switch {",
              "    transition: .4s;",
              "}",
              "",
-             ".slider:before {",
-             "    position: absolute;",
-             "    content: '';",
-             "    height: 26px;",
-             "    width: 26px;",
-             "    left: 4px;",
-             "    bottom: 4px;",
+             ".slider > span {",
+             "    position: relative;",
+             "    height: 29px;",
+             "    width: 29px;",
+             "    bottom: -3px;",
              "    background-color: white;",
              "    -webkit-transition: .4s;",
              "    transition: .4s;",
+             "    border-radius: 50%",
              "}",
              "",
              "input:checked + .slider {",
@@ -69,19 +69,14 @@ const css = [".switch {",
              "    box-shadow: 0 0 1px #2196F3;",
              "}",
              "",
-             "input:checked + .slider:before {",
-             "    -webkit-transform: translateX(26px);",
-             "    -ms-transform: translateX(26px);",
-             "    transform: translateX(26px);",
+             "input:checked + .slider > span {",
+             "    margin-left: auto",
              "}",
              "",
              ".slider.round {",
              "    border-radius: 34px;",
              "}",
              "",
-             ".slider.round:before {",
-             "    border-radius: 50%;",
-             "}",
              ".panel::-webkit-scrollbar {",
              "	width:0 !important",
              "}",
@@ -697,8 +692,11 @@ function createThemeSwitcherButton() {
     label = document.createElement('label');
     const input = document.createElement('input');
     const span = document.createElement('span');
+    const span2 = document.createElement('span');
+
 
     label.append(input, span);
+    span.append(span2);
     label.setAttribute('class','switch');
     label.style.zIndex = '100';
     label.style.top = '0.8em';
@@ -1012,7 +1010,10 @@ let interval;
                     if (mutation.addedNodes[0].classList.value === "_9O-0s _1888P") {
                         clearTimeout(interval);
                         interval = setTimeout(() => {
-                            hideUnhideComplete('initial')
+                            hideUnhideComplete('initial');
+                            setTimeout(() => {
+                                hideUnhideComplete('initial');
+                            }, 5000);
                         }, 250);
                     }
 
@@ -1051,7 +1052,7 @@ let interval;
                             const elX = el.getBoundingClientRect().x;
                             if (elX < 0 || (elX + elWidth) > (innerWidth - 16)) {
                                 el.style.transform = null;
-                                document.querySelector('._3fuMA').style.left = null;
+                                document.querySelector('.ite_X').style.left = null;
                             }
                         }, 250);
                     }
