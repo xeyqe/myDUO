@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.7.1
+// @version      2.9.7.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -434,7 +434,7 @@ function autoClick() {
 
 function reclick() {
     const clickedBtt = document.querySelectorAll('._1uasP button');
-    const unclickedBtt = Array.from(document.querySelectorAll('[data-test="word-bank"] button:disabled'));
+    const unclickedBtt = Array.from(document.querySelectorAll('[data-test="word-bank"] button[aria-disabled]'));
     const strs = [];
     for (const selectedBu of clickedBtt) {
         strs.push(selectedBu.innerText);
@@ -745,29 +745,35 @@ function storiesAutoClick() {
         const array = document.querySelectorAll('._3sNGF._3j32v:not(._2n3Ta)');
         const selected = Array.from(array).pop();
 
-        if (selected) {
-            let myLength;
-            const phrases = selected.querySelectorAll('.phrase');
-            const regex = /^\W+$/;
-            if (phrases[phrases.length - 1] &&
-                phrases[phrases.length - 1].textContent &&
-                phrases[phrases.length - 1].textContent.length > 1 &&
-                !regex.test(phrases[phrases.length - 1].textContent)) {
-                myLength = phrases[phrases.length - 1].textContent.length;
-                if (selected.querySelector('._3jGFa') && document.querySelector('._3jGFa').lastChild) {
-                    myLength += document.querySelector('._3jGFa').lastChild.textContent.length;
+        if (selected.querySelector('._3jGFa._1e1GW.Za336')) {
+            delay = 750;
+        } else {
+            if (selected) {
+                let myLength;
+                const phrases = selected.querySelectorAll('.phrase');
+                const regex = /^\W+$/;
+                if (phrases[phrases.length - 1] &&
+                    phrases[phrases.length - 1].textContent &&
+                    phrases[phrases.length - 1].textContent.length > 1 &&
+                    !regex.test(phrases[phrases.length - 1].textContent)) {
+                    myLength = phrases[phrases.length - 1].textContent.length;
+                    if (selected.querySelector('._3jGFa') && document.querySelector('._3jGFa').lastChild) {
+                        myLength += document.querySelector('._3jGFa').lastChild.textContent.length;
+                    }
+                } else if (phrases[phrases.length - 2] && phrases[phrases.length - 2].textContent && phrases[phrases.length - 2].textContent.length > 1) {
+                    myLength = phrases[phrases.length - 2].textContent.length;
+                } else if (document.querySelector('button[autofocus]')) {
+                    document.querySelector('button[autofocus]').click();
+                    return;
                 }
-            } else if (phrases[phrases.length - 2] && phrases[phrases.length - 2].textContent && phrases[phrases.length - 2].textContent.length > 1) {
-                myLength = phrases[phrases.length - 2].textContent.length;
-            } else if (document.querySelector('button[autofocus]')) {
-                document.querySelector('button[autofocus]').click();
-                return;
-            }
-            delay = myLength < 5 ? (myLength*100) + 300 : myLength*100;
-            if (selected.querySelector('._2ufQI')) {
-                delay += selected.querySelector('._2ufQI').textContent.length * 100;
+                delay = myLength < 5 ? (myLength*100) + 300 : myLength*100;
+                if (selected.querySelector('._2ufQI')) {
+                    delay += selected.querySelector('._2ufQI').textContent.length * 100;
+                }
             }
         }
+
+
 
     } else {
         delay = storiesHiddenLength < 5 ? (storiesHiddenLength*100) + 300 : storiesHiddenLength*100;
@@ -919,7 +925,6 @@ let interval;
 
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
-
                 if (mutation.attributeName === "autofocus" && mutation.target.disabled === false &&
                     (!document.querySelector('textarea') || document.querySelector('textarea').disabled)) {
                     if (storyContinueButtonTimeout) {
@@ -1011,9 +1016,6 @@ let interval;
                         clearTimeout(interval);
                         interval = setTimeout(() => {
                             hideUnhideComplete('initial');
-                            setTimeout(() => {
-                                hideUnhideComplete('initial');
-                            }, 5000);
                         }, 250);
                     }
 
