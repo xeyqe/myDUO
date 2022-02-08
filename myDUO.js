@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.7.2
+// @version      2.9.7.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,7 +9,7 @@
 // @include      https://duolingo.com/*
 // @include      http://*.duolingo.com/*
 // @include      https://*.duolingo.com/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.13.0/Sortable.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
 
@@ -442,8 +442,7 @@ function reclick() {
         setTimeout(() => {
             for (const str of strs) {
                 const btn = unclickedBtt.find(bu => {
-                    const text = bu.innerText.includes('\n') ? bu.innerText.split('\n')[1] : bu.innerText;
-                    return str === text && !bu.disabled;
+                    return str === bu.innerText && !bu.getAttributeNames().includes('aria-disabled');
                 })
                 btn?.click();
             }
@@ -463,57 +462,59 @@ function draggable() {
     const words = document.querySelectorAll('[data-test="word-bank"] > *');
 }
 
-function keyboardShortcuts() {
-    const list = document.querySelectorAll('[data-test="challenge-tap-token"]');
+// function keyboardShortcuts() {
+//     function removeTouchEndEvent(e) {
+//             e.stopPropagation();
+//         }
+//     window.removeEventListener('keydown', removeTouchEndEvent, true);
+//     const list = document.querySelectorAll('[data-test="challenge-tap-token"]');
 
-    const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
-                        "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
-                        "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyZ", "KeyX",
-                        "KeyC", "KeyV", "KeyB", "KeyN", "KeyM"];
+//     const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
+//                         "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
+//                         "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyZ", "KeyX",
+//                         "KeyC", "KeyV", "KeyB", "KeyN", "KeyM"];
 
-    document.onkeyup = function(e) {
-        if (listOfCode.includes(e.code)) {
-            let char = e.code[3].toLowerCase();
-            list.forEach(el => {
-                if (el.innerText.includes('\n') && el.innerText.split('\n')[0] === char) {
-                    el.click();
-                }
-            });
-        } else if (e.code === "Backspace") {
-            let node = document.querySelectorAll('._1uasP button');
+//     document.onkeyup = function(e) {
+//         if (listOfCode.includes(e.code)) {
+//             let char = e.code[3].toLowerCase();
+//             list.forEach(el => {
+//                 if (el.querySelector('i')?.innerText === char) {
+//                     el.click();
+//                 }
+//             });
+//         }
+//     }
 
-            if (node[node.length - 1]) {
-                node[node.length - 1].click();
-            }
-        }
-    }
+//     window.addEventListener('resize', hideShowKey);
+//     setTimeout(_ => hideShowKey(), 100);
+// }
 
-    window.addEventListener('resize', hideShowKey);
-    setTimeout(_ => hideShowKey(), 100);
-}
+// function hideShowKey() {
+//     const list = document.querySelectorAll('[data-test="word-bank"] button');
 
-function hideShowKey() {
-    const list = document.querySelectorAll('[data-test="word-bank"] button');
+//     const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
+//                         "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
+//                         "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyZ", "KeyX",
+//                         "KeyC", "KeyV", "KeyB", "KeyN", "KeyM"];
 
-    const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
-                        "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
-                        "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyZ", "KeyX",
-                        "KeyC", "KeyV", "KeyB", "KeyN", "KeyM"];
-
-    if (window.innerWidth>700 && window.innerWidth>window.innerHeight) {
-        for (let i=0; i<list.length; i++) {
-            if (!list[i].innerText.includes('\n')) {
-                list[i].innerText = listOfCode[i][3].toLowerCase() + '\n' + list[i].innerText;
-            }
-        }
-    } else {
-        list.forEach(el => {
-            if (el.innerText.includes('\n')) {
-                el.innerText = el.innerText.split('\n')[1];
-            }
-        });
-    }
-}
+//     if (window.innerWidth>700 && window.innerWidth>window.innerHeight) {
+//         list.forEach((el, i) => {
+//             if (!el.querySelector('i')) {
+//                 const sp = document.createElement('i');
+//                 sp.style.color = 'orangered';
+//                 sp.innerText = listOfCode[i][3].toLowerCase();
+//                 list[i].style.cssText = "display: flex; flex-direction: column;";
+//                 list[i].prepend(sp);
+//             }
+//         });
+//     } else {
+//         list.forEach(el => {
+//             if (el.querySelector('i')) {
+//                 el?.firstChild?.remove();
+//             }
+//         });
+//     }
+// }
 
 
 function createSlider() {
@@ -815,10 +816,24 @@ function createAutoClickButton(isStories) {
         document.querySelector('.nP82K').appendChild(bu);
     }
 }
+const storiesProgressBarUpdater = function(mutationsList, observer) {
+    for(let mutation of mutationsList) {
+        if (mutation.attributeName === 'aria-valuenow') {
+            const progress = String(mutation.target.getAttribute('aria-valuenow')*100).substring(0, 4)+'%';
+            document.querySelector('#bugibugi').innerText = progress;
+        }
+    }
+}
+
 
 function createStoriesProgressShower() {
+    const targetNode = document.querySelector('[role="progressbar"]');
+    const config = { attributes: true };
+    const observer = new MutationObserver(storiesProgressBarUpdater);
+
+    observer.observe(targetNode, config);
     const progressEl = document.createElement('SPAN');
-    progressEl.innerText = document.querySelector('[role="progressbar"]').firstChild.style.width;
+    progressEl.innerText = document.querySelector('[role="progressbar"]').getAttribute('aria-valuenow')*100+'%';
     progressEl.style.cssText = "z-index: 10; right: 0; position: absolute; top: 0;"
     progressEl.id = 'bugibugi';
     const target = document.querySelector('._2QKoe');
@@ -1001,9 +1016,9 @@ let interval;
                         },200);
                     }
 
-                    if (mutation.addedNodes[0].querySelector('[data-test="word-bank"]')) {
+                    if (mutation.addedNodes[0].querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
                         draggable();
-                        keyboardShortcuts();
+                        // keyboardShortcuts();
                     }
                     if (mutation.addedNodes[0].querySelector('.eFS_r, ._19SCP, ._1OHEh')) {
                         appendThemeSwitcher(mutation.addedNodes[0].querySelector('.eFS_r, ._19SCP, ._1OHEh'));
@@ -1070,7 +1085,7 @@ let interval;
                             document.onkeyup = function (e) {
                                 return false;
                             }
-                            window.removeEventListener("resize", hideShowKey);
+                            // window.removeEventListener("resize", hideShowKey);
                         }
                     }
                 }
