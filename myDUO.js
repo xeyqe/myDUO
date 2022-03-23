@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.7.3
+// @version      2.9.7.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -177,9 +177,22 @@ const css = [".switch {",
              "        display: block;",
              "    }",
              "}",
+             "button._2mDNn > i {",
+             "    opacity: 0;",
+             "}",
              ".panel * {",
              "    min-width: unset;",
-             "}"].join("\n");
+             "}",
+             ".uH5m4 {",
+             "    height: fit-content;",
+             "}",
+             "._6lk-i {",
+             "    padding: 32px 12px 0px;",
+             "}",
+             "._3f9ou:not(.hidden-item) {",
+             "    padding: 0px;",
+             "}"
+            ].join("\n");
 const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
               "@supports (backdrop-filter: invert(100%)) {",
               "    #mybpwaycfxccmnp-dblt-backdrop-filter {",
@@ -583,6 +596,10 @@ function neco(color) {
             divMain.appendChild(div);
         }
 
+        if (document.querySelector('[data-test="hint-token"]')) {
+            question = document.querySelector('[data-test="hint-token"]').parentElement.innerText;
+        }
+
         if (document.querySelector('[data-test="hint-sentence"]')) {
             question = document.querySelector('[data-test="hint-sentence"]').innerText;
         }
@@ -609,6 +626,10 @@ function neco(color) {
             yourAnswer = document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]').textContent;
         }
 
+        if (document.querySelector('[data-test="challenge challenge-listenComplete"] ._55nw4 label')) {
+            question = document.querySelector('[data-test="challenge challenge-listenComplete"] ._55nw4 label').textContent;
+            yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
+        }
 
 
         if (document.querySelector('[data-test="challenge-translate-input"]')) {
@@ -616,7 +637,10 @@ function neco(color) {
         }
 
         if (document.querySelector('[data-test="challenge-text-input"]')) {
-            yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
+            const fisrtPart = document.querySelector('.disCS >[data-test="challenge-judge-text"]')?.textContent;
+            if (fisrtPart) {
+                yourAnswer = fisrtPart + ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
+            }
         }
 
         if (document.querySelector('._3ysW7')) {
@@ -624,12 +648,8 @@ function neco(color) {
         }
 
         // draggable
-        const buttons = document.querySelectorAll('._1uasP button');
-        if (buttons && buttons.length) {
-            yourAnswer = '';
-            for (const bu of buttons) {
-                yourAnswer = yourAnswer + ' ' + bu.textContent;
-            }
+        if (document.querySelector('[data-test="challenge-tap-token"]')) {
+            yourAnswer = document.querySelector('[data-test="challenge-tap-token"]').parentElement.parentElement.innerText.replace(/\n/g, ' ');
         }
 
         const pictures = document.querySelectorAll('[data-test="challenge-choice-card"]');
@@ -846,20 +866,20 @@ function hideUnhideComplete(initial) {
     if (initial && minus) return;
 
     if (minus || initial) {
-        const containers = Array.from(document.querySelectorAll('._3f9ou'));
-        containers.forEach(container => {
-            const skills = Array.from(container.querySelectorAll('[data-test="skill"]'));
-            const toHide = skills.filter(skill => {
-                if (skill.querySelector('._3dqWQ') && !skill.querySelector('._1m7gz')) {
-                    return skill;
+        const treeSections = Array.from(document.querySelectorAll('[data-test="tree-section"]'));
+        treeSections.forEach(section => {
+            const containers = Array.from(section.querySelectorAll('._3f9ou'));
+            containers.forEach(container => {
+                const skills = Array.from(container.querySelectorAll('[data-test="skill"]'));
+                skills.forEach(skill => {
+                    if ((skill.querySelector('._3dqWQ') || skill.querySelector('._2rjLm')) && !skill.querySelector('._1m7gz')) {
+                        skill.classList.add('hidden-item');
+                    }
+                });
+                if (!container.querySelectorAll('[data-test="skill"]:not(.hidden-item)').length) {
+                    container.classList.add('hidden-item');
                 }
             });
-            toHide.forEach(item => {
-                item.classList.add('hidden-item');
-            });
-            if (!container.querySelectorAll('[data-test="skill"]:not(.hidden-item)').length) {
-                container.classList.add('hidden-item');
-            }
         });
     } else {
         const hidden = Array.from(document.querySelectorAll('.hidden-item'));
@@ -916,9 +936,9 @@ let interval;
         if (el) {
             appendThemeSwitcher(el);
         }
-        if (document.querySelector('[data-test="skill"]')) {
-            createHideButton();
-        }
+
+         if (document.querySelector('[data-test="skill-tree"]'))
+             createHideButton();
 
         if (localStorage.getItem('themed') === "1") {
             head[0].appendChild(style);
@@ -940,6 +960,20 @@ let interval;
 
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
+                if (
+                    mutation.addedNodes[0]?.classList?.value === '_15U-t' &&
+                    document.querySelector('#hide-show-bu')?.innerText === '+' &&
+                    (mutation.addedNodes[0].querySelector('._3dqWQ') || mutation.addedNodes[0].querySelector('._2rjLm')) &&
+                    !mutation.addedNodes[0].querySelector('._1m7gz')
+                ) {
+                    mutation.target.parentElement.parentElement.parentElement.classList.add('hidden-item');
+                }
+                // if (
+                //     mutation.target.classList?.value === 'vsc-initialized' &&
+                //     mutation.removedNodes[0]?.src === 'https://tpc.googlesyndication.com/sodar/sodar2/225/runner.html' &&
+                //     document.querySelector('[data-test="skill-tree"]')
+                // )
+                //     createHideButton();
                 if (mutation.attributeName === "autofocus" && mutation.target.disabled === false &&
                     (!document.querySelector('textarea') || document.querySelector('textarea').disabled)) {
                     if (storyContinueButtonTimeout) {
@@ -947,7 +981,7 @@ let interval;
                         storyContinueButtonTimeout = null;
                     }
 
-                    if (storiesAuto) {
+                    if (storiesAuto && document.querySelector('[data-test="stories-element"]')) {
                         storiesAutoClick();
                     }
                 }
@@ -1036,7 +1070,10 @@ let interval;
 
                     if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
                         mutation.addedNodes[0].contains(document.querySelector('input'))) {
-                        setTimeout(()=>{document.querySelector('textarea, input').focus()},200);
+                        setTimeout(()=>{
+                            document.querySelector('textarea, input').focus({preventScroll: true});
+                            window.scroll(0, 0);
+                        },200);
                     }
 
                     if (mutation.addedNodes[0].contains(document.querySelector(father))) {
