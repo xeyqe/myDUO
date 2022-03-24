@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.7.5
+// @version      2.9.7.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -177,14 +177,20 @@ const css = [".switch {",
              "        display: block;",
              "    }",
              "}",
+             "@media (max-width: 700px) {",
+             "    ._3FAc4 {",
+             "        display: flex;",
+             "        flex-direction: column-reverse;",
+             "    }",
+             "    .mQ0GW {",
+             "        height: calc(100% + 50px);",
+             "    }",
+             "}",
              "button._2mDNn > i {",
              "    opacity: 0;",
              "}",
              ".panel * {",
              "    min-width: unset;",
-             "}",
-             ".uH5m4 {",
-             "    height: fit-content;",
              "}",
              "._6lk-i {",
              "    padding: 32px 12px 0px;",
