@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.7.4
+// @version      2.9.7.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -647,6 +647,16 @@ function neco(color) {
             yourAnswer = document.querySelector('._3ysW7').innerText.replace(/\n/g, ' ');
         }
 
+        if (document.querySelector('[data-test="challenge-choice"][aria-checked="true"]')) {
+            if (document.querySelector('[data-test="challenge-judge-text"]')) {
+                yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] [data-test="challenge-judge-text"]').innerText;
+                if (document.querySelector('[data-test="challenge-text-input"]')) {
+                    yourAnswer += ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
+                }
+            } else
+                yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').innerText.split('\n').at(0);
+        }
+
         // draggable
         if (document.querySelector('[data-test="challenge-tap-token"]')) {
             yourAnswer = document.querySelector('[data-test="challenge-tap-token"]').parentElement.parentElement.innerText.replace(/\n/g, ' ');
@@ -660,10 +670,22 @@ function neco(color) {
                 }
             }
         }
+        let question2;
+        if (document.querySelector('[data-test="challenge challenge-completeReverseTranslation"] [data-test="challenge-text-input"]')) {
+            question2 = document.querySelector('[data-test="challenge challenge-completeReverseTranslation"] [data-test="challenge-text-input"]').parentElement.parentElement.textContent;
+            yourAnswer = document.querySelector('[data-test="challenge challenge-completeReverseTranslation"] [data-test="challenge-text-input"]').value;
+        }
 
         if (question) {
             const div = emptyDiv.cloneNode();
             div.innerText = question;
+            div.style.color = 'black';
+            divMain.appendChild(div);
+        }
+
+        if (question2) {
+            const div = emptyDiv.cloneNode();
+            div.innerText = question2;
             div.style.color = 'black';
             divMain.appendChild(div);
         }
@@ -968,6 +990,9 @@ let interval;
                 ) {
                     mutation.target.parentElement.parentElement.parentElement.classList.add('hidden-item');
                 }
+
+                if (mutation.type === 'childList' && mutation.addedNodes?.length && mutation.addedNodes[0]?.classList?.value === '_2lzAc')
+                    document.querySelector('[data-test="player-next"]')?.click()
                 // if (
                 //     mutation.target.classList?.value === 'vsc-initialized' &&
                 //     mutation.removedNodes[0]?.src === 'https://tpc.googlesyndication.com/sodar/sodar2/225/runner.html' &&
