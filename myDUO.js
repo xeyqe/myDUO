@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.7.6
+// @version      2.9.7.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -138,8 +138,8 @@ const css = [".switch {",
              "}",
              ".panel {",
              "    width: fit-content;",
-             "    max-width: 95vw;",
              "    float: left;",
+             "    max-width: 95vw;",
              "    height: fit-content;",
              "    position: absolute;",
              "    top: 8%;",
@@ -178,12 +178,14 @@ const css = [".switch {",
              "    }",
              "}",
              "@media (max-width: 700px) {",
-             "    ._3FAc4 {",
-             "        display: flex;",
-             "        flex-direction: column-reverse;",
+             "    .uH5m4 {",
+             "        min-height: fit-content;",
              "    }",
-             "    .mQ0GW {",
-             "        height: calc(100% + 50px);",
+             "    .panel.show.shorter {",
+             "        max-height: 72vh;",
+             "    }",
+             "    .hidden-footer {",
+             "        display: none;",
              "    }",
              "}",
              "button._2mDNn > i {",
@@ -481,61 +483,6 @@ function draggable() {
     const words = document.querySelectorAll('[data-test="word-bank"] > *');
 }
 
-// function keyboardShortcuts() {
-//     function removeTouchEndEvent(e) {
-//             e.stopPropagation();
-//         }
-//     window.removeEventListener('keydown', removeTouchEndEvent, true);
-//     const list = document.querySelectorAll('[data-test="challenge-tap-token"]');
-
-//     const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
-//                         "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
-//                         "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyZ", "KeyX",
-//                         "KeyC", "KeyV", "KeyB", "KeyN", "KeyM"];
-
-//     document.onkeyup = function(e) {
-//         if (listOfCode.includes(e.code)) {
-//             let char = e.code[3].toLowerCase();
-//             list.forEach(el => {
-//                 if (el.querySelector('i')?.innerText === char) {
-//                     el.click();
-//                 }
-//             });
-//         }
-//     }
-
-//     window.addEventListener('resize', hideShowKey);
-//     setTimeout(_ => hideShowKey(), 100);
-// }
-
-// function hideShowKey() {
-//     const list = document.querySelectorAll('[data-test="word-bank"] button');
-
-//     const listOfCode = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
-//                         "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF",
-//                         "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyZ", "KeyX",
-//                         "KeyC", "KeyV", "KeyB", "KeyN", "KeyM"];
-
-//     if (window.innerWidth>700 && window.innerWidth>window.innerHeight) {
-//         list.forEach((el, i) => {
-//             if (!el.querySelector('i')) {
-//                 const sp = document.createElement('i');
-//                 sp.style.color = 'orangered';
-//                 sp.innerText = listOfCode[i][3].toLowerCase();
-//                 list[i].style.cssText = "display: flex; flex-direction: column;";
-//                 list[i].prepend(sp);
-//             }
-//         });
-//     } else {
-//         list.forEach(el => {
-//             if (el.querySelector('i')) {
-//                 el?.firstChild?.remove();
-//             }
-//         });
-//     }
-// }
-
-
 function createSlider() {
     const panel = document.createElement("div");
 
@@ -570,7 +517,6 @@ function showHidePanel(event){
         }
     }
 }
-
 
 function neco(color) {
     const promise = new Promise((resolve)=>{
@@ -735,8 +681,6 @@ function neco(color) {
 
 }
 
-
-
 function createThemeSwitcherButton() {
     label = document.createElement('label');
     const input = document.createElement('input');
@@ -768,10 +712,16 @@ function createThemeSwitcherButton() {
     });
 }
 
-function appendThemeSwitcher(element) {
-    element.append(label);
-    if (localStorage.getItem('themed') === '1' && document.querySelector('#checkbx')) {
-        document.querySelector('#checkbx').checked = true;
+async function appendThemeSwitcher() {
+    let element = document.querySelector('._1bdcY') || document.querySelector('._3gRtk') || document.querySelector('._5k0pQ');
+    if (!element)
+        await new Promise(resolve => setTimeout(resolve, 500));
+    element = document.querySelector('._1bdcY') || document.querySelector('._3gRtk') || document.querySelector('._5k0pQ');
+    if (element) {
+        element.append(label);
+        if (localStorage.getItem('themed') === '1' && document.querySelector('#checkbx')) {
+            document.querySelector('#checkbx').checked = true;
+        }
     }
 }
 
@@ -784,62 +734,9 @@ function mayISwipe(event) {
     }
 }
 
-let storyContinueButtonTimeout;
-let storiesHiddenLength;
-function storiesAutoClick() {
-    let delay;
-
-    if (!storiesHiddenLength) {
-
-        const array = document.querySelectorAll('._3sNGF._3j32v:not(._2n3Ta)');
-        const selected = Array.from(array).pop();
-
-        if (selected.querySelector('._3jGFa._1e1GW.Za336')) {
-            delay = 750;
-        } else {
-            if (selected) {
-                let myLength;
-                const phrases = selected.querySelectorAll('.phrase');
-                const regex = /^\W+$/;
-                if (phrases[phrases.length - 1] &&
-                    phrases[phrases.length - 1].textContent &&
-                    phrases[phrases.length - 1].textContent.length > 1 &&
-                    !regex.test(phrases[phrases.length - 1].textContent)) {
-                    myLength = phrases[phrases.length - 1].textContent.length;
-                    if (selected.querySelector('._3jGFa') && document.querySelector('._3jGFa').lastChild) {
-                        myLength += document.querySelector('._3jGFa').lastChild.textContent.length;
-                    }
-                } else if (phrases[phrases.length - 2] && phrases[phrases.length - 2].textContent && phrases[phrases.length - 2].textContent.length > 1) {
-                    myLength = phrases[phrases.length - 2].textContent.length;
-                } else if (document.querySelector('button[autofocus]')) {
-                    document.querySelector('button[autofocus]').click();
-                    return;
-                }
-                delay = myLength < 5 ? (myLength*100) + 300 : myLength*100;
-                if (selected.querySelector('._2ufQI')) {
-                    delay += selected.querySelector('._2ufQI').textContent.length * 100;
-                }
-            }
-        }
-
-
-
-    } else {
-        delay = storiesHiddenLength < 5 ? (storiesHiddenLength*100) + 300 : storiesHiddenLength*100;
-    }
-    storyContinueButtonTimeout = setTimeout(() => {
-        if (document.querySelector('button[autofocus]')) {
-            document.querySelector('button[autofocus]').click();
-        }
-        if (storiesHiddenLength) {
-            storiesHiddenLength = null;
-        }
-    }, delay);
-}
-
-let storiesAuto = localStorage.getItem('stories_autoclick') && localStorage.getItem('stories_autoclick') === 'yes';
-let testingAuto = localStorage.getItem('autoclick') && localStorage.getItem('autoclick') === 'yes';
 function createAutoClickButton(isStories) {
+    let storiesAuto = localStorage.getItem('stories_autoclick') === 'yes';
+    let testingAuto = localStorage.getItem('autoclick') === 'yes';
     const bu = document.createElement('BUTTON');
     bu.id = 'my-autoclick-bu';
     bu.style.zIndex = isStories ? 10000 : 10;
@@ -864,22 +761,8 @@ function createAutoClickButton(isStories) {
         document.querySelector('.nP82K').appendChild(bu);
     }
 }
-const storiesProgressBarUpdater = function(mutationsList, observer) {
-    for(let mutation of mutationsList) {
-        if (mutation.attributeName === 'aria-valuenow') {
-            const progress = String(mutation.target.getAttribute('aria-valuenow')*100).substring(0, 4)+'%';
-            document.querySelector('#bugibugi').innerText = progress;
-        }
-    }
-}
-
 
 function createStoriesProgressShower() {
-    const targetNode = document.querySelector('[role="progressbar"]');
-    const config = { attributes: true };
-    const observer = new MutationObserver(storiesProgressBarUpdater);
-
-    observer.observe(targetNode, config);
     const progressEl = document.createElement('SPAN');
     progressEl.innerText = document.querySelector('[role="progressbar"]').getAttribute('aria-valuenow')*100+'%';
     progressEl.style.cssText = "z-index: 10; right: 0; position: absolute; top: 0;"
@@ -939,6 +822,164 @@ function createHideButton() {
     }
 }
 
+let footerHidden = localStorage.getItem('footerHidden') === "true"
+function showHideFooter() {
+    if (footerHidden) {
+        localStorage.removeItem('footerHidden');
+        footerHidden = false;
+    } else {
+        localStorage.setItem('footerHidden', 'true');
+        footerHidden = true;
+    }
+    hideShowFooter(footerHidden);
+}
+
+function hideShowFooter(hide) {
+    const el = document.querySelector('#session\\/PlayerFooter').parentElement;
+    if (hide) {
+        el?.classList?.add('hidden-footer');
+        document.querySelector('.panel')?.classList?.remove('shorter')
+    } else {
+        el?.classList?.remove('hidden-footer');
+        document.querySelector('.panel')?.classList?.add('shorter')
+    }
+}
+
+function setSkillTreeObserver() {
+    const callback = function(mutationsList, observer) {
+        for(const mutation of mutationsList) {
+            if (
+                mutation.addedNodes[0]?.classList?.value === '_15U-t' &&
+                document.querySelector('#hide-show-bu')?.innerText === '+' &&
+                (mutation.addedNodes[0].querySelector('._3dqWQ') || mutation.addedNodes[0].querySelector('._2rjLm')) &&
+                !mutation.addedNodes[0].querySelector('._1m7gz')
+            ) {
+                mutation.target.parentElement.parentElement.parentElement.classList.add('hidden-item');
+            } else  if (
+                mutation.addedNodes[0]?.nodeType === 1 &&
+                (
+                    mutation.addedNodes[0] === document.querySelector('[data-test=skill-popout]') ||
+                    mutation.addedNodes[0]?.querySelector('[data-test="skill-popout"]')
+                )
+            ) {
+                const innerWidth = window.innerWidth;
+                setTimeout(() => {
+                    const el = document.querySelector('[data-test=skill-popout]').firstElementChild;
+                    const elWidth = el.getBoundingClientRect().width;
+                    const elX = el.getBoundingClientRect().x;
+                    if (elX < 0 || (elX + elWidth) > (innerWidth - 16)) {
+                        el.style.transform = null;
+                        document.querySelector('.ite_X').style.left = null;
+                    }
+                }, 250);
+            }
+        }
+    }
+    const targetNode = document.querySelector('body');
+    const config = { attributes: false, childList: true, subtree: true, characterData: false };
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+}
+
+function setLearnObserver() {
+    const callback = function(mutationsList, observer) {
+        for(const mutation of mutationsList) {
+            if (mutation.addedNodes[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
+                draggable();
+            } else if (
+                mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
+                mutation.addedNodes[0].contains(document.querySelector('input'))
+            ) {
+                setTimeout(()=>{
+                    document.querySelector('textarea, input').focus({preventScroll: true});
+                    document.querySelector('[data-test="challenge-header"]')?.scrollIntoView({behavior: "smooth"});
+                },200);
+            }
+        }
+    }
+    const targetNode = document.querySelector('[data-test*="challenge "]').parentElement.parentElement;
+    const config = { attributes: false, childList: true, subtree: true, characterData: false };
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+
+    const callback2 = function(mutationsList, observer) {
+        for(const mutation of mutationsList) {
+            if (
+                mutation.attributeName === "class" &&
+                mutation.target.id === 'session/PlayerFooter' &&
+                mutation.target.classList.value.includes('_399cc')
+            ) {
+                hideShowFooter(footerHidden);
+            }
+            setTimeout(() => {
+                if (mutation.addedNodes[0]?.querySelector('[data-test="blame blame-correct"]')) {
+                    if (!document.querySelector('[data-test="blame blame-correct"]').parentElement.classList.value.includes('_2NxDA')) { // can't listen/speak skip
+                        neco('right').then(() => {
+                            changeCounter('right');
+                            document.querySelector('[data-test="player-next"]')?.click();
+                        });
+                    }
+                } else if (mutation.addedNodes[0]?.querySelector('[data-test="blame blame-incorrect"]')) {
+                    neco('wrong').then(() => {
+                        changeCounter('bad');
+                        hideShowFooter(false);
+                    });
+                }
+            }, 1);
+        }
+    }
+    const targetNode2 = document.querySelector('#session\\/PlayerFooter').parentElement;
+    const config2 = { attributes: true, childList: true, subtree: true, characterData: false };
+    const observer2 = new MutationObserver(callback2);
+    observer2.observe(targetNode2, config2);
+}
+
+function setStoriesObservers() {
+    const storiesProgressBarUpdater = function(mutationsList, observer) {
+        for(let mutation of mutationsList) {
+            if (mutation.attributeName === 'aria-valuenow') {
+                const progress = String(mutation.target.getAttribute('aria-valuenow')*100).substring(0, 4)+'%';
+                document.querySelector('#bugibugi').innerText = progress;
+            }
+        }
+    }
+    const targetNode = document.querySelector('[role="progressbar"]');
+    const config = { attributes: true };
+    const observer = new MutationObserver(storiesProgressBarUpdater);
+    observer.observe(targetNode, config);
+
+    const storiesElementsContainerObserverFun = (mutationsList, observer) => {
+        mutationsList.forEach(mutation => {
+            if (mutation.attributeName === 'autofocus' && mutation.target.disabled === false) {
+                if (document.querySelector('#my-autoclick-bu').textContent === 'A') {
+                    const delay = getDelay();
+                    setTimeout(() => {
+                        document.querySelector('[data-test="stories-player-continue"]')?.click();
+                    }, delay);
+                }
+            }
+        });
+    }
+    const targetNode2 = document.querySelector('[data-test="stories-player-continue"]')
+    const config2 = { attributes: true, childList: false, subtree: false, characterData: false };
+    const observer2 = new MutationObserver(storiesElementsContainerObserverFun);
+    observer2.observe(targetNode2, config2);
+}
+
+function getDelay() {
+    const el = Array.from(
+        document.querySelectorAll('[data-test="stories-element"]._3sNGF:not(._1Mwcz, ._2n3Ta), [data-test="stories-element"]._35e5D')
+    ).filter(el => !!el.childElementCount && !el.querySelector('[data-test="stories-element"]')).pop();
+    if (document.querySelector('.TVxEB') && !el?.querySelector('._2mWtz')) return 0;
+    let str = el?.querySelector('._2mWtz')?.textContent ||
+        el?.textContent?.split(/\s/)?.pop() ||
+        document.querySelector('[data-test="stories-element"]').textContent
+
+    return str?.length ?
+        (str.length < 5 ? (str.length * 100) + 300 : str.length * 100) :
+        750;
+}
+
 let interval;
 (function() {
     'use strict';
@@ -948,36 +989,20 @@ let interval;
     document.querySelector('html').insertBefore(el, document.querySelector('body'))
 
     window.addEventListener('load', function() {
-        window.removeEventListener('touchend', removeTouchEndEvent, true);
-        if (document.querySelector(father)) {
-            document.querySelector(father).swiper("swipeLeft", swipeFunc);
-            document.querySelector(father).swiper("swipeRight", showHidePanel);
-        } else if(document.querySelector('.story-page')) {
-            document.querySelector('.story-page').swiper('swipeDown', ()=>{
-                document.querySelector('button.continue').click();
-            });
-        }
-
         addThemes();
         createThemeSwitcherButton();
-        const el = document.querySelector('._1bdcY');
-        if (el) {
-            appendThemeSwitcher(el);
-        }
+        appendThemeSwitcher();
 
-         if (document.querySelector('[data-test="skill-tree"]'))
-             createHideButton();
+        if (document.querySelector('[data-test="skill-tree"]')) {
+            createHideButton();
+            setSkillTreeObserver();
+        }
 
         if (localStorage.getItem('themed') === "1") {
             head[0].appendChild(style);
             if (document.querySelector('#checkbx')) {
                 document.querySelector('#checkbx').checked = true;
             }
-        }
-
-        let counterBool = true;
-        const aaa = (event) => {
-            event.stopPropagation;
         }
 
         function removeTouchEndEvent(e) {
@@ -988,184 +1013,45 @@ let interval;
 
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
-                if (
-                    mutation.addedNodes[0]?.classList?.value === '_15U-t' &&
-                    document.querySelector('#hide-show-bu')?.innerText === '+' &&
-                    (mutation.addedNodes[0].querySelector('._3dqWQ') || mutation.addedNodes[0].querySelector('._2rjLm')) &&
-                    !mutation.addedNodes[0].querySelector('._1m7gz')
-                ) {
-                    mutation.target.parentElement.parentElement.parentElement.classList.add('hidden-item');
-                }
 
-                if (mutation.type === 'childList' && mutation.addedNodes?.length && mutation.addedNodes[0]?.classList?.value === '_2lzAc')
-                    document.querySelector('[data-test="player-next"]')?.click()
-                // if (
-                //     mutation.target.classList?.value === 'vsc-initialized' &&
-                //     mutation.removedNodes[0]?.src === 'https://tpc.googlesyndication.com/sodar/sodar2/225/runner.html' &&
-                //     document.querySelector('[data-test="skill-tree"]')
-                // )
-                //     createHideButton();
-                if (mutation.attributeName === "autofocus" && mutation.target.disabled === false &&
-                    (!document.querySelector('textarea') || document.querySelector('textarea').disabled)) {
-                    if (storyContinueButtonTimeout) {
-                        clearTimeout(storyContinueButtonTimeout);
-                        storyContinueButtonTimeout = null;
+                if (mutation.addedNodes[0]?.nodeType === 1) {
+                    if (mutation.addedNodes[0]?.querySelector('._3GElo') || mutation.addedNodes[0]?.querySelector('._1bdcY')) {
+                        appendThemeSwitcher();
                     }
 
-                    if (storiesAuto && document.querySelector('[data-test="stories-element"]')) {
-                        storiesAutoClick();
-                    }
-                }
-
-                if (mutation.target === document.querySelector('[role="progressbar"]') && document.querySelector('#bugibugi')) {
-                    document.querySelector('#bugibugi').innerText = document.querySelector('[role="progressbar"]').firstChild.style.width;
-                }
-
-                if (mutation.addedNodes[0] && mutation.addedNodes[0].tagName === 'DIV') {
-                    if (mutation.addedNodes[0].contains(document.querySelector('[data-test="skill"]'))) {
-                        window.addEventListener('touchend', removeTouchEndEvent, true);
-                    }
-
-                    if (mutation.addedNodes[0].contains(document.querySelector('._3gjcv'))) {
-                        createAutoClickButton(true);
-                    }
-
-                    if (mutation.addedNodes[0].contains(document.querySelector('[data-test="stories-choice"]'))) {
-                        const storiesEll = document.querySelectorAll('._3sNGF._3j32v:not(._2n3Ta)');
-                        const storiesEl = storiesEll[storiesEll.length - 1];
-                        const el = storiesEl.querySelector('._2igzU._1xWrt._2P5W7');
-                        if (el) {
-                            const phrases = storiesEl.querySelectorAll('.phrase');
-                            if (phrases && phrases[phrases.length - 1]) {
-                                storiesHiddenLength = phrases[phrases.length - 1].textContent.length
-                            }
-                        }
-                    }
-
-                    setTimeout(() => {
-                        if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-correct"]'))) {
-                            neco('right').then(() => {
-                                if (counterBool) {
-                                    changeCounter('right');
-                                } else {
-                                    counterBool = true;
-                                }
-                                autoClick();
-                            });
-                        } else if (mutation.addedNodes[0].contains(document.querySelector('[data-test="blame blame-incorrect"]'))) {
-                            neco('wrong').then(() => {
-                                if (counterBool) {
-                                    changeCounter('bad');
-                                } else {
-                                    counterBool = true;
-                                }
-                            });
-                        }
-                    }, 1);
-
-
-                    if (mutation.addedNodes[0].contains(document.querySelector('._1bfyi'))) {
-                        window.removeEventListener('touchend', removeTouchEndEvent, true);
-                        document.querySelector('._1bfyi').swiper('swipeLeft', () => {
-                            document.querySelector('._1fURZ, ._3JkvC').click()});
-                    }
-
-                    // takes care of skipping
-                    if (mutation.addedNodes[0].contains(document.querySelector('[data-test="player-skip"]'))) {
-                        setTimeout(()=>{
-                            if (document.querySelector('._1uJnx') || document.querySelector('[data-test="challenge-speak-button"]')) {
-                                document.querySelector('[data-test="player-skip"]').addEventListener('click', function() {
-                                    counterBool = false;
-                                });
-                            }
-                        },200);
-                    }
-
-                    if (mutation.addedNodes[0].querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
-                        draggable();
-                        // keyboardShortcuts();
-                    }
-                    if (mutation.addedNodes[0].querySelector('.eFS_r, ._19SCP, ._1OHEh')) {
-                        appendThemeSwitcher(mutation.addedNodes[0].querySelector('.eFS_r, ._19SCP, ._1OHEh'));
-                    }
-
-                    if (mutation.addedNodes[0].querySelector('[data-test="skill-tree"]')) {
+                    if (mutation.addedNodes[0]?.querySelector('[data-test="skill-tree"]')) {
+                        // MAIN PAGE
                         createHideButton();
-                    }
-                    if (mutation.addedNodes[0].classList.value === "_9O-0s _1888P") {
-                        clearTimeout(interval);
-                        interval = setTimeout(() => {
-                            hideUnhideComplete('initial');
-                        }, 250);
-                    }
-
-                    if (mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
-                        mutation.addedNodes[0].contains(document.querySelector('input'))) {
-                        setTimeout(()=>{
-                            document.querySelector('textarea, input').focus({preventScroll: true});
-                            window.scroll(0, 0);
-                        },200);
-                    }
-
-                    if (mutation.addedNodes[0].contains(document.querySelector(father))) {
+                        setSkillTreeObserver();
+                    } else if (mutation.addedNodes[0]?.querySelector('[data-test="stories-player-continue"]')) {
+                        // STORIES PAGE
+                        createStoriesProgressShower();
+                        createAutoClickButton(true);
+                        setStoriesObservers();
                         window.removeEventListener('touchend', removeTouchEndEvent, true);
-                        document.querySelector(father).swiper("swipeLeft", swipeFunc);
-                        document.querySelector(father).swiper("swipeRight", showHidePanel);
-                    }
-
-                    if (mutation.addedNodes[0].className === 'story-page') {
-                        window.removeEventListener('touchend', removeTouchEndEvent, true);
-                        document.querySelector('.story-page').swiper("swipeDown", () => {
-                            if (document.querySelector('button.continue')) {
-                                document.querySelector('button.continue').click();
-                            }
+                        document.querySelector('.WzuSM')?.swiper("swipeDown", () => {
+                            document.querySelector('[data-test="stories-player-continue"]')?.click();
                         });
-                    }
-
-                    if (mutation.addedNodes[0].querySelector('.nP82K')) {
+                    } else if (mutation.addedNodes[0]?.querySelector('[data-test="quit-button"]')) {
+                        // LEARN
                         createNumber();
                         createSlider();
                         createAutoClickButton(false);
-                    }
-
-                    if (mutation.addedNodes[0] === document.querySelector('[data-test=skill-popout]') ||
-                        mutation.addedNodes[0].querySelector('[data-test="skill-popout"]')) {
-                        const innerWidth = window.innerWidth;
-                        setTimeout(() => {
-                            const el = document.querySelector('[data-test=skill-popout]').firstElementChild;
-                            const elWidth = el.getBoundingClientRect().width;
-                            const elX = el.getBoundingClientRect().x;
-                            if (elX < 0 || (elX + elWidth) > (innerWidth - 16)) {
-                                el.style.transform = null;
-                                document.querySelector('.ite_X').style.left = null;
-                            }
-                        }, 250);
-                    }
-                    // I don't want to use the latest features with the Duolingo app!
-                    if (mutation.addedNodes[0].querySelector('._3ivLU._2kfEr._1nlVc._2fOC9.UCrz7.t5wFJ')) {
-                        document.querySelector('._3ivLU._2kfEr._1nlVc._2fOC9.UCrz7.t5wFJ').click();
-                    }
-                }
-
-                if (mutation.removedNodes.length) {
-                    if (mutation.removedNodes[0].className === "_2NEKS") {
-                        if (!document.querySelector('[data-test="word-bank"]')) {
-                            document.onkeyup = function (e) {
-                                return false;
-                            }
-                            // window.removeEventListener("resize", hideShowKey);
-                        }
+                        setLearnObserver();
+                        if (footerHidden) hideShowFooter(true);
+                        window.removeEventListener('touchend', removeTouchEndEvent, true);
+                        document.querySelector(father).swiper("swipeLeft", swipeFunc);
+                        document.querySelector(father).swiper("swipeRight", showHidePanel);
+                        document.querySelector(father).swiper("swipeUp", showHideFooter);
                     }
                 }
             }
         }
 
         const targetNode = document.querySelector('body');
-        const config = { attributes: true, childList: true, subtree: true, characterData: true };
+        const config = { attributes: false, childList: true, subtree: true, characterData: false };
         const observer = new MutationObserver(callback);
-
         observer.observe(targetNode, config);
-
     }, false);
 
 })();
