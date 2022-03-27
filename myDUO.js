@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.8.1
+// @version      2.9.8.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -191,12 +191,9 @@ const css = [".switch {",
              "        top: 0.5rem;",
              "        position: relative;",
              "    }",
-             "    ._2nDUm {",
-             "        grid-template-columns: 1rem 1fr 1rem;",
-             "    }",
-             "    #my-autoclick-bu {",
-             "        width: 2rem;",
-             "    }",
+             "}",
+             "#my-autoclick-bu {",
+             "    width: 2rem;",
              "}",
              "button._2mDNn > i {",
              "    opacity: 0;",
@@ -218,6 +215,15 @@ const css = [".switch {",
              "}",
              "._3gjcv {",
              "    padding-top: 103px !important;",
+             "}",
+             "._2plWZ {",
+             "    grid-gap: 0px;",
+             "}",
+             "._2nDUm {",
+             "    grid-template-columns: 1rem 1fr 1rem;",
+             "}",
+             ".with-hearts {",
+             "    grid-template-columns: 1rem 1fr 3rem 1rem;",
              "}"
             ].join("\n");
 const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
@@ -1089,6 +1095,8 @@ let interval;
                             }
                         }, 500);
                         if (footerHidden) hideShowFooter(true);
+                        if (document.querySelector('._2plWZ'))
+                            document.querySelector('._2nDUm').classList.add('with-hearts')
                         window.removeEventListener('touchend', removeTouchEndEvent, true);
                         document.querySelector(father).swiper("swipeLeft", swipeFunc);
                         document.querySelector(father).swiper("swipeRight", showHidePanel);
