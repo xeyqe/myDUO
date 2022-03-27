@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.7.9
+// @version      2.9.8.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -186,6 +186,12 @@ const css = [".switch {",
              "    }",
              "    .hidden-footer {",
              "        display: none;",
+             "    }",
+             "    .mQ0GW {",
+             "        grid-gap: 0px;",
+             "    }",
+             "    .Yf5zL {",
+             "        padding-bottom: 0px;",
              "    }",
              "}",
              "button._2mDNn > i {",
@@ -906,6 +912,14 @@ function setSkillTreeObserver() {
 }
 
 function setLearnObserver() {
+    hideShowFooter(footerHidden);
+     if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
+         draggable();
+     } else if (document.querySelector('textarea, input')) {
+         setTimeout(()=>{
+             document.querySelector('textarea, input').focus({preventScroll: true});
+         }, 200);
+     }
     const callback = function(mutationsList, observer) {
         for(const mutation of mutationsList) {
             if (mutation.addedNodes[0]?.nodeType === 1) {
