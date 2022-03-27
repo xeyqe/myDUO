@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.7.8
+// @version      2.9.7.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -1049,27 +1049,27 @@ let interval;
 
                     if (mutation.addedNodes[0]?.querySelector('[data-test="skill-tree"]')) {
                         // MAIN PAGE
+                        setSkillTreeObserver();
                         removeScrollingEvent();
                         createHideButton();
-                        setSkillTreeObserver();
                         window.addEventListener('touchend', removeTouchEndEvent, true);
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="stories-player-continue"]')) {
                         // STORIES PAGE
+                        setStoriesObservers();
                         removeScrollingEvent();
                         createStoriesProgressShower();
                         createAutoClickButton(true);
-                        setStoriesObservers();
                         window.removeEventListener('touchend', removeTouchEndEvent, true);
                         document.querySelector('.WzuSM')?.swiper("swipeUp", () => {
                             document.querySelector('[data-test="stories-player-continue"]')?.click();
                         });
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="quit-button"]')) {
                         // LEARN
+                        setLearnObserver();
                         setScrollEvent();
                         createNumber();
                         createSlider();
                         createAutoClickButton(false);
-                        setLearnObserver();
                         setTimeout(()=>{
                             if (document.querySelector('textarea, input')) {
                                 document.querySelector('textarea, input').focus({preventScroll: true});
@@ -1080,6 +1080,8 @@ let interval;
                         document.querySelector(father).swiper("swipeLeft", swipeFunc);
                         document.querySelector(father).swiper("swipeRight", showHidePanel);
                         document.querySelector(father).swiper("swipeDown", showHideFooter, [document.querySelector('.panel')]);
+                    } else if (mutation.addedNodes[0]?.querySelector('[data-test="xp-slide"]')) {
+                        if (footerHidden) hideShowFooter(false);
                     }
                 }
             }
