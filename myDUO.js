@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.8.0
+// @version      2.9.8.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -148,13 +148,6 @@ const css = [".switch {",
              "    z-index: 1000;",
              "    scrollbar-width: none;",
              "}",
-             "#my-autoclick-bu {",
-             "    z-index: 100000;",
-             "    position: fixed;",
-             "    left: 50%;",
-             "    top: 0rem;",
-             "    transform: translateX(-50%);",
-             "}",
              "[data-test=challenge-tap-token] {",
              "    text-align: center;",
              "}",
@@ -192,6 +185,17 @@ const css = [".switch {",
              "    }",
              "    .Yf5zL {",
              "        padding-bottom: 0px;",
+             "        padding-top: 0px;",
+             "    }",
+             "    #counter {",
+             "        top: 0.5rem;",
+             "        position: relative;",
+             "    }",
+             "    ._2nDUm {",
+             "        grid-template-columns: 1rem 1fr 1rem;",
+             "    }",
+             "    #my-autoclick-bu {",
+             "        width: 2rem;",
              "    }",
              "}",
              "button._2mDNn > i {",
@@ -205,6 +209,15 @@ const css = [".switch {",
              "}",
              "._3f9ou:not(.hidden-item) {",
              "    padding: 0px;",
+             "}",
+             "._2QKoe {",
+             "    position: fixed;",
+             "    width: 100%;",
+             "    transform: translateX(-50%);",
+             "    left: 50%;",
+             "}",
+             "._3gjcv {",
+             "    padding-top: 103px !important;",
              "}"
             ].join("\n");
 const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
@@ -447,21 +460,6 @@ function removeTempAlert(num) {
             }
         }, 20);
     }, num);
-}
-
-function autoClick() {
-    if (testingAuto) {
-        if (document.querySelector('[data-test="player-next"]')) {
-            document.querySelector('[data-test="player-next"]').click();
-        } else {
-            setTimeout(() => {
-                if (document.querySelector('[data-test="player-next"]')) {
-                    document.querySelector('[data-test="player-next"]').click();
-                }
-            }, 100);
-        }
-
-    }
 }
 
 function reclick() {
@@ -760,8 +758,8 @@ function createAutoClickButton(isStories) {
             document.querySelector('#my-autoclick-bu').innerText = storiesAuto ? 'A' : 'M';
             localStorage.setItem('stories_autoclick', storiesAuto ? 'yes' : 'no');
         });
-        document.querySelector('._3gjcv').appendChild(bu);
-        createStoriesProgressShower();
+        document.querySelector('._2QKoe').appendChild(bu);
+        document.querySelector('.xzblA').prepend(document.querySelector('._2QKoe'))
     } else {
         bu.innerText = testingAuto ? 'A' : 'M';
         bu.addEventListener('click', () => {
@@ -769,14 +767,14 @@ function createAutoClickButton(isStories) {
             document.querySelector('#my-autoclick-bu').innerText = testingAuto ? 'A' : 'M';
             localStorage.setItem('autoclick', testingAuto ? 'yes' : 'no');
         });
-        document.querySelector('.nP82K').appendChild(bu);
+        document.querySelector('._2nDUm').appendChild(bu);
     }
 }
 
 function createStoriesProgressShower() {
     const progressEl = document.createElement('SPAN');
     progressEl.innerText = document.querySelector('[role="progressbar"]').getAttribute('aria-valuenow')*100+'%';
-    progressEl.style.cssText = "z-index: 10; right: 0; position: absolute; top: 0;"
+    progressEl.style.cssText = "z-index: 10; margin-left: .5rem;"
     progressEl.id = 'bugibugi';
     const target = document.querySelector('._2QKoe');
     target.append(progressEl);
@@ -857,7 +855,6 @@ function hideShowFooter(hide) {
 }
 
 function scrolling() {
-    console.log(isScrolling)
     isScrolling = true;
     clearInterval(scrollingInterval);
     scrollingInterval = setTimeout(() => {
@@ -947,21 +944,23 @@ function setLearnObserver() {
             ) {
                 hideShowFooter(footerHidden);
             }
-            setTimeout(() => {
-                if (mutation.addedNodes[0]?.querySelector('[data-test="blame blame-correct"]')) {
-                    if (!document.querySelector('[data-test="blame blame-correct"]').parentElement.classList.value.includes('_2NxDA')) { // can't listen/speak skip
-                        neco('right').then(() => {
-                            changeCounter('right');
+            if (mutation.addedNodes[0]?.querySelector('[data-test="blame blame-correct"]')) {
+                if (!document.querySelector('[data-test="blame blame-correct"]').parentElement.classList.value.includes('_2NxDA')) { // can't listen/speak skip
+                    neco('right').then(() => {
+                        changeCounter('right');
+                        if (document.querySelector('#my-autoclick-bu').innerText === 'A') {
                             document.querySelector('[data-test="player-next"]')?.click();
-                        });
-                    }
-                } else if (mutation.addedNodes[0]?.querySelector('[data-test="blame blame-incorrect"]')) {
-                    neco('wrong').then(() => {
-                        changeCounter('bad');
-                        hideShowFooter(false);
+                        } else {
+                            hideShowFooter(false);
+                        }
                     });
                 }
-            }, 1);
+            } else if (mutation.addedNodes[0]?.querySelector('[data-test="blame blame-incorrect"]')) {
+                neco('wrong').then(() => {
+                    changeCounter('bad');
+                    hideShowFooter(false);
+                });
+            }
         }
     }
     const targetNode2 = document.querySelector('#session\\/PlayerFooter').parentElement;
@@ -1050,7 +1049,7 @@ let interval;
             clearInterval(interval);
             interval = setTimeout(() => {
                 document.querySelector('#counter')?.scrollIntoView();
-            }, 200);
+            }, 100);
         });
 
         const callback = function(mutationsList, observer) {
@@ -1071,8 +1070,8 @@ let interval;
                         // STORIES PAGE
                         setStoriesObservers();
                         removeScrollingEvent();
-                        createStoriesProgressShower();
                         createAutoClickButton(true);
+                        createStoriesProgressShower();
                         window.removeEventListener('touchend', removeTouchEndEvent, true);
                         document.querySelector('.WzuSM')?.swiper("swipeUp", () => {
                             document.querySelector('[data-test="stories-player-continue"]')?.click();
@@ -1081,9 +1080,9 @@ let interval;
                         // LEARN
                         setLearnObserver();
                         setScrollEvent();
+                        createAutoClickButton(false);
                         createNumber();
                         createSlider();
-                        createAutoClickButton(false);
                         setTimeout(()=>{
                             if (document.querySelector('textarea, input')) {
                                 document.querySelector('textarea, input').focus({preventScroll: true});
