@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.7.7
+// @version      2.9.7.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -281,7 +281,7 @@ function addThemes() {
     }
 }
 
-Node.prototype.swiper = function(direction, func) {
+Node.prototype.swiper = function(direction, func, forbidden) {
     let touchstartX = 0;
     let touchstartY = 0;
     let touchendX = 0;
@@ -289,10 +289,14 @@ Node.prototype.swiper = function(direction, func) {
 
     const gesuredZone = this;
 
-    gesuredZone.addEventListener('touchstart', function(event) {
-        touchstartX = event.touches[0].pageX;
-        touchstartY = event.touches[0].pageY;
-    });
+    gesuredZone.addEventListener(
+        'touchstart',
+        function(event) {
+            touchstartX = event.touches[0].pageX;
+            touchstartY = event.touches[0].pageY;
+        },
+        { passive: true}
+    );
 
     gesuredZone.addEventListener('touchend', function(event) {
         touchendX = event.changedTouches[0].pageX;
@@ -300,28 +304,29 @@ Node.prototype.swiper = function(direction, func) {
 
         const absX = Math.abs(touchstartX - touchendX);
         const absY = Math.abs(touchstartY - touchendY);
+        if (forbidden?.length) {
+            for (const el of forbidden) {
+                if (el?.contains(event?.target)) {
+                    return;
+                }
+            }
+        }
+
 
         if (direction === "swipeRight") {
-            if (touchstartX - touchendX < -25 &&
-                absY < absX) {
+            if (touchstartX - touchendX < -25 && absY < absX) {
                 func(event);
             }
-        }
-        else if (direction === "swipeLeft") {
-            if (touchstartX - touchendX > 25 &&
-                absY < absX) {
+        } else if (direction === "swipeLeft") {
+            if (touchstartX - touchendX > 25 && absY < absX) {
                 func(event);
             }
-        }
-        else if (direction === "swipeUp") {
-            if (touchstartY - touchendY < -25 &&
-                absY > absX) {
+        } else if (direction === "swipeDown") {
+            if (touchstartY - touchendY < -25 && absY > absX) {
                 func(event);
             }
-        }
-        else if (direction === "swipeDown") {
-            if (touchstartY - touchendY > 25 &&
-                absY > absX) {
+        } else if (direction === "swipeUp") {
+            if (touchstartY - touchendY > 25 && absY > absX) {
                 func(event);
             }
         }
@@ -845,6 +850,25 @@ function hideShowFooter(hide) {
     }
 }
 
+function scrolling() {
+    console.log(isScrolling)
+    isScrolling = true;
+    clearInterval(scrollingInterval);
+    scrollingInterval = setTimeout(() => {
+        isScrolling = false;
+    }, 100);
+}
+
+let isScrolling = false;
+let scrollingInterval;
+function setScrollEvent() {
+    document.addEventListener('scroll', scrolling);
+}
+
+function removeScrollingEvent() {
+    document.removeEventListener('scroll', scrolling);
+}
+
 function setSkillTreeObserver() {
     const callback = function(mutationsList, observer) {
         for(const mutation of mutationsList) {
@@ -855,7 +879,7 @@ function setSkillTreeObserver() {
                 !mutation.addedNodes[0].querySelector('._1m7gz')
             ) {
                 mutation.target.parentElement.parentElement.parentElement.classList.add('hidden-item');
-            } else  if (
+            } else if (
                 mutation.addedNodes[0]?.nodeType === 1 &&
                 (
                     mutation.addedNodes[0] === document.querySelector('[data-test=skill-popout]') ||
@@ -884,16 +908,14 @@ function setSkillTreeObserver() {
 function setLearnObserver() {
     const callback = function(mutationsList, observer) {
         for(const mutation of mutationsList) {
-            if (mutation.addedNodes[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
-                draggable();
-            } else if (
-                mutation.addedNodes[0].contains(document.querySelector('textarea')) ||
-                mutation.addedNodes[0].contains(document.querySelector('input'))
-            ) {
-                setTimeout(()=>{
-                    document.querySelector('textarea, input').focus({preventScroll: true});
-                    document.querySelector('[data-test="challenge-header"]')?.scrollIntoView({behavior: "smooth"});
-                },200);
+            if (mutation.addedNodes[0]?.nodeType === 1) {
+                if (mutation.addedNodes[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
+                    draggable();
+                } else if (mutation.addedNodes[0].contains(document.querySelector('textarea, input'))) {
+                    setTimeout(()=>{
+                        document.querySelector('textarea, input').focus({preventScroll: true});
+                    }, 200);
+                }
             }
         }
     }
@@ -1010,6 +1032,12 @@ let interval;
         }
 
         window.addEventListener('touchend', removeTouchEndEvent, true);
+        window.addEventListener('resize', function(event){
+            clearInterval(interval);
+            interval = setTimeout(() => {
+                document.querySelector('#counter')?.scrollIntoView();
+            }, 200);
+        });
 
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
@@ -1021,28 +1049,37 @@ let interval;
 
                     if (mutation.addedNodes[0]?.querySelector('[data-test="skill-tree"]')) {
                         // MAIN PAGE
+                        removeScrollingEvent();
                         createHideButton();
                         setSkillTreeObserver();
+                        window.addEventListener('touchend', removeTouchEndEvent, true);
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="stories-player-continue"]')) {
                         // STORIES PAGE
+                        removeScrollingEvent();
                         createStoriesProgressShower();
                         createAutoClickButton(true);
                         setStoriesObservers();
                         window.removeEventListener('touchend', removeTouchEndEvent, true);
-                        document.querySelector('.WzuSM')?.swiper("swipeDown", () => {
+                        document.querySelector('.WzuSM')?.swiper("swipeUp", () => {
                             document.querySelector('[data-test="stories-player-continue"]')?.click();
                         });
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="quit-button"]')) {
                         // LEARN
+                        setScrollEvent();
                         createNumber();
                         createSlider();
                         createAutoClickButton(false);
                         setLearnObserver();
+                        setTimeout(()=>{
+                            if (document.querySelector('textarea, input')) {
+                                document.querySelector('textarea, input').focus({preventScroll: true});
+                            }
+                        }, 500);
                         if (footerHidden) hideShowFooter(true);
                         window.removeEventListener('touchend', removeTouchEndEvent, true);
                         document.querySelector(father).swiper("swipeLeft", swipeFunc);
                         document.querySelector(father).swiper("swipeRight", showHidePanel);
-                        document.querySelector(father).swiper("swipeUp", showHideFooter);
+                        document.querySelector(father).swiper("swipeDown", showHideFooter, [document.querySelector('.panel')]);
                     }
                 }
             }
