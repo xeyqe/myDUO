@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.8.2
+// @version      2.9.8.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -126,7 +126,6 @@ const css = [".switch {",
              "}",
              "#tempAlert {",
              "    padding: 0.2rem;",
-             "    top:1.5rem;",
              "    left:50%;transform:translateX(-50%);",
              "    max-width:94%;",
              "    width:fit-content;",
@@ -220,10 +219,20 @@ const css = [".switch {",
              "    grid-gap: 0px;",
              "}",
              "._2nDUm {",
-             "    grid-template-columns: 1rem 1fr 1rem;",
+             "    display: flex;",
+             "    grid-gap: 6px;",
              "}",
-             ".with-hearts {",
-             "    grid-template-columns: 1rem 1fr 3rem 1rem;",
+             "div[role=progressbar] {",
+             "    width: 100%;",
+             "}",
+             "._2kfEr {",
+             "    flex-shrink: 0;",
+             "}",
+             "._3XZrb, ._22kW9 {",
+             "    display: none;",
+             "}",
+             "._1Oz7v {",
+             "    position: relative;",
              "}"
             ].join("\n");
 const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
@@ -629,6 +638,12 @@ function neco(color) {
             yourAnswer = document.querySelector('[data-test="challenge-tap-token"]').parentElement.parentElement.innerText.replace(/\n/g, ' ');
         }
 
+        if (document.querySelector('._2eHne')) {
+            const els = Array.from(document.querySelectorAll('._2eHne'));
+            question = els[0].innerText.replace(/\n/g, '|');
+            yourAnswer = els[1].innerText.replace(/\n/g, '|');
+        }
+
         const pictures = document.querySelectorAll('[data-test="challenge-choice-card"]');
         if (pictures) {
             for (let i = 0; i<pictures.length; i++) {
@@ -914,7 +929,7 @@ function setSkillTreeObserver() {
     observer.observe(targetNode, config);
 }
 
-function setLearnObserver() {
+async function setLearnObserver() {
     hideShowFooter(footerHidden);
      if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
          draggable();
@@ -936,7 +951,13 @@ function setLearnObserver() {
             }
         }
     }
-    const targetNode = document.querySelector('[data-test*="challenge "]').parentElement.parentElement;
+
+    let targetNode = document.querySelector('[data-test*="challenge "]')?.parentElement?.parentElement;
+    if (!targetNode) {
+        document.querySelector('[data-test="player-next"]')?.click();
+        await new Promise(resolve => setTimeout(resolve, 700));
+        targetNode = document.querySelector('[data-test*="challenge "]').parentElement.parentElement;
+    }
     const config = { attributes: false, childList: true, subtree: true, characterData: false };
     const observer = new MutationObserver(callback);
     observer.observe(targetNode, config);
