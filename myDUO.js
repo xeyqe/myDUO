@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.8.3
+// @version      2.9.8.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -477,23 +477,19 @@ function removeTempAlert(num) {
     }, num);
 }
 
-function reclick() {
-    const clickedBtt = document.querySelectorAll('._1uasP button');
+async function reclick() {
+    const clickedBtt = Array.from(document.querySelectorAll('._1uasP button'));
     const unclickedBtt = Array.from(document.querySelectorAll('[data-test="word-bank"] button[aria-disabled]'));
-    const strs = [];
-    for (const selectedBu of clickedBtt) {
-        strs.push(selectedBu.innerText);
-        selectedBu.click();
-        setTimeout(() => {
-            for (const str of strs) {
-                const btn = unclickedBtt.find(bu => {
-                    return str === bu.innerText && !bu.getAttributeNames().includes('aria-disabled');
-                })
-                btn?.click();
-            }
-        }, 300)
-    }
+    const clickedStrs = clickedBtt.map(bt => bt.innerText);
+    const unclickedStrs = unclickedBtt.map(bt => bt.innerText);
+    clickedBtt.forEach(bt => bt.click());
+    await new Promise(resolve => setTimeout(resolve, 250));
 
+    clickedStrs.forEach(clStr => {
+        const index = unclickedStrs.indexOf(clStr);
+        unclickedBtt[index].click();
+        unclickedStrs[index] = null;
+    });
 }
 
 function draggable() {
@@ -545,6 +541,7 @@ function showHidePanel(event){
 function neco(color) {
     const promise = new Promise((resolve)=>{
         let question;
+        let question2;
         let yourAnswer;
         let header;
 
@@ -572,91 +569,120 @@ function neco(color) {
             divMain.appendChild(div);
         }
 
-        if (document.querySelector('[data-test="hint-token"]')) {
-            question = document.querySelector('[data-test="hint-token"]').parentElement.innerText;
-        }
-
-        if (document.querySelector('[data-test="hint-sentence"]')) {
-            question = document.querySelector('[data-test="hint-sentence"]').innerText;
-        }
-
-        if (document.querySelector('._13Ae5._1JtWw._1tY-d._66Mfn._2NQKM')) {
-            question = document.querySelector('._13Ae5._1JtWw._1tY-d._66Mfn._2NQKM').innerText;
-        }
-
-        if (document.querySelector('[data-test="challenge-translate-prompt"]')) {
-            question = document.querySelector('[data-test="challenge-translate-prompt"]').textContent;
-        }
-
-        if (document.querySelector('[data-test="challenge challenge-judge"]')) {
-            if (document.querySelector('._3-JBe')) {
-                question = document.querySelector('._3-JBe').textContent;
+        if (document.querySelector('[data-test="challenge challenge-translate"]')) {
+            if (document.querySelector('[data-test="challenge-translate-input"]')) {
+                yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').textContent;
+                question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
+            } else if (document.querySelector('[data-test="word-bank"]')) {
+                question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
+                yourAnswer = document.querySelector('.PcKtj').innerText.replace(/\n/g, ' ')
             }
-            if (document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]')) {
-                yourAnswer = document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]').textContent;
-            }
-        }
-
-        if (document.querySelector('[data-test="challenge challenge-form"]')) {
-            question = document.querySelector('[data-test="challenge-form-prompt"]').getAttribute('data-prompt');
-            yourAnswer = document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]').textContent;
-        }
-
-        if (document.querySelector('[data-test="challenge challenge-listenComplete"] ._55nw4 label')) {
-            question = document.querySelector('[data-test="challenge challenge-listenComplete"] ._55nw4 label').textContent;
-            yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
-        }
-
-
-        if (document.querySelector('[data-test="challenge-translate-input"]')) {
-            yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').innerHTML;
-        }
-
-        if (document.querySelector('[data-test="challenge-text-input"]')) {
-            const fisrtPart = document.querySelector('.disCS >[data-test="challenge-judge-text"]')?.textContent;
-            if (fisrtPart) {
-                yourAnswer = fisrtPart + ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
-            }
-        }
-
-        if (document.querySelector('._3ysW7')) {
-            yourAnswer = document.querySelector('._3ysW7').innerText.replace(/\n/g, ' ');
-        }
-
-        if (document.querySelector('[data-test="challenge-choice"][aria-checked="true"]')) {
-            if (document.querySelector('[data-test="challenge-judge-text"]')) {
-                yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] [data-test="challenge-judge-text"]').innerText;
-                if (document.querySelector('[data-test="challenge-text-input"]')) {
-                    yourAnswer += ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
-                }
-            } else
-                yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').innerText.split('\n').at(0);
-        }
-
-        // draggable
-        if (document.querySelector('[data-test="challenge-tap-token"]')) {
-            yourAnswer = document.querySelector('[data-test="challenge-tap-token"]').parentElement.parentElement.innerText.replace(/\n/g, ' ');
-        }
-
-        if (document.querySelector('._2eHne')) {
+        } else if (document.querySelector('[data-test="challenge challenge-listen"]')) {
+            yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').textContent;
+        } else if (document.querySelector('[data-test="challenge challenge-listenTap"]')) {
+            yourAnswer = document.querySelector('.PcKtj').innerText.replace(/\n/g, ' ')
+        } else if (document.querySelector('[data-test="challenge challenge-match"]')) {
             const els = Array.from(document.querySelectorAll('._2eHne'));
             question = els[0].innerText.replace(/\n/g, '|');
             yourAnswer = els[1].innerText.replace(/\n/g, '|');
+        } else if (document.querySelector('[data-test="challenge challenge-speak"]')) {
+            question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
+        } else if (document.querySelector('[data-test="challenge challenge-judge"]')) {
+            question = document.querySelector('._3-JBe').textContent;
+            yourAnswer = document.querySelector('[data-test="challenge-choice"].disCS > div').textContent;
+        } else if (document.querySelector('[data-test="challenge challenge-completeReverseTranslation"]')) {
+            question2 = document.querySelector('[data-test="challenge-text-input"]').parentElement.parentElement.textContent;
+            yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
+        } else if (document.querySelector('[data-test="challenge challenge-selectTranscription"]')) {
+            yourAnswer = document.querySelector('[data-test="challenge-choice"].disCS > div').textContent;
+        } else if (document.querySelector('[data-test="challenge challenge-name"]')) {
+            yourAnswer = document.querySelector('[data-test="challenge-choice"].disCS > div').textContent;
+            yourAnswer = yourAnswer + ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
         }
 
-        const pictures = document.querySelectorAll('[data-test="challenge-choice-card"]');
-        if (pictures) {
-            for (let i = 0; i<pictures.length; i++) {
-                if (!pictures[i].querySelector('._3IeVF.Nlbt5')) {
-                    yourAnswer = pictures[i].innerText.split('\n')[0];
-                }
-            }
-        }
-        let question2;
-        if (document.querySelector('[data-test="challenge challenge-completeReverseTranslation"] [data-test="challenge-text-input"]')) {
-            question2 = document.querySelector('[data-test="challenge challenge-completeReverseTranslation"] [data-test="challenge-text-input"]').parentElement.parentElement.textContent;
-            yourAnswer = document.querySelector('[data-test="challenge challenge-completeReverseTranslation"] [data-test="challenge-text-input"]').value;
-        }
+
+
+
+//         if (document.querySelector('[data-test="hint-token"]')) {
+//             question = document.querySelector('[data-test="hint-token"]').parentElement.innerText;
+//         }
+
+//         if (document.querySelector('[data-test="hint-sentence"]')) {
+//             question = document.querySelector('[data-test="hint-sentence"]').innerText;
+//         }
+
+//         if (document.querySelector('._13Ae5._1JtWw._1tY-d._66Mfn._2NQKM')) {
+//             question = document.querySelector('._13Ae5._1JtWw._1tY-d._66Mfn._2NQKM').innerText;
+//         }
+
+//         if (document.querySelector('[data-test="challenge-translate-prompt"]')) {
+//             question = document.querySelector('[data-test="challenge-translate-prompt"]').textContent;
+//         }
+
+//         if (document.querySelector('[data-test="challenge challenge-judge"]')) {
+//             if (document.querySelector('._3-JBe')) {
+//                 question = document.querySelector('._3-JBe').textContent;
+//             }
+//             if (document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]')) {
+//                 yourAnswer = document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]').textContent;
+//             }
+//         }
+
+//         if (document.querySelector('[data-test="challenge challenge-form"]')) {
+//             question = document.querySelector('[data-test="challenge-form-prompt"]').getAttribute('data-prompt');
+//             yourAnswer = document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]').textContent;
+//         }
+
+//         if (document.querySelector('[data-test="challenge challenge-listenComplete"] ._55nw4 label')) {
+//             question = document.querySelector('[data-test="challenge challenge-listenComplete"] ._55nw4 label').textContent;
+//             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
+//         }
+
+
+//         if (document.querySelector('[data-test="challenge-translate-input"]')) {
+//             yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').innerHTML;
+//         }
+
+//         if (document.querySelector('[data-test="challenge-text-input"]')) {
+//             const fisrtPart = document.querySelector('.disCS >[data-test="challenge-judge-text"]')?.textContent;
+//             if (fisrtPart) {
+//                 yourAnswer = fisrtPart + ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
+//             }
+//         }
+
+//         if (document.querySelector('._3ysW7')) {
+//             yourAnswer = document.querySelector('._3ysW7').innerText.replace(/\n/g, ' ');
+//         }
+
+//         if (document.querySelector('[data-test="challenge-choice"][aria-checked="true"]')) {
+//             if (document.querySelector('[data-test="challenge-judge-text"]')) {
+//                 yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] [data-test="challenge-judge-text"]').innerText;
+//                 if (document.querySelector('[data-test="challenge-text-input"]')) {
+//                     yourAnswer += ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
+//                 }
+//             } else
+//                 yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').innerText.split('\n').at(0);
+//         }
+
+//         // draggable
+//         if (document.querySelector('[data-test="challenge-tap-token"]')) {
+//             yourAnswer = document.querySelector('[data-test="challenge-tap-token"]').parentElement.parentElement.innerText.replace(/\n/g, ' ');
+//         }
+
+//         if (document.querySelector('._2eHne')) {
+//             const els = Array.from(document.querySelectorAll('._2eHne'));
+//             question = els[0].innerText.replace(/\n/g, '|');
+//             yourAnswer = els[1].innerText.replace(/\n/g, '|');
+//         }
+
+//         const pictures = document.querySelectorAll('[data-test="challenge-choice-card"]');
+//         if (pictures) {
+//             for (let i = 0; i<pictures.length; i++) {
+//                 if (!pictures[i].querySelector('._3IeVF.Nlbt5')) {
+//                     yourAnswer = pictures[i].innerText.split('\n')[0];
+//                 }
+//             }
+//         }
 
         if (question) {
             const div = emptyDiv.cloneNode();
@@ -1105,23 +1131,25 @@ let interval;
                         });
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="quit-button"]')) {
                         // LEARN
-                        setLearnObserver();
-                        setScrollEvent();
-                        createAutoClickButton(false);
-                        createNumber();
-                        createSlider();
-                        setTimeout(()=>{
-                            if (document.querySelector('textarea, input')) {
-                                document.querySelector('textarea, input').focus({preventScroll: true});
-                            }
-                        }, 500);
-                        if (footerHidden) hideShowFooter(true);
-                        if (document.querySelector('._2plWZ'))
-                            document.querySelector('._2nDUm').classList.add('with-hearts')
-                        window.removeEventListener('touchend', removeTouchEndEvent, true);
-                        document.querySelector(father).swiper("swipeLeft", swipeFunc);
-                        document.querySelector(father).swiper("swipeRight", showHidePanel);
-                        document.querySelector(father).swiper("swipeDown", showHideFooter, [document.querySelector('.panel')]);
+                        if (!document.querySelector('.F9GEY')) {
+                            setLearnObserver();
+                            setScrollEvent();
+                            createAutoClickButton(false);
+                            createNumber();
+                            createSlider();
+                            setTimeout(()=>{
+                                if (document.querySelector('textarea, input')) {
+                                    document.querySelector('textarea, input').focus({preventScroll: true});
+                                }
+                            }, 500);
+                            if (footerHidden) hideShowFooter(true);
+                            if (document.querySelector('._2plWZ'))
+                                document.querySelector('._2nDUm').classList.add('with-hearts')
+                            window.removeEventListener('touchend', removeTouchEndEvent, true);
+                            document.querySelector(father).swiper("swipeLeft", swipeFunc);
+                            document.querySelector(father).swiper("swipeRight", showHidePanel);
+                            document.querySelector(father).swiper("swipeDown", showHideFooter, [document.querySelector('.panel')]);
+                        }
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="xp-slide"]')) {
                         if (footerHidden) hideShowFooter(false);
                     }
