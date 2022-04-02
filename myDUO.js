@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.8.4
+// @version      2.9.8.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -390,7 +390,7 @@ function createNumber() {
     if (document.querySelector('._2nDUm')) {
         document.querySelector('._2nDUm').appendChild(node);
     } else {
-        console.log('HELP. place for counter is missing!');
+        console.error('HELP. place for counter is missing!');
     }
 }
 
@@ -600,90 +600,6 @@ function neco(color) {
             yourAnswer = yourAnswer + ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
         }
 
-
-
-
-//         if (document.querySelector('[data-test="hint-token"]')) {
-//             question = document.querySelector('[data-test="hint-token"]').parentElement.innerText;
-//         }
-
-//         if (document.querySelector('[data-test="hint-sentence"]')) {
-//             question = document.querySelector('[data-test="hint-sentence"]').innerText;
-//         }
-
-//         if (document.querySelector('._13Ae5._1JtWw._1tY-d._66Mfn._2NQKM')) {
-//             question = document.querySelector('._13Ae5._1JtWw._1tY-d._66Mfn._2NQKM').innerText;
-//         }
-
-//         if (document.querySelector('[data-test="challenge-translate-prompt"]')) {
-//             question = document.querySelector('[data-test="challenge-translate-prompt"]').textContent;
-//         }
-
-//         if (document.querySelector('[data-test="challenge challenge-judge"]')) {
-//             if (document.querySelector('._3-JBe')) {
-//                 question = document.querySelector('._3-JBe').textContent;
-//             }
-//             if (document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]')) {
-//                 yourAnswer = document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]').textContent;
-//             }
-//         }
-
-//         if (document.querySelector('[data-test="challenge challenge-form"]')) {
-//             question = document.querySelector('[data-test="challenge-form-prompt"]').getAttribute('data-prompt');
-//             yourAnswer = document.querySelector('[data-test="challenge-choice"]._1HjFK [data-test="challenge-judge-text"]').textContent;
-//         }
-
-//         if (document.querySelector('[data-test="challenge challenge-listenComplete"] ._55nw4 label')) {
-//             question = document.querySelector('[data-test="challenge challenge-listenComplete"] ._55nw4 label').textContent;
-//             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
-//         }
-
-
-//         if (document.querySelector('[data-test="challenge-translate-input"]')) {
-//             yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').innerHTML;
-//         }
-
-//         if (document.querySelector('[data-test="challenge-text-input"]')) {
-//             const fisrtPart = document.querySelector('.disCS >[data-test="challenge-judge-text"]')?.textContent;
-//             if (fisrtPart) {
-//                 yourAnswer = fisrtPart + ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
-//             }
-//         }
-
-//         if (document.querySelector('._3ysW7')) {
-//             yourAnswer = document.querySelector('._3ysW7').innerText.replace(/\n/g, ' ');
-//         }
-
-//         if (document.querySelector('[data-test="challenge-choice"][aria-checked="true"]')) {
-//             if (document.querySelector('[data-test="challenge-judge-text"]')) {
-//                 yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] [data-test="challenge-judge-text"]').innerText;
-//                 if (document.querySelector('[data-test="challenge-text-input"]')) {
-//                     yourAnswer += ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
-//                 }
-//             } else
-//                 yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').innerText.split('\n').at(0);
-//         }
-
-//         // draggable
-//         if (document.querySelector('[data-test="challenge-tap-token"]')) {
-//             yourAnswer = document.querySelector('[data-test="challenge-tap-token"]').parentElement.parentElement.innerText.replace(/\n/g, ' ');
-//         }
-
-//         if (document.querySelector('._2eHne')) {
-//             const els = Array.from(document.querySelectorAll('._2eHne'));
-//             question = els[0].innerText.replace(/\n/g, '|');
-//             yourAnswer = els[1].innerText.replace(/\n/g, '|');
-//         }
-
-//         const pictures = document.querySelectorAll('[data-test="challenge-choice-card"]');
-//         if (pictures) {
-//             for (let i = 0; i<pictures.length; i++) {
-//                 if (!pictures[i].querySelector('._3IeVF.Nlbt5')) {
-//                     yourAnswer = pictures[i].innerText.split('\n')[0];
-//                 }
-//             }
-//         }
-
         if (question) {
             const div = emptyDiv.cloneNode();
             div.innerText = question;
@@ -786,7 +702,7 @@ function mayISwipe(event) {
         document.querySelector('._2PLYW').contains(event.target)) {
         return false;
     } else {
-        return true
+        return true;
     }
 }
 
@@ -901,51 +817,40 @@ function hideShowFooter(hide) {
     }
 }
 
-function scrolling() {
-    isScrolling = true;
-    clearInterval(scrollingInterval);
-    scrollingInterval = setTimeout(() => {
-        isScrolling = false;
-    }, 100);
-}
-
-let isScrolling = false;
-let scrollingInterval;
-function setScrollEvent() {
-    document.addEventListener('scroll', scrolling);
-}
-
-function removeScrollingEvent() {
-    document.removeEventListener('scroll', scrolling);
-}
-
 function setSkillTreeObserver() {
     const callback = function(mutationsList, observer) {
         for(const mutation of mutationsList) {
-            if (
-                mutation.addedNodes[0]?.classList?.value === '_15U-t' &&
-                document.querySelector('#hide-show-bu')?.innerText === '+' &&
-                (mutation.addedNodes[0].querySelector('._3dqWQ') || mutation.addedNodes[0].querySelector('._2rjLm')) &&
-                !mutation.addedNodes[0].querySelector('._1m7gz')
-            ) {
-                mutation.target.parentElement.parentElement.parentElement.classList.add('hidden-item');
-            } else if (
-                mutation.addedNodes[0]?.nodeType === 1 &&
-                (
+            if (mutation.addedNodes[0]?.nodeType === 1) {
+                if (
+                    mutation.addedNodes[0]?.classList?.value === '_15U-t' &&
+                    document.querySelector('#hide-show-bu')?.innerText === '+' &&
+                    (mutation.addedNodes[0].querySelector('._3dqWQ') || mutation.addedNodes[0].querySelector('._2rjLm')) &&
+                    !mutation.addedNodes[0].querySelector('._1m7gz')
+                ) {
+                    mutation.target.parentElement.parentElement.parentElement.classList.add('hidden-item');
+                } else if (mutation.addedNodes[0]?.getAttribute('data-test') === 'skill') {
+                    mutation.addedNodes[0].addEventListener('touchend', removeTouchEndEvent);
+                } else if (
                     mutation.addedNodes[0] === document.querySelector('[data-test=skill-popout]') ||
                     mutation.addedNodes[0]?.querySelector('[data-test="skill-popout"]')
-                )
-            ) {
-                const innerWidth = window.innerWidth;
-                setTimeout(() => {
-                    const el = document.querySelector('[data-test=skill-popout]').firstElementChild;
-                    const elWidth = el.getBoundingClientRect().width;
-                    const elX = el.getBoundingClientRect().x;
-                    if (elX < 0 || (elX + elWidth) > (innerWidth - 16)) {
-                        el.style.transform = null;
-                        document.querySelector('.ite_X').style.left = null;
-                    }
-                }, 250);
+                ) {
+                    const innerWidth = window.innerWidth;
+                    setTimeout(() => {
+                        const el = document.querySelector('[data-test=skill-popout]').firstElementChild;
+                        const elWidth = el.getBoundingClientRect().width;
+                        const elX = el.getBoundingClientRect().x;
+                        const iteXLeft = document.querySelector('.ite_X').style.left;
+                        if (elX < 0) {
+                            const val = Math.floor(Math.abs(elX) + 10)
+                            el.style.transform = `${el.style.transform} translateX(${val}px)`;
+                            document.querySelector('.ite_X').style.left = iteXLeft.replace(/\)$/, ` - ${val}px)`);
+                        } else if ((elX + elWidth) > innerWidth) {
+                            const val = Math.floor(innerWidth - elX - elWidth - 10);
+                            el.style.transform = `${el.style.transform} translateX(${val}px)`;
+                            document.querySelector('.ite_X').style.left = iteXLeft.replace(/\)$/, ` - ${val}px)`);
+                        }
+                    }, 301);
+                }
             }
         }
     }
@@ -957,13 +862,13 @@ function setSkillTreeObserver() {
 
 async function setLearnObserver() {
     hideShowFooter(footerHidden);
-     if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
-         draggable();
-     } else if (document.querySelector('textarea, input')) {
-         setTimeout(()=>{
-             document.querySelector('textarea, input').focus({preventScroll: true});
-         }, 200);
-     }
+    if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
+        draggable();
+    } else if (document.querySelector('textarea, input')) {
+        setTimeout(()=>{
+            document.querySelector('textarea, input').focus({preventScroll: true});
+        }, 200);
+    }
     const callback = function(mutationsList, observer) {
         for(const mutation of mutationsList) {
             if (mutation.addedNodes[0]?.nodeType === 1) {
@@ -1020,6 +925,20 @@ async function setLearnObserver() {
     const config2 = { attributes: true, childList: true, subtree: true, characterData: false };
     const observer2 = new MutationObserver(callback2);
     observer2.observe(targetNode2, config2);
+
+    const progressBarCallback = function(mutationsList, observer) {
+        for(const mutation of mutationsList) {
+            if (mutation.attributeName === 'aria-valuenow' && mutation.target.getAttribute('aria-valuenow') === '1') {
+                const panel = document.querySelector('.panel');
+                panel.classList.add('show');
+                panel.classList.remove('hide');
+            }
+        }
+    }
+    const progressBar = document.querySelector('[role="progressbar"]');
+    const progressBarConfig = { attributes: true, childList: false, subtree: false, characterData: false };
+    const progressBarObserver = new MutationObserver(progressBarCallback);
+    progressBarObserver.observe(progressBar, progressBarConfig);
 }
 
 function setStoriesObservers() {
@@ -1068,6 +987,33 @@ function getDelay() {
         750;
 }
 
+function debounce(func, timeout = 300){
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
+
+let isScrolling = false;
+let scrollingInterval;
+function scrolling(e) {
+    e.stopPropagation();
+    isScrolling = true;
+    clearInterval(scrollingInterval);
+    scrollingInterval = setTimeout(() => {
+        isScrolling = false
+    });
+}
+
+function setScrollEvent() {
+    document.addEventListener('scroll', scrolling);
+}
+
+function removeTouchEndEvent(e) {
+    e.stopPropagation();
+}
+
 let interval;
 (function() {
     'use strict';
@@ -1077,6 +1023,7 @@ let interval;
     document.querySelector('html').insertBefore(el, document.querySelector('body'))
 
     window.addEventListener('load', function() {
+        setScrollEvent();
         addThemes();
         createThemeSwitcherButton();
         appendThemeSwitcher();
@@ -1084,6 +1031,9 @@ let interval;
         if (document.querySelector('[data-test="skill-tree"]')) {
             createHideButton();
             setSkillTreeObserver();
+            Array.from(document.querySelectorAll('[data-test="skill"]')).forEach(el => {
+                el.addEventListener('touchend', removeTouchEndEvent);
+            });
         }
 
         if (localStorage.getItem('themed') === "1") {
@@ -1093,11 +1043,6 @@ let interval;
             }
         }
 
-        function removeTouchEndEvent(e) {
-            e.stopPropagation();
-        }
-
-        window.addEventListener('touchend', removeTouchEndEvent, true);
         window.addEventListener('resize', function(event){
             clearInterval(interval);
             interval = setTimeout(() => {
@@ -1116,24 +1061,19 @@ let interval;
                     if (mutation.addedNodes[0]?.querySelector('[data-test="skill-tree"]')) {
                         // MAIN PAGE
                         setSkillTreeObserver();
-                        removeScrollingEvent();
                         createHideButton();
-                        window.addEventListener('touchend', removeTouchEndEvent, true);
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="stories-player-continue"]')) {
                         // STORIES PAGE
                         setStoriesObservers();
-                        removeScrollingEvent();
                         createAutoClickButton(true);
                         createStoriesProgressShower();
-                        window.removeEventListener('touchend', removeTouchEndEvent, true);
                         document.querySelector('.WzuSM')?.swiper("swipeUp", () => {
                             document.querySelector('[data-test="stories-player-continue"]')?.click();
                         });
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="quit-button"]')) {
                         // LEARN
-                        if (!document.querySelector('.F9GEY')) {
+                        if (document.querySelector('[role="progressbar"]')) {
                             setLearnObserver();
-                            setScrollEvent();
                             createAutoClickButton(false);
                             createNumber();
                             createSlider();
@@ -1143,9 +1083,9 @@ let interval;
                                 }
                             }, 500);
                             if (footerHidden) hideShowFooter(true);
-                            if (document.querySelector('._2plWZ'))
+                            if (document.querySelector('._2plWZ')) {
                                 document.querySelector('._2nDUm').classList.add('with-hearts')
-                            window.removeEventListener('touchend', removeTouchEndEvent, true);
+                            }
                             document.querySelector(father).swiper("swipeLeft", swipeFunc);
                             document.querySelector(father).swiper("swipeRight", showHidePanel);
                             document.querySelector(father).swiper("swipeDown", showHideFooter, [document.querySelector('.panel')]);
