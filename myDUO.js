@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.8.5
+// @version      2.9.8.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -19,9 +19,6 @@ let myArray = [];
 let el;
 let label;
 
-const progressBar = "_1TkZD";
-const hint = "XUDC1 _2nhHI _3ZTEO";
-const coloredHint = "_1c_ny _1gjlS";
 const father = '._3x0ok';
 
 const css = [".switch {",
@@ -189,6 +186,14 @@ const css = [".switch {",
              "    #counter {",
              "        top: 0.5rem;",
              "        position: relative;",
+             "    }",
+             // draggable height
+             "    ._1C_S3 {",
+             "        display: unset;",
+             "    }",
+             "    ._2PLYW {",
+             "        min-height: 52px;",
+             "        margin-bottom: 2rem;",
              "    }",
              "}",
              "#my-autoclick-bu {",
@@ -860,10 +865,23 @@ function setSkillTreeObserver() {
     observer.observe(targetNode, config);
 }
 
+function setDraggableObserver() {
+    const callback = function(mutationsList, observer) {
+        for(const mutation of mutationsList) {
+            document.querySelector('._2PLYW').style.height = document.querySelector('.PcKtj').clientHeight + 'px';
+        }
+    }
+    const targetNode = document.querySelector('.PcKtj');
+    const config = { attributes: false, childList: true, subtree: false, characterData: false };
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+}
+
 async function setLearnObserver() {
     hideShowFooter(footerHidden);
     if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
         draggable();
+        setDraggableObserver();
     } else if (document.querySelector('textarea, input')) {
         setTimeout(()=>{
             document.querySelector('textarea, input').focus({preventScroll: true});
@@ -874,6 +892,7 @@ async function setLearnObserver() {
             if (mutation.addedNodes[0]?.nodeType === 1) {
                 if (mutation.addedNodes[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
                     draggable();
+                    setDraggableObserver();
                 } else if (mutation.addedNodes[0].contains(document.querySelector('textarea, input'))) {
                     setTimeout(()=>{
                         document.querySelector('textarea, input').focus({preventScroll: true});
@@ -1046,7 +1065,7 @@ let interval;
         window.addEventListener('resize', function(event){
             clearInterval(interval);
             interval = setTimeout(() => {
-                document.querySelector('#counter')?.scrollIntoView();
+                document.querySelector('#counter')?.scrollIntoView({ block: 'center' });
             }, 100);
         });
 
@@ -1088,7 +1107,14 @@ let interval;
                             }
                             document.querySelector(father).swiper("swipeLeft", swipeFunc);
                             document.querySelector(father).swiper("swipeRight", showHidePanel);
-                            document.querySelector(father).swiper("swipeDown", showHideFooter, [document.querySelector('.panel')]);
+                            document.querySelector(father).swiper(
+                                "swipeDown",
+                                showHideFooter,
+                                [
+                                    document.querySelector('.panel'),
+                                    document.querySelector('._2PLYW')
+                                ]
+                            );
                         }
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="xp-slide"]')) {
                         if (footerHidden) hideShowFooter(false);
