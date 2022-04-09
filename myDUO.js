@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.9.0
+// @version      2.9.9.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -345,19 +345,19 @@ Node.prototype.swiper = function(direction, func, forbidden) {
 
 
         if (direction === "swipeRight") {
-            if (touchstartX - touchendX < -25 && absX - absY > 70) {
+            if (touchstartX - touchendX < -25 && absX - absY > 25) {
                 func(event);
             }
         } else if (direction === "swipeLeft") {
-            if (touchstartX - touchendX > 25 && absX - absY > 70) {
+            if (touchstartX - touchendX > 25 && absX - absY > 25) {
                 func(event);
             }
         } else if (direction === "swipeDown") {
-            if (touchstartY - touchendY < -25 && absY - absX > 70) {
+            if (touchstartY - touchendY < -25 && absY - absX > 25) {
                 func(event);
             }
         } else if (direction === "swipeUp") {
-            if (touchstartY - touchendY > 25 && absY - absX > 70) {
+            if (touchstartY - touchendY > 25 && absY - absX > 25) {
                 func(event);
             }
         }
@@ -814,6 +814,25 @@ function hideShowFooter(hide) {
     }
 }
 
+function movePopout() {
+    const innerWidth = window.innerWidth;
+    setTimeout(() => {
+        const el = document.querySelector('[data-test=skill-popout]').firstElementChild;
+        const elWidth = el.getBoundingClientRect().width;
+        const elX = el.getBoundingClientRect().x;
+        const iteXLeft = document.querySelector('.ite_X').style.left;
+        if (elX < 0) {
+            const val = Math.floor(Math.abs(elX) + 10)
+            el.style.transform = `${el.style.transform} translateX(${val}px)`;
+            document.querySelector('.ite_X').style.left = iteXLeft.replace(/\)$/, ` - ${val}px)`);
+        } else if ((elX + elWidth) > innerWidth) {
+            const val = Math.floor(innerWidth - elX - elWidth - 10);
+            el.style.transform = `${el.style.transform} translateX(${val}px)`;
+            document.querySelector('.ite_X').style.left = iteXLeft.replace(/\)$/, ` - ${val}px)`);
+        }
+    }, 301);
+}
+
 function setSkillTreeObserver() {
     const callback = function(mutationsList, observer) {
         for(const mutation of mutationsList) {
@@ -831,22 +850,7 @@ function setSkillTreeObserver() {
                     mutation.addedNodes[0] === document.querySelector('[data-test=skill-popout]') ||
                     mutation.addedNodes[0]?.querySelector('[data-test="skill-popout"]')
                 ) {
-                    const innerWidth = window.innerWidth;
-                    setTimeout(() => {
-                        const el = document.querySelector('[data-test=skill-popout]').firstElementChild;
-                        const elWidth = el.getBoundingClientRect().width;
-                        const elX = el.getBoundingClientRect().x;
-                        const iteXLeft = document.querySelector('.ite_X').style.left;
-                        if (elX < 0) {
-                            const val = Math.floor(Math.abs(elX) + 10)
-                            el.style.transform = `${el.style.transform} translateX(${val}px)`;
-                            document.querySelector('.ite_X').style.left = iteXLeft.replace(/\)$/, ` - ${val}px)`);
-                        } else if ((elX + elWidth) > innerWidth) {
-                            const val = Math.floor(innerWidth - elX - elWidth - 10);
-                            el.style.transform = `${el.style.transform} translateX(${val}px)`;
-                            document.querySelector('.ite_X').style.left = iteXLeft.replace(/\)$/, ` - ${val}px)`);
-                        }
-                    }, 301);
+                    this.movePopout();
                 }
             }
         }
@@ -881,7 +885,7 @@ async function setLearnObserver() {
         draggable();
         setDraggableObserver();
     } else if (document.querySelector('textarea, input')) {
-        document.querySelector('textarea, input').addEventListener('focus', (event) => {
+        document.querySelector('textarea, input').addEventListener('tab', (event) => {
             setTimeout(()=>{
                 event.target.scrollIntoView({ block: 'end'});
             }, 200);
@@ -1085,6 +1089,9 @@ function removeTouchEndEvent(e) {
                         document.addEventListener('touchend', removeTouchEndEvent);
                         setSkillTreeObserver();
                         createHideButton();
+                        if (document.querySelector('[data-test=skill-popout]')) {
+                            this.movePopout();
+                        }
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="stories-player-continue"]')) {
                         // STORIES PAGE
                         document.removeEventListener('touchend', removeTouchEndEvent, true);
