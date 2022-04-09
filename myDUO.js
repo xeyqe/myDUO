@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.8.7
+// @version      2.9.8.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -353,19 +353,19 @@ Node.prototype.swiper = function(direction, func, forbidden) {
 
 
         if (direction === "swipeRight") {
-            if (touchstartX - touchendX < -25 && absY < absX) {
+            if (touchstartX - touchendX < -25 && absY < absX && absY < 25) {
                 func(event);
             }
         } else if (direction === "swipeLeft") {
-            if (touchstartX - touchendX > 25 && absY < absX) {
+            if (touchstartX - touchendX > 25 && absY < absX && absY < 25) {
                 func(event);
             }
         } else if (direction === "swipeDown") {
-            if (touchstartY - touchendY < -25 && absY > absX) {
+            if (touchstartY - touchendY < -25 && absY > absX && absX < 25) {
                 func(event);
             }
         } else if (direction === "swipeUp") {
-            if (touchstartY - touchendY > 25 && absY > absX) {
+            if (touchstartY - touchendY > 25 && absY > absX && absX < 25) {
                 func(event);
             }
         }
