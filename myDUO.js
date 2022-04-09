@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.8.6
+// @version      2.9.8.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -883,6 +883,11 @@ async function setLearnObserver() {
         draggable();
         setDraggableObserver();
     } else if (document.querySelector('textarea, input')) {
+        document.querySelector('textarea, input').addEventListener('focus', (event) => {
+            setTimeout(()=>{
+                event.target.scrollIntoView({ block: 'end'});
+            }, 200);
+        });
         setTimeout(()=>{
             document.querySelector('textarea, input').focus({preventScroll: true});
         }, 200);
@@ -894,6 +899,13 @@ async function setLearnObserver() {
                     draggable();
                     setDraggableObserver();
                 } else if (mutation.addedNodes[0].contains(document.querySelector('textarea, input'))) {
+                    document.querySelector('textarea, input').addEventListener('focus', (event) => {
+                        event.target.scrollIntoView({ block: 'end'});
+                        setTimeout(()=>{
+                            event.target.scrollIntoView({ block: 'end'});
+                            setTimeout(() => event.target.scrollIntoView({ block: 'end'}), 100);
+                        }, 200);
+                    });
                     setTimeout(()=>{
                         document.querySelector('textarea, input').focus({preventScroll: true});
                     }, 200);
@@ -1033,7 +1045,6 @@ function removeTouchEndEvent(e) {
     e.stopPropagation();
 }
 
-let interval;
 (function() {
     'use strict';
 
@@ -1061,13 +1072,6 @@ let interval;
                 document.querySelector('#checkbx').checked = true;
             }
         }
-
-        window.addEventListener('resize', function(event){
-            clearInterval(interval);
-            interval = setTimeout(() => {
-                document.querySelector('#counter')?.scrollIntoView({ block: 'center' });
-            }, 100);
-        });
 
         const callback = function(mutationsList, observer) {
             for(let mutation of mutationsList) {
