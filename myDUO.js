@@ -345,19 +345,19 @@ Node.prototype.swiper = function(direction, func, forbidden) {
 
 
         if (direction === "swipeRight") {
-            if (touchstartX - touchendX < -25 && absY < absX && absY < 25) {
+            if (touchstartX - touchendX < -25 && absX - absY > 70) {
                 func(event);
             }
         } else if (direction === "swipeLeft") {
-            if (touchstartX - touchendX > 25 && absY < absX && absY < 25) {
+            if (touchstartX - touchendX > 25 && absX - absY > 70) {
                 func(event);
             }
         } else if (direction === "swipeDown") {
-            if (touchstartY - touchendY < -25 && absY > absX && absX < 25) {
+            if (touchstartY - touchendY < -25 && absY - absX > 70) {
                 func(event);
             }
         } else if (direction === "swipeUp") {
-            if (touchstartY - touchendY > 25 && absY > absX && absX < 25) {
+            if (touchstartY - touchendY > 25 && absY - absX > 70) {
                 func(event);
             }
         }
