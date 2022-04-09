@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.8.9
+// @version      2.9.9.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -186,14 +186,6 @@ const css = [".switch {",
              "    #counter {",
              "        top: 0.5rem;",
              "        position: relative;",
-             "    }",
-             // draggable height
-             "    ._1C_S3 {",
-             "        display: unset;",
-             "    }",
-             "    ._2PLYW {",
-             "        min-height: 52px;",
-             "        margin-bottom: 2rem;",
              "    }",
              "}",
              "#my-autoclick-bu {",
@@ -866,15 +858,21 @@ function setSkillTreeObserver() {
 }
 
 function setDraggableObserver() {
-    const callback = function(mutationsList, observer) {
-        for(const mutation of mutationsList) {
-            document.querySelector('._2PLYW').style.height = document.querySelector('.PcKtj').clientHeight + 'px';
+    const el = document.querySelector('.uH5m4');
+    if (el.scrollHeight > el.clientHeight) {
+        document.querySelector('._1C_S3').style = 'display: unset;';
+        document.querySelector('._2PLYW').style.cssText = 'min-height: 52px; margin-bottom: 2rem;';
+
+        const callback = function(mutationsList, observer) {
+            for(const mutation of mutationsList) {
+                document.querySelector('._2PLYW').style.height = document.querySelector('.PcKtj').clientHeight + 'px';
+            }
         }
+        const targetNode = document.querySelector('.PcKtj');
+        const config = { attributes: false, childList: true, subtree: false, characterData: false };
+        const observer = new MutationObserver(callback);
+        observer.observe(targetNode, config);
     }
-    const targetNode = document.querySelector('.PcKtj');
-    const config = { attributes: false, childList: true, subtree: false, characterData: false };
-    const observer = new MutationObserver(callback);
-    observer.observe(targetNode, config);
 }
 
 async function setLearnObserver() {
@@ -1061,9 +1059,10 @@ function removeTouchEndEvent(e) {
         if (document.querySelector('[data-test="skill-tree"]')) {
             createHideButton();
             setSkillTreeObserver();
-            Array.from(document.querySelectorAll('[data-test="skill"]')).forEach(el => {
-                el.addEventListener('touchend', removeTouchEndEvent);
-            });
+            // Array.from(document.querySelectorAll('[data-test="skill"]')).forEach(el => {
+            //     el.addEventListener('touchend', removeTouchEndEvent);
+            // });
+            document.addEventListener('touchend', removeTouchEndEvent);
         }
 
         if (localStorage.getItem('themed') === "1") {
@@ -1083,10 +1082,12 @@ function removeTouchEndEvent(e) {
 
                     if (mutation.addedNodes[0]?.querySelector('[data-test="skill-tree"]')) {
                         // MAIN PAGE
+                        document.addEventListener('touchend', removeTouchEndEvent);
                         setSkillTreeObserver();
                         createHideButton();
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="stories-player-continue"]')) {
                         // STORIES PAGE
+                        document.removeEventListener('touchend', removeTouchEndEvent, true);
                         setStoriesObservers();
                         createAutoClickButton(true);
                         createStoriesProgressShower();
@@ -1096,6 +1097,7 @@ function removeTouchEndEvent(e) {
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="quit-button"]')) {
                         // LEARN
                         if (document.querySelector('[role="progressbar"]')) {
+                            document.removeEventListener('touchend', removeTouchEndEvent, true);
                             setLearnObserver();
                             createAutoClickButton(false);
                             createNumber();
