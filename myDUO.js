@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.9.1
+// @version      2.9.9.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -345,19 +345,19 @@ Node.prototype.swiper = function(direction, func, forbidden) {
 
 
         if (direction === "swipeRight") {
-            if (touchstartX - touchendX < -25 && absX - absY > 25) {
+            if (touchstartX - touchendX < -25 && absX - absY > 70) {
                 func(event);
             }
         } else if (direction === "swipeLeft") {
-            if (touchstartX - touchendX > 25 && absX - absY > 25) {
+            if (touchstartX - touchendX > 25 && absX - absY > 70) {
                 func(event);
             }
         } else if (direction === "swipeDown") {
-            if (touchstartY - touchendY < -25 && absY - absX > 25) {
+            if (touchstartY - touchendY < -25 && absY - absX > 70) {
                 func(event);
             }
         } else if (direction === "swipeUp") {
-            if (touchstartY - touchendY > 25 && absY - absX > 25) {
+            if (touchstartY - touchendY > 25 && absY - absX > 70) {
                 func(event);
             }
         }
@@ -821,6 +821,7 @@ function movePopout() {
         const elWidth = el.getBoundingClientRect().width;
         const elX = el.getBoundingClientRect().x;
         const iteXLeft = document.querySelector('.ite_X').style.left;
+
         if (elX < 0) {
             const val = Math.floor(Math.abs(elX) + 10)
             el.style.transform = `${el.style.transform} translateX(${val}px)`;
@@ -850,7 +851,7 @@ function setSkillTreeObserver() {
                     mutation.addedNodes[0] === document.querySelector('[data-test=skill-popout]') ||
                     mutation.addedNodes[0]?.querySelector('[data-test="skill-popout"]')
                 ) {
-                    this.movePopout();
+                    movePopout();
                 }
             }
         }
@@ -891,7 +892,8 @@ async function setLearnObserver() {
             }, 200);
         });
         setTimeout(()=>{
-            document.querySelector('textarea, input').focus({preventScroll: true});
+            event.target.focus({preventScroll: true});
+            event.target.scrollIntoView({ block: 'end'});
         }, 200);
     }
     const callback = function(mutationsList, observer) {
@@ -1063,10 +1065,9 @@ function removeTouchEndEvent(e) {
         if (document.querySelector('[data-test="skill-tree"]')) {
             createHideButton();
             setSkillTreeObserver();
-            // Array.from(document.querySelectorAll('[data-test="skill"]')).forEach(el => {
-            //     el.addEventListener('touchend', removeTouchEndEvent);
-            // });
-            document.addEventListener('touchend', removeTouchEndEvent);
+            Array.from(document.querySelectorAll('[data-test="skill"]')).forEach(el => {
+                el.addEventListener('touchend', removeTouchEndEvent);
+            });
         }
 
         if (localStorage.getItem('themed') === "1") {
@@ -1086,15 +1087,13 @@ function removeTouchEndEvent(e) {
 
                     if (mutation.addedNodes[0]?.querySelector('[data-test="skill-tree"]')) {
                         // MAIN PAGE
-                        document.addEventListener('touchend', removeTouchEndEvent);
                         setSkillTreeObserver();
                         createHideButton();
                         if (document.querySelector('[data-test=skill-popout]')) {
-                            this.movePopout();
+                            movePopout();
                         }
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="stories-player-continue"]')) {
                         // STORIES PAGE
-                        document.removeEventListener('touchend', removeTouchEndEvent, true);
                         setStoriesObservers();
                         createAutoClickButton(true);
                         createStoriesProgressShower();
@@ -1104,7 +1103,6 @@ function removeTouchEndEvent(e) {
                     } else if (mutation.addedNodes[0]?.querySelector('[data-test="quit-button"]')) {
                         // LEARN
                         if (document.querySelector('[role="progressbar"]')) {
-                            document.removeEventListener('touchend', removeTouchEndEvent, true);
                             setLearnObserver();
                             createAutoClickButton(false);
                             createNumber();
