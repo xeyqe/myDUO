@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.9.2
+// @version      2.9.9.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
 // @license      MIT
-// @include      http://duolingo.com/*
-// @include      https://duolingo.com/*
-// @include      http://*.duolingo.com/*
-// @include      https://*.duolingo.com/*
+// @match        http://duolingo.com/*
+// @match        https://duolingo.com/*
+// @match        http://*.duolingo.com/*
+// @match        https://*.duolingo.com/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
@@ -595,6 +595,8 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-name"]')) {
             yourAnswer = document.querySelector('[data-test="challenge-choice"].disCS > div').textContent;
             yourAnswer = yourAnswer + ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
+        } else if (document.querySelector('[data-test="challenge challenge-assist"]')) {
+            yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
         }
 
         if (question) {
@@ -618,12 +620,8 @@ function neco(color) {
             divMain.appendChild(div);
         }
 
-        const review = document.querySelector('.panel')
-        .previousElementSibling
-        .querySelector('[data-test="blame blame-incorrect"]') ||
-              document.querySelector('.panel')
-        .previousElementSibling
-        .querySelector('[data-test="blame blame-correct"]');
+        const review = document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-incorrect"]') ||
+              document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-correct"]');
         if (review) {
             const node = review.children[1].children[0].cloneNode(true);
             divMain.appendChild(node);
