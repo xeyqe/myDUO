@@ -22,275 +22,275 @@ let label;
 const father = '._3x0ok';
 
 const css = [".switch {",
-             "    position: relative;",
-             "    display: inline-block;",
-             "    width: 60px;",
-             "    height: 34px;",
-             "}",
-             "",
-             ".switch input { ",
-             "    opacity: 0;",
-             "    width: 0;",
-             "    height: 0;",
-             "}",
-             "",
-             ".slider {",
-             "    display: flex;",
-             "    position: absolute;",
-             "    cursor: pointer;",
-             "    top: 0;",
-             "    left: 0;",
-             "    right: 0;",
-             "    bottom: 0;",
-             "    background-color: #ccc;",
-             "    -webkit-transition: .4s;",
-             "    transition: .4s;",
-             "}",
-             "",
-             ".slider > span {",
-             "    position: relative;",
-             "    height: 29px;",
-             "    width: 29px;",
-             "    bottom: -3px;",
-             "    background-color: white;",
-             "    -webkit-transition: .4s;",
-             "    transition: .4s;",
-             "    border-radius: 50%",
-             "}",
-             "",
-             "input:checked + .slider {",
-             "    background-color: #2196F3;",
-             "}",
-             "",
-             "input:focus + .slider {",
-             "    box-shadow: 0 0 1px #2196F3;",
-             "}",
-             "",
-             "input:checked + .slider > span {",
-             "    margin-left: auto",
-             "}",
-             "",
-             ".slider.round {",
-             "    border-radius: 34px;",
-             "}",
-             "",
-             ".panel::-webkit-scrollbar {",
-             "	width:0 !important",
-             "}",
-             "",
-             "._3B1cY:after, ._3B1cY:before {",
-             "	display:none",
-             "}",
-             "",
-             "textarea, input {",
-             "	-moz-user-select: text;",
-             "	direction: ltr;",
-             "}",
-             ".lnZE0 {",
-             "    height: unset;",
-             "}",
-             "._1ttrU.Au17D._2CBTu {",
-             "    margin-top: 0;",
-             "}",
-             "._1Y5M_ {",
-             "    flex-grow: unset;",
-             "}",
-             ".panel {",
-             "    line-height: 1.15;",
-             "}",
-             ".rotmp {",
-             "    grid-row-gap: unset;",
-             "}",
-             ".panelItem {",
-             "    box-sizing: border-box;",
-             "    padding: 10px;",
-             "    width: fit-content;",
-             "    height: fit-content;",
-             "    border-radius: 10px;",
-             "    margin: 10px;",
-             "}",
-             ".panelItem.right {",
-             "    background-color: #b8f28b;",
-             "    color: #58a700;",
-             "}",
-             ".panelItem.wrong {",
-             "    background-color: #ffc1c1;",
-             "    color: #ea2b2b;",
-             "}",
-             "#counter {",
-             "    font-size: 2rem;",
-             "    grid-column-end: end;",
-             "}",
-             "#tempAlert {",
-             "    padding: 0.2rem;",
-             "    left:50%;transform:translateX(-50%);",
-             "    max-width:94%;",
-             "    width:fit-content;",
-             "    overflow:visible;",
-             "    position:absolute;",
-             "    color:#58a700;",
-             "    background:#b8f28b;",
-             "    z-index:900",
-             "}",
-             ".panel {",
-             "    width: fit-content;",
-             "    float: left;",
-             "    max-width: 95vw;",
-             "    height: fit-content;",
-             "    position: absolute;",
-             "    top: 8%;",
-             "    overflow-y: scroll;",
-             "    max-height: 92%;",
-             "    z-index: 1000;",
-             "    scrollbar-width: none;",
-             "}",
-             "[data-test=challenge-tap-token] {",
-             "    text-align: center;",
-             "}",
-             "._2LMXW:after {",
-             "    height: 0;",
-             "}",
-             ".panel.hide {",
-             "    transform: translateX(calc(-100% + 1.2rem));",
-             "    transition: .5s ease-in-out;",
-             "}",
-             ".panel.show {",
-             "    transform: translateX(0%);",
-             "    transition: .5s ease-in-out;",
-             "}",
-             ".hidden-item {",
-             "    display: none;",
-             "}",
-             "@media (min-width: 700px) {",
-             "    ._30i_q, ._1yghA {",
-             "        display: block;",
-             "    }",
-             "}",
-             "@media (max-width: 700px) {",
-             "    .uH5m4 {",
-             "        min-height: fit-content;",
-             "    }",
-             "    .panel.show.shorter {",
-             "        max-height: 72vh;",
-             "    }",
-             "    .hidden-footer {",
-             "        display: none;",
-             "    }",
-             "    .mQ0GW {",
-             "        grid-gap: 0px;",
-             "    }",
-             "    .Yf5zL {",
-             "        padding-bottom: 0px;",
-             "        padding-top: 0px;",
-             "    }",
-             "    #counter {",
-             "        top: 0.5rem;",
-             "        position: relative;",
-             "    }",
-             "}",
-             "#my-autoclick-bu {",
-             "    width: 2rem;",
-             "}",
-             "button._2mDNn > i {",
-             "    opacity: 0;",
-             "}",
-             ".panel * {",
-             "    min-width: unset;",
-             "}",
-             "._6lk-i {",
-             "    padding: 32px 12px 0px;",
-             "}",
-             "._3f9ou:not(.hidden-item) {",
-             "    padding: 0px;",
-             "}",
-             "._2QKoe {",
-             "    position: fixed;",
-             "    width: 100%;",
-             "    transform: translateX(-50%);",
-             "    left: 50%;",
-             "}",
-             "._3gjcv {",
-             "    padding-top: 103px !important;",
-             "}",
-             "._2plWZ {",
-             "    grid-gap: 0px;",
-             "}",
-             "._2nDUm {",
-             "    display: flex;",
-             "    grid-gap: 6px;",
-             "}",
-             "div[role=progressbar] {",
-             "    width: 100%;",
-             "}",
-             "._2kfEr {",
-             "    flex-shrink: 0;",
-             "}",
-             "._3XZrb, ._22kW9 {",
-             "    display: none;",
-             "}",
-             "._1Oz7v {",
-             "    position: relative;",
-             "}"
-            ].join("\n");
-const css2 = [ "/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
-              "@supports (backdrop-filter: invert(100%)) {",
-              "    #mybpwaycfxccmnp-dblt-backdrop-filter {",
-              "        display: block !important;",
-              "        position: fixed !important;",
-              "        top: 0 !important;",
-              "        bottom: 0 !important;",
-              "        left: 0 !important;",
-              "        right: 0 !important;",
-              "        margin: 0 !important;",
-              "        pointer-events: none !important;",
-              "        z-index: 2147483647 !important;",
-              "        backdrop-filter: invert(100%) hue-rotate(180deg) !important;",
-              "    }",
-              "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"]),",
-              "    video,",
-              "    ins,    /* duolingo google ads */",
-              "    ._3-gOT.LBIqX, /* duolingo flags */",
-              "    ._3BevS.PA4Av._3I8oV, /* another duolingo flags */",
-              "    ._3BevS._1fpAw, /* duolingo flags my profile*/",
-              "    svg {",
-              "        filter: invert(100%) hue-rotate(180deg) !important;",
-              "    }",
-              "}",
-              "@supports not (backdrop-filter: invert(100%)) {",
-              "    html,",
-              "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"])",
-              "    embed[type=\"application/x-shockwave-flash\"],",
-              "    object[type=\"application/x-shockwave-flash\"],",
-              "    video,",
-              "    svg,",
-              "    ins,",
-              "    ._3-gOT.LBIqX,",
-              "    ._3BevS.PA4Av._3I8oV,",
-              "    ._3BevS._1fpAw,",
-              "    div#viewer.pdfViewer div.page",
-              "    {",
-              "        filter: invert(100%) hue-rotate(180deg) !important;",
-              "    }",
-              "    /* #28 */",
-              "    :fullscreen video,",
-              "    video:fullscreen",
-              "    {",
-              "        filter: none !important;",
-              "    }",
-              "",
-              "    html {",
-              "        background-color: black !important;",
-              "    }",
-              "}",
-              "",
-              "button,",
-              "input,",
-              "optgroup,",
-              "select,",
-              "textarea {",
-              "    background-color: white;",
-              "    color: black;",
-              "}"].join("\n");
+    "    position: relative;",
+    "    display: inline-block;",
+    "    width: 60px;",
+    "    height: 34px;",
+    "}",
+    "",
+    ".switch input { ",
+    "    opacity: 0;",
+    "    width: 0;",
+    "    height: 0;",
+    "}",
+    "",
+    ".slider {",
+    "    display: flex;",
+    "    position: absolute;",
+    "    cursor: pointer;",
+    "    top: 0;",
+    "    left: 0;",
+    "    right: 0;",
+    "    bottom: 0;",
+    "    background-color: #ccc;",
+    "    -webkit-transition: .4s;",
+    "    transition: .4s;",
+    "}",
+    "",
+    ".slider > span {",
+    "    position: relative;",
+    "    height: 29px;",
+    "    width: 29px;",
+    "    bottom: -3px;",
+    "    background-color: white;",
+    "    -webkit-transition: .4s;",
+    "    transition: .4s;",
+    "    border-radius: 50%",
+    "}",
+    "",
+    "input:checked + .slider {",
+    "    background-color: #2196F3;",
+    "}",
+    "",
+    "input:focus + .slider {",
+    "    box-shadow: 0 0 1px #2196F3;",
+    "}",
+    "",
+    "input:checked + .slider > span {",
+    "    margin-left: auto",
+    "}",
+    "",
+    ".slider.round {",
+    "    border-radius: 34px;",
+    "}",
+    "",
+    ".panel::-webkit-scrollbar {",
+    "	width:0 !important",
+    "}",
+    "",
+    "._3B1cY:after, ._3B1cY:before {",
+    "	display:none",
+    "}",
+    "",
+    "textarea, input {",
+    "	-moz-user-select: text;",
+    "	direction: ltr;",
+    "}",
+    ".lnZE0 {",
+    "    height: unset;",
+    "}",
+    "._1ttrU.Au17D._2CBTu {",
+    "    margin-top: 0;",
+    "}",
+    "._1Y5M_ {",
+    "    flex-grow: unset;",
+    "}",
+    ".panel {",
+    "    line-height: 1.15;",
+    "}",
+    ".rotmp {",
+    "    grid-row-gap: unset;",
+    "}",
+    ".panelItem {",
+    "    box-sizing: border-box;",
+    "    padding: 10px;",
+    "    width: fit-content;",
+    "    height: fit-content;",
+    "    border-radius: 10px;",
+    "    margin: 10px;",
+    "}",
+    ".panelItem.right {",
+    "    background-color: #b8f28b;",
+    "    color: #58a700;",
+    "}",
+    ".panelItem.wrong {",
+    "    background-color: #ffc1c1;",
+    "    color: #ea2b2b;",
+    "}",
+    "#counter {",
+    "    font-size: 2rem;",
+    "    grid-column-end: end;",
+    "}",
+    "#tempAlert {",
+    "    padding: 0.2rem;",
+    "    left:50%;transform:translateX(-50%);",
+    "    max-width:94%;",
+    "    width:fit-content;",
+    "    overflow:visible;",
+    "    position:absolute;",
+    "    color:#58a700;",
+    "    background:#b8f28b;",
+    "    z-index:900",
+    "}",
+    ".panel {",
+    "    width: fit-content;",
+    "    float: left;",
+    "    max-width: 95vw;",
+    "    height: fit-content;",
+    "    position: absolute;",
+    "    top: 8%;",
+    "    overflow-y: scroll;",
+    "    max-height: 92%;",
+    "    z-index: 1000;",
+    "    scrollbar-width: none;",
+    "}",
+    "[data-test=challenge-tap-token] {",
+    "    text-align: center;",
+    "}",
+    "._2LMXW:after {",
+    "    height: 0;",
+    "}",
+    ".panel.hide {",
+    "    transform: translateX(calc(-100% + 1.2rem));",
+    "    transition: .5s ease-in-out;",
+    "}",
+    ".panel.show {",
+    "    transform: translateX(0%);",
+    "    transition: .5s ease-in-out;",
+    "}",
+    ".hidden-item {",
+    "    display: none;",
+    "}",
+    "@media (min-width: 700px) {",
+    "    ._30i_q, ._1yghA {",
+    "        display: block;",
+    "    }",
+    "}",
+    "@media (max-width: 700px) {",
+    "    .uH5m4 {",
+    "        min-height: fit-content;",
+    "    }",
+    "    .panel.show.shorter {",
+    "        max-height: 72vh;",
+    "    }",
+    "    .hidden-footer {",
+    "        display: none;",
+    "    }",
+    "    .mQ0GW {",
+    "        grid-gap: 0px;",
+    "    }",
+    "    .Yf5zL {",
+    "        padding-bottom: 0px;",
+    "        padding-top: 0px;",
+    "    }",
+    "    #counter {",
+    "        top: 0.5rem;",
+    "        position: relative;",
+    "    }",
+    "}",
+    "#my-autoclick-bu {",
+    "    width: 2rem;",
+    "}",
+    "button._2mDNn > i {",
+    "    opacity: 0;",
+    "}",
+    ".panel * {",
+    "    min-width: unset;",
+    "}",
+    "._6lk-i {",
+    "    padding: 32px 12px 0px;",
+    "}",
+    "._3f9ou:not(.hidden-item) {",
+    "    padding: 0px;",
+    "}",
+    "._2QKoe {",
+    "    position: fixed;",
+    "    width: 100%;",
+    "    transform: translateX(-50%);",
+    "    left: 50%;",
+    "}",
+    "._3gjcv {",
+    "    padding-top: 103px !important;",
+    "}",
+    "._2plWZ {",
+    "    grid-gap: 0px;",
+    "}",
+    "._2nDUm {",
+    "    display: flex;",
+    "    grid-gap: 6px;",
+    "}",
+    "div[role=progressbar] {",
+    "    width: 100%;",
+    "}",
+    "._2kfEr {",
+    "    flex-shrink: 0;",
+    "}",
+    "._3XZrb, ._22kW9 {",
+    "    display: none;",
+    "}",
+    "._1Oz7v {",
+    "    position: relative;",
+    "}"
+].join("\n");
+const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
+    "@supports (backdrop-filter: invert(100%)) {",
+    "    #mybpwaycfxccmnp-dblt-backdrop-filter {",
+    "        display: block !important;",
+    "        position: fixed !important;",
+    "        top: 0 !important;",
+    "        bottom: 0 !important;",
+    "        left: 0 !important;",
+    "        right: 0 !important;",
+    "        margin: 0 !important;",
+    "        pointer-events: none !important;",
+    "        z-index: 2147483647 !important;",
+    "        backdrop-filter: invert(100%) hue-rotate(180deg) !important;",
+    "    }",
+    "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"]),",
+    "    video,",
+    "    ins,    /* duolingo google ads */",
+    "    ._3-gOT.LBIqX, /* duolingo flags */",
+    "    ._3BevS.PA4Av._3I8oV, /* another duolingo flags */",
+    "    ._3BevS._1fpAw, /* duolingo flags my profile*/",
+    "    svg {",
+    "        filter: invert(100%) hue-rotate(180deg) !important;",
+    "    }",
+    "}",
+    "@supports not (backdrop-filter: invert(100%)) {",
+    "    html,",
+    "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"])",
+    "    embed[type=\"application/x-shockwave-flash\"],",
+    "    object[type=\"application/x-shockwave-flash\"],",
+    "    video,",
+    "    svg,",
+    "    ins,",
+    "    ._3-gOT.LBIqX,",
+    "    ._3BevS.PA4Av._3I8oV,",
+    "    ._3BevS._1fpAw,",
+    "    div#viewer.pdfViewer div.page",
+    "    {",
+    "        filter: invert(100%) hue-rotate(180deg) !important;",
+    "    }",
+    "    /* #28 */",
+    "    :fullscreen video,",
+    "    video:fullscreen",
+    "    {",
+    "        filter: none !important;",
+    "    }",
+    "",
+    "    html {",
+    "        background-color: black !important;",
+    "    }",
+    "}",
+    "",
+    "button,",
+    "input,",
+    "optgroup,",
+    "select,",
+    "textarea {",
+    "    background-color: white;",
+    "    color: black;",
+    "}"].join("\n");
 
 function addThemes() {
     if (!document.querySelector('#darkDUOmobile')) {
@@ -312,7 +312,7 @@ function addThemes() {
     }
 }
 
-Node.prototype.swiper = function(direction, func, forbidden) {
+Node.prototype.swiper = function (direction, func, forbidden) {
     let touchstartX = 0;
     let touchstartY = 0;
     let touchendX = 0;
@@ -322,14 +322,14 @@ Node.prototype.swiper = function(direction, func, forbidden) {
 
     gesuredZone.addEventListener(
         'touchstart',
-        function(event) {
+        function (event) {
             touchstartX = event.touches[0].pageX;
             touchstartY = event.touches[0].pageY;
         },
-        { passive: true}
+        { passive: true }
     );
 
-    gesuredZone.addEventListener('touchend', function(event) {
+    gesuredZone.addEventListener('touchend', function (event) {
         touchendX = event.changedTouches[0].pageX;
         touchendY = event.changedTouches[0].pageY;
 
@@ -437,7 +437,7 @@ function tempAlert(input) {
         }
     });
 
-    el.addEventListener("click", ()=>{
+    el.addEventListener("click", () => {
         if (document.querySelector('#tempAlert').style.border === "") {
             document.querySelector('#tempAlert').style.border = "3px solid white";
             clearTimeout(timeout);
@@ -454,7 +454,7 @@ function tempAlert(input) {
 }
 
 function removeTempAlert(num) {
-    timeout = setTimeout(function() {
+    timeout = setTimeout(function () {
         const fadeTarget = document.getElementById("tempAlert");
         const fadeEffect = setInterval(function () {
             if (!fadeTarget) clearInterval(fadeEffect);
@@ -493,7 +493,7 @@ function draggable() {
     const output = document.querySelector('.PcKtj');
 
     Sortable.create(output, {
-        onEnd: function (evt){ reclick() },
+        onEnd: function (evt) { reclick() },
         animation: 150,
     });
     const container = document.querySelector('.PcKtj')
@@ -503,11 +503,11 @@ function draggable() {
 function createSlider() {
     const panel = document.createElement("div");
 
-    panel.setAttribute('class','panel hide');
+    panel.setAttribute('class', 'panel hide');
 
     document.querySelector(father).appendChild(panel);
 
-    document.querySelector(father).addEventListener('mousedown', function(event) {
+    document.querySelector(father).addEventListener('mousedown', function (event) {
         const isClickInside = document.querySelector('.panel').contains(event.target) || panel === event.target;
 
         if (!isClickInside) {
@@ -522,7 +522,7 @@ function createSlider() {
     });
 }
 
-function showHidePanel(event){
+function showHidePanel(event) {
     if (mayISwipe(event)) {
         const panel = document.querySelector('.panel');
         if (panel.classList.contains('show')) {
@@ -536,7 +536,7 @@ function showHidePanel(event){
 }
 
 function neco(color) {
-    const promise = new Promise((resolve)=>{
+    const promise = new Promise((resolve) => {
         let question;
         let question2;
         let yourAnswer;
@@ -616,12 +616,12 @@ function neco(color) {
         if (yourAnswer) {
             const div = emptyDiv.cloneNode();
             div.innerText = yourAnswer;
-            div.style.color = color === 'right' ? '#279f09': '#e7559e';
+            div.style.color = color === 'right' ? '#279f09' : '#e7559e';
             divMain.appendChild(div);
         }
 
         const review = document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-incorrect"]') ||
-              document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-correct"]');
+            document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-correct"]');
         if (review) {
             const node = review.children[1].children[0].cloneNode(true);
             divMain.appendChild(node);
@@ -635,12 +635,12 @@ function neco(color) {
 
 
         const panel = document.querySelector('.panel.show');
-        setTimeout(()=>{
+        setTimeout(() => {
             if (panel) {
                 panel.classList.remove('show');
                 panel.classList.add('hide');
             }
-        },20);
+        }, 20);
 
         resolve();
     });
@@ -657,15 +657,15 @@ function createThemeSwitcherButton() {
 
     label.append(input, span);
     span.append(span2);
-    label.setAttribute('class','switch');
+    label.setAttribute('class', 'switch');
     label.style.zIndex = '100';
     label.style.top = '0.8em';
     label.style.marginLeft = '9px';
-    input.setAttribute('type','checkbox');
+    input.setAttribute('type', 'checkbox');
     input.id = 'checkbx';
-    span.setAttribute('class','slider round');
+    span.setAttribute('class', 'slider round');
 
-    input.addEventListener('click', function(e){
+    input.addEventListener('click', function (e) {
         if (!document.querySelector('#checkbx').checked) {
             if (document.querySelector('#darkDUOmobile')) {
                 document.querySelector('#darkDUOmobile').remove();
@@ -731,7 +731,7 @@ function createAutoClickButton(isStories) {
 
 function createStoriesProgressShower() {
     const progressEl = document.createElement('SPAN');
-    progressEl.innerText = document.querySelector('[role="progressbar"]').getAttribute('aria-valuenow')*100+'%';
+    progressEl.innerText = document.querySelector('[role="progressbar"]').getAttribute('aria-valuenow') * 100 + '%';
     progressEl.style.cssText = "z-index: 10; margin-left: .5rem;"
     progressEl.id = 'bugibugi';
     const target = document.querySelector('._2QKoe');
@@ -833,8 +833,8 @@ function movePopout() {
 }
 
 function setSkillTreeObserver() {
-    const callback = function(mutationsList, observer) {
-        for(const mutation of mutationsList) {
+    const callback = function (mutationsList, observer) {
+        for (const mutation of mutationsList) {
             if (mutation.addedNodes[0]?.nodeType === 1) {
                 if (
                     mutation.addedNodes[0]?.classList?.value === '_15U-t' &&
@@ -866,8 +866,8 @@ function setDraggableObserver() {
         document.querySelector('._1C_S3').style = 'display: unset;';
         document.querySelector('._2PLYW').style.cssText = 'min-height: 52px; margin-bottom: 2rem;';
 
-        const callback = function(mutationsList, observer) {
-            for(const mutation of mutationsList) {
+        const callback = function (mutationsList, observer) {
+            for (const mutation of mutationsList) {
                 document.querySelector('._2PLYW').style.height = document.querySelector('.PcKtj').clientHeight + 'px';
             }
         }
@@ -885,31 +885,31 @@ async function setLearnObserver() {
         setDraggableObserver();
     } else if (document.querySelector('textarea, input')) {
         document.querySelector('textarea, input').addEventListener('tab', (event) => {
-            setTimeout(()=>{
-                event.target.scrollIntoView({ block: 'end'});
+            setTimeout(() => {
+                event.target.scrollIntoView({ block: 'end' });
             }, 200);
         });
-        setTimeout(()=>{
-            event.target.focus({preventScroll: true});
-            event.target.scrollIntoView({ block: 'end'});
+        setTimeout(() => {
+            document.querySelector('textarea, input').focus({ preventScroll: true });
+            document.querySelector('textarea, input').scrollIntoView({ block: 'end' });
         }, 200);
     }
-    const callback = function(mutationsList, observer) {
-        for(const mutation of mutationsList) {
+    const callback = function (mutationsList, observer) {
+        for (const mutation of mutationsList) {
             if (mutation.addedNodes[0]?.nodeType === 1) {
                 if (mutation.addedNodes[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
                     draggable();
                     setDraggableObserver();
                 } else if (mutation.addedNodes[0].contains(document.querySelector('textarea, input'))) {
                     document.querySelector('textarea, input').addEventListener('focus', (event) => {
-                        event.target.scrollIntoView({ block: 'end'});
-                        setTimeout(()=>{
-                            event.target.scrollIntoView({ block: 'end'});
-                            setTimeout(() => event.target.scrollIntoView({ block: 'end'}), 100);
+                        event.target.scrollIntoView({ block: 'end' });
+                        setTimeout(() => {
+                            event.target.scrollIntoView({ block: 'end' });
+                            setTimeout(() => event.target.scrollIntoView({ block: 'end' }), 100);
                         }, 200);
                     });
-                    setTimeout(()=>{
-                        document.querySelector('textarea, input').focus({preventScroll: true});
+                    setTimeout(() => {
+                        document.querySelector('textarea, input').focus({ preventScroll: true });
                     }, 200);
                 }
             }
@@ -926,8 +926,8 @@ async function setLearnObserver() {
     const observer = new MutationObserver(callback);
     observer.observe(targetNode, config);
 
-    const callback2 = function(mutationsList, observer) {
-        for(const mutation of mutationsList) {
+    const callback2 = function (mutationsList, observer) {
+        for (const mutation of mutationsList) {
             if (
                 mutation.attributeName === "class" &&
                 mutation.target.id === 'session/PlayerFooter' &&
@@ -959,8 +959,8 @@ async function setLearnObserver() {
     const observer2 = new MutationObserver(callback2);
     observer2.observe(targetNode2, config2);
 
-    const progressBarCallback = function(mutationsList, observer) {
-        for(const mutation of mutationsList) {
+    const progressBarCallback = function (mutationsList, observer) {
+        for (const mutation of mutationsList) {
             if (mutation.attributeName === 'aria-valuenow' && mutation.target.getAttribute('aria-valuenow') === '1') {
                 const panel = document.querySelector('.panel');
                 panel.classList.add('show');
@@ -975,10 +975,10 @@ async function setLearnObserver() {
 }
 
 function setStoriesObservers() {
-    const storiesProgressBarUpdater = function(mutationsList, observer) {
-        for(let mutation of mutationsList) {
+    const storiesProgressBarUpdater = function (mutationsList, observer) {
+        for (let mutation of mutationsList) {
             if (mutation.attributeName === 'aria-valuenow') {
-                const progress = String(mutation.target.getAttribute('aria-valuenow')*100).substring(0, 4)+'%';
+                const progress = String(mutation.target.getAttribute('aria-valuenow') * 100).substring(0, 4) + '%';
                 document.querySelector('#bugibugi').innerText = progress;
             }
         }
@@ -1020,12 +1020,12 @@ function getDelay() {
         750;
 }
 
-function debounce(func, timeout = 300){
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => { func.apply(this, args); }, timeout);
-  };
+function debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
 }
 
 let isScrolling = false;
@@ -1047,14 +1047,14 @@ function removeTouchEndEvent(e) {
     e.stopPropagation();
 }
 
-(function() {
+(function () {
     'use strict';
 
     var el = document.createElement('DIV');
     el.id = 'mybpwaycfxccmnp-dblt-backdrop-filter'
     document.querySelector('html').insertBefore(el, document.querySelector('body'))
 
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         setScrollEvent();
         addThemes();
         createThemeSwitcherButton();
@@ -1075,8 +1075,8 @@ function removeTouchEndEvent(e) {
             }
         }
 
-        const callback = function(mutationsList, observer) {
-            for(let mutation of mutationsList) {
+        const callback = function (mutationsList, observer) {
+            for (let mutation of mutationsList) {
 
                 if (mutation.addedNodes[0]?.nodeType === 1) {
                     if (mutation.addedNodes[0]?.querySelector('._3GElo') || mutation.addedNodes[0]?.querySelector('._1bdcY')) {
@@ -1105,9 +1105,9 @@ function removeTouchEndEvent(e) {
                             createAutoClickButton(false);
                             createNumber();
                             createSlider();
-                            setTimeout(()=>{
+                            setTimeout(() => {
                                 if (document.querySelector('textarea, input')) {
-                                    document.querySelector('textarea, input').focus({preventScroll: true});
+                                    document.querySelector('textarea, input').focus({ preventScroll: true });
                                 }
                             }, 500);
                             if (footerHidden) hideShowFooter(true);
