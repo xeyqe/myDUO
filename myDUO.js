@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.9.4
+// @version      2.9.9.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -248,6 +248,7 @@ const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-
     "    }",
     "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"]),",
     "    video,",
+    "    canvas,",
     "    ins,    /* duolingo google ads */",
     "    ._3-gOT.LBIqX, /* duolingo flags */",
     "    ._3BevS.PA4Av._3I8oV, /* another duolingo flags */",
@@ -263,6 +264,7 @@ const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-
     "    object[type=\"application/x-shockwave-flash\"],",
     "    video,",
     "    svg,",
+    "    canvas,",
     "    ins,",
     "    ._3-gOT.LBIqX,",
     "    ._3BevS.PA4Av._3I8oV,",
