@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.9.5
+// @version      2.9.9.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -245,6 +245,7 @@ const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-
     "        pointer-events: none !important;",
     "        z-index: 2147483647 !important;",
     "        backdrop-filter: invert(100%) hue-rotate(180deg) !important;",
+    "        height: 100vh;",
     "    }",
     "    img:not(.mwe-math-fallback-image-inline):not([alt=\"inline_formula\"]),",
     "    video,",
