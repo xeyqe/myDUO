@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.9.6
+// @version      2.9.9.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -477,8 +477,8 @@ function removeTempAlert(num) {
     }, num);
 }
 
-async function reclick() {
-    const clickedBtt = Array.from(document.querySelectorAll('._1uasP button'));
+async function reclick(index) {
+    const clickedBtt = Array.from(document.querySelectorAll('._1uasP button')).slice(index);
     const unclickedBtt = Array.from(document.querySelectorAll('[data-test="word-bank"] button[aria-disabled]'));
     const clickedStrs = clickedBtt.map(bt => bt.innerText);
     const unclickedStrs = unclickedBtt.map(bt => bt.innerText);
@@ -496,11 +496,9 @@ function draggable() {
     const output = document.querySelector('.PcKtj');
 
     Sortable.create(output, {
-        onEnd: function (evt) { reclick() },
+        onEnd: function (evt) { reclick(evt.oldIndex < evt.newIndex ? evt.oldIndex : evt.newIndex) },
         animation: 150,
     });
-    const container = document.querySelector('.PcKtj')
-    const words = document.querySelectorAll('[data-test="word-bank"] > *');
 }
 
 function createSlider() {
