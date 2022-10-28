@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.9.9
+// @version      3.0.0.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -131,6 +131,9 @@ const css = [".switch {",
     "    color:#58a700;",
     "    background:#b8f28b;",
     "    z-index:900",
+    "}",
+    "#tempAlert h2 {",
+    "    white-space: nowrap;",
     "}",
     ".panel {",
     "    width: fit-content;",
@@ -424,6 +427,12 @@ function tempAlert(input) {
     }
 
     el.appendChild(node);
+    setTimeout(() => {
+        const tmpAl = document.querySelector('#tempAlert');
+        if (tmpAl.offsetHeight > 80) {
+            tmpAl.style.width = '94%';
+        }
+    });
 
     removeTempAlert(3000);
 
