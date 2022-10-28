@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      2.9.9.7
+// @version      2.9.9.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -479,17 +479,20 @@ function removeTempAlert(num) {
 
 async function reclick(index) {
     const clickedBtt = Array.from(document.querySelectorAll('._1uasP button')).slice(index);
-    const unclickedBtt = Array.from(document.querySelectorAll('[data-test="word-bank"] button[aria-disabled]'));
+    let unclickedBtt = Array.from(document.querySelectorAll('[data-test="word-bank"] button[aria-disabled]'));
     const clickedStrs = clickedBtt.map(bt => bt.innerText);
-    const unclickedStrs = unclickedBtt.map(bt => bt.innerText);
     clickedBtt.forEach(bt => bt.click());
     await new Promise(resolve => setTimeout(resolve, 250));
 
+    unclickedBtt = unclickedBtt.filter(bt => !bt.hasAttribute('aria-disabled'));
+    const unclickedStrs = unclickedBtt.map(bt => bt.innerText);
+
     clickedStrs.forEach(clStr => {
-        const index = unclickedStrs.indexOf(clStr);
-        unclickedBtt[index].click();
-        unclickedStrs[index] = null;
+        const indx = unclickedStrs.indexOf(clStr);
+        unclickedBtt[indx].click();
+        unclickedStrs[indx] = null;
     });
+
 }
 
 function draggable() {
