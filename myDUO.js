@@ -234,6 +234,10 @@ const css = [".switch {",
     "}",
     "._1Oz7v {",
     "    position: relative;",
+    // "}",
+    // "section {",
+    // "    position: relative !important;",
+    // "    top: unset;",
     "}"
 ].join("\n");
 const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
@@ -602,6 +606,7 @@ function neco(color) {
             question = document.querySelector('._3-JBe').textContent;
             yourAnswer = document.querySelector('[data-test="challenge-choice"].disCS > div').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-completeReverseTranslation"]')) {
+            question = document.querySelector('._1KUxv._11rtD').textContent;
             question2 = document.querySelector('[data-test="challenge-text-input"]').parentElement.parentElement.textContent;
             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
         } else if (document.querySelector('[data-test="challenge challenge-selectTranscription"]')) {
@@ -617,13 +622,13 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-listenMatch"]')) {
             yourAnswer = Array.from(document.querySelectorAll("[data-test='challenge-tap-token-text']")).map(bt => bt.textContent).toString();
         } else if (document.querySelector('[data-test="challenge challenge-listenIsolation"]')) {
-            const ar = Array.from(document.querySelector('[data-test=hint-token]').parentElement.children);
             question = '';
-            ar.forEach(el => {
+            const els = Array.from(document.querySelector('[data-test=hint-token]').parentElement.children);
+            els.forEach(el => {
                 if (el.classList.contains('_1aMpd')) {
-                    question = question + `_${el.textContent}_`;
+                    question += `_${el.textContent}_`;
                 } else {
-                    question = question + el.textContent;
+                    question += el.textContent;
                 }
             });
         }
@@ -773,20 +778,9 @@ function hideUnhideComplete(initial) {
     if (initial && minus) return;
 
     if (minus || initial) {
-        const treeSections = Array.from(document.querySelectorAll('[data-test="tree-section"]'));
+        const treeSections = Array.from(document.querySelectorAll('[data-test*="skill-path-unit"]'));
         treeSections.forEach(section => {
-            const containers = Array.from(section.querySelectorAll('._3f9ou'));
-            containers.forEach(container => {
-                const skills = Array.from(container.querySelectorAll('[data-test="skill"]'));
-                skills.forEach(skill => {
-                    if ((skill.querySelector('._3dqWQ') || skill.querySelector('._2rjLm')) && !skill.querySelector('._1m7gz')) {
-                        skill.classList.add('hidden-item');
-                    }
-                });
-                if (!container.querySelectorAll('[data-test="skill"]:not(.hidden-item)').length) {
-                    container.classList.add('hidden-item');
-                }
-            });
+            hideInSection(section);
         });
     } else {
         const hidden = Array.from(document.querySelectorAll('.hidden-item'));
@@ -796,6 +790,20 @@ function hideUnhideComplete(initial) {
     }
     if (!initial) bu.innerText = minus ? '+' : '-';
     localStorage.setItem('hide', bu.innerText);
+}
+
+function hideInSection(section) {
+    const container = section.querySelector('div');
+
+    const skills = Array.from(container.querySelectorAll('[data-test*="skill-path-level"]'));
+    skills.forEach(skill => {
+        if (skill.classList.contains('_2D40f') || skill.classList.contains('_3bpfS')) {
+            skill.classList.add('hidden-item');
+        }
+    });
+    if (!section.querySelectorAll('[data-test*="skill-path-level"]:not(.hidden-item)').length) {
+        section.classList.add('hidden-item');
+    }
 }
 
 function createHideButton() {
@@ -811,8 +819,8 @@ function createHideButton() {
     bu.addEventListener('click', () => {
         hideUnhideComplete();
     });
-    const sibling = document.querySelector('._3f9ou')
-    sibling.parentElement.insertBefore(bu, sibling);
+    const parent = document.querySelector('[data-test="skill-path"]');
+    parent.parentElement.insertBefore(bu, parent);
     if (text === '+') {
         hideUnhideComplete('initial');
     }
@@ -865,16 +873,13 @@ function setSkillTreeObserver() {
     const callback = function (mutationsList, observer) {
         for (const mutation of mutationsList) {
             if (mutation.addedNodes[0]?.nodeType === 1) {
-                if (
-                    mutation.addedNodes[0]?.classList?.value === '_15U-t' &&
-                    document.querySelector('#hide-show-bu')?.innerText === '+' &&
-                    (mutation.addedNodes[0].querySelector('._3dqWQ') || mutation.addedNodes[0].querySelector('._2rjLm')) &&
-                    !mutation.addedNodes[0].querySelector('._1m7gz')
-                ) {
-                    mutation.target.parentElement.parentElement.parentElement.classList.add('hidden-item');
-                } else if (mutation.addedNodes[0]?.getAttribute('data-test') === 'skill') {
-                    mutation.addedNodes[0].addEventListener('touchend', removeTouchEndEvent);
-                } else if (
+                // if (mutation.addedNodes[0].nodeName === 'SECTION') {
+                //     if (mutation.addedNodes[0].attributes.hasOwnProperty('data-test')) {
+                //         hideInSection(mutation.addedNodes[0])
+                //     }
+                //     // mutation.target.parentElement.parentElement.parentElement.classList.add('hidden-item');
+                // } else
+                    if (
                     mutation.addedNodes[0] === document.querySelector('[data-test=skill-popout]') ||
                     mutation.addedNodes[0]?.querySelector('[data-test="skill-popout"]')
                 ) {
@@ -883,8 +888,8 @@ function setSkillTreeObserver() {
             }
         }
     }
-    const targetNode = document.querySelector('body');
-    const config = { attributes: false, childList: true, subtree: true, characterData: false };
+    const targetNode = document.querySelector('[data-test="skill-path"]');
+    const config = { attributes: false, childList: true, subtree: false, characterData: false };
     const observer = new MutationObserver(callback);
     observer.observe(targetNode, config);
 }
@@ -1059,22 +1064,26 @@ function debounce(func, timeout = 300) {
 
 let isScrolling = false;
 let scrollingInterval;
-function scrolling(e) {
-    e.stopPropagation();
-    isScrolling = true;
-    clearInterval(scrollingInterval);
-    scrollingInterval = setTimeout(() => {
-        isScrolling = false
-    });
+function scrolling() {
+    // if (!isScrolling) document.querySelector('[data-test="skill-path"]').classList.add('scrolling');
+    // console.log('true')
+    // // e.stopPropagation();
+    // isScrolling = true;
+    // clearInterval(scrollingInterval);
+    // scrollingInterval = setTimeout(() => {
+    //     console.log('false')
+    //     isScrolling = false;
+    //     document.querySelector('[data-test="skill-path"]').classList.remove('scrolling')
+    // }, 100);
 }
 
 function setScrollEvent() {
-    document.addEventListener('scroll', scrolling);
+    // document.addEventListener('scroll', scrolling);
 }
 
-function removeTouchEndEvent(e) {
-    e.stopPropagation();
-}
+// function removeTouchEndEvent(e) {
+//     e.stopPropagation();
+// }
 
 (function () {
     'use strict';
@@ -1089,12 +1098,12 @@ function removeTouchEndEvent(e) {
         createThemeSwitcherButton();
         appendThemeSwitcher();
 
-        if (document.querySelector('[data-test="skill-tree"]')) {
-            createHideButton();
+        if (document.querySelector('[data-test="skill-path"]')) {
+            // createHideButton();
             setSkillTreeObserver();
-            Array.from(document.querySelectorAll('[data-test="skill"]')).forEach(el => {
-                el.addEventListener('touchend', removeTouchEndEvent);
-            });
+            // Array.from(document.querySelectorAll('[data-test="skill"]')).forEach(el => {
+            //     el.addEventListener('touchend', removeTouchEndEvent);
+            // });
         }
 
         if (localStorage.getItem('themed') === "1") {
@@ -1115,7 +1124,7 @@ function removeTouchEndEvent(e) {
                     if (mutation.addedNodes[0]?.querySelector('[data-test="skill-tree"]')) {
                         // MAIN PAGE
                         setSkillTreeObserver();
-                        createHideButton();
+                        // createHideButton();
                         if (document.querySelector('[data-test=skill-popout]')) {
                             movePopout();
                         }
