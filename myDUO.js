@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.0.2
+// @version      3.0.0.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -45,13 +45,14 @@ const css = [".switch {",
     "    background-color: #ccc;",
     "    -webkit-transition: .4s;",
     "    transition: .4s;",
+    "    border: 1px solid white;",
     "}",
     "",
     ".slider > span {",
     "    position: relative;",
     "    height: 29px;",
     "    width: 29px;",
-    "    bottom: -3px;",
+    "    bottom: -2px;",
     "    background-color: white;",
     "    -webkit-transition: .4s;",
     "    transition: .4s;",
@@ -264,6 +265,15 @@ const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-
     "    ._3BevS._1fpAw, /* duolingo flags my profile*/",
     "    svg {",
     "        filter: invert(100%) hue-rotate(180deg) !important;",
+    "    }",
+    "    @media only screen and (max-width: 37.5em) {",
+    "        ._1bdcY, .switch {",
+    "            background-color: inherit;",
+    "        }",
+    "        .slider.round {",
+    "            background-color: inherit !important;",
+    "            filter: invert(100%) hue-rotate(200deg) !important;",
+    "        }",
     "    }",
     "}",
     "@supports not (backdrop-filter: invert(100%)) {",
