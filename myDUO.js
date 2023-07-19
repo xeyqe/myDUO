@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.0.4
+// @version      3.0.0.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -993,10 +993,12 @@ async function setLearnObserver() {
                     });
                 }
             } else if (mutation.addedNodes[0]?.querySelector('[data-test="blame blame-incorrect"]')) {
-                neco('wrong').then(() => {
-                    changeCounter('bad');
-                    hideShowFooter(false);
-                });
+                if (!document.querySelector('[data-test="challenge challenge-speak"]')) {
+                    neco('wrong').then(() => {
+                        changeCounter('bad');
+                        hideShowFooter(false);
+                    });
+                }
             }
         }
     }
@@ -1124,6 +1126,10 @@ function setScrollEvent() {
                 document.querySelector('#checkbx').checked = true;
             }
         }
+
+        setTimeout(() => {
+            document.querySelector('._34v50._275sd._1ZefG._1GoKU')?.click(); // open in app dialog
+        }, 200);
 
         const callback = function (mutationsList, observer) {
             for (let mutation of mutationsList) {
