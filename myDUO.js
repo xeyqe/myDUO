@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.0.5
+// @version      3.0.0.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -358,12 +358,11 @@ Node.prototype.swiper = function (direction, func, forbidden) {
         const absY = Math.abs(touchstartY - touchendY);
         if (forbidden?.length) {
             for (const el of forbidden) {
-                if (el?.contains(event?.target)) {
+                if (document.querySelector(el)?.contains(event?.target)) {
                     return;
                 }
             }
         }
-
 
         if (direction === "swipeRight") {
             if (touchstartX - touchendX < -25 && absX - absY > 70) {
@@ -1176,8 +1175,9 @@ function setScrollEvent() {
                                 "swipeDown",
                                 showHideFooter,
                                 [
-                                    document.querySelector('.panel'),
-                                    document.querySelector('._2PLYW')
+                                    '.panel',
+                                    '._2PLYW',
+                                    '._1vzP4.CeAwM'
                                 ]
                             );
                         }
