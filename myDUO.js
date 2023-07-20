@@ -724,6 +724,7 @@ function createThemeSwitcherButton() {
     label.style.zIndex = '100';
     label.style.top = '0.8em';
     label.style.marginLeft = '9px';
+    label.style.minWidth = '3.5rem';
     input.setAttribute('type', 'checkbox');
     input.id = 'checkbx';
     span.setAttribute('class', 'slider round');
@@ -743,10 +744,10 @@ function createThemeSwitcherButton() {
 }
 
 async function appendThemeSwitcher() {
-    let element = document.querySelector('._1bdcY') || document.querySelector('._3gRtk') || document.querySelector('._5k0pQ');
+    let element = document.querySelector('._1bdcY') || document.querySelector('._3gRtk') || document.querySelector('._5k0pQ') || document.querySelector('.-YrWa');
     if (!element)
         await new Promise(resolve => setTimeout(resolve, 500));
-    element = document.querySelector('._1bdcY') || document.querySelector('._3gRtk') || document.querySelector('._5k0pQ');
+    element = document.querySelector('._1bdcY') || document.querySelector('._3gRtk') || document.querySelector('._5k0pQ') || document.querySelector('.-YrWa');
     if (element) {
         element.append(label);
         if (localStorage.getItem('themed') === '1' && document.querySelector('#checkbx')) {
@@ -957,6 +958,7 @@ async function setLearnObserver() {
             document.querySelector('textarea, input').scrollIntoView({ block: 'end' });
         }, 200);
     }
+
     const callback = function (mutationsList, observer) {
         for (const mutation of mutationsList) {
             if (mutation.addedNodes[0]?.nodeType === 1) {
