@@ -655,6 +655,11 @@ function neco(color) {
                     question += el.textContent;
                 }
             });
+        } else if (document.querySelector('[data-test="challenge challenge-dialogue"]')) {
+            footerHidden = localStorage.getItem('footerHidden') === "true"
+            if (footerHidden) hideShowFooter(true);
+            question = Array.from(document.querySelectorAll('[data-test="hint-token"]')).map(it => it.textContent).join('');
+            yourAnswer = document.querySelector('[data-test="challenge-choice"]', '[aria-checked="true"]').querySelector('[data-test="challenge-judge-text"]').textContent;
         }
 
         if (question) {
@@ -958,6 +963,9 @@ async function setLearnObserver() {
                 if (mutation.addedNodes[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
                     draggable();
                     setDraggableObserver();
+                } else if (mutation.addedNodes[0]?.querySelector('[data-test="challenge challenge-dialogue"]')) {
+                    hideShowFooter(false);
+                    footerHidden = false;
                 } else if (mutation.addedNodes[0].contains(document.querySelector('textarea, input'))) {
                     document.querySelector('textarea, input').addEventListener('focus', (event) => {
                         event.target.scrollIntoView({ block: 'end' });
