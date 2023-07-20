@@ -645,6 +645,16 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-definition"]')) {
             yourAnswer = document.querySelector('[aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
             question = document.querySelector('[role="radiogroup"]').previousElementSibling.textContent;
+        } else if (document.querySelector('[data-test="challenge challenge-tapComplete"]')) {
+            const els = Array.from(document.querySelector('[data-test="hint-token"]').parentElement.parentElement.children);
+            question = '';
+            els.forEach(el => {
+                if (el.tagName === 'DIV') {
+                    question += `_${el.innerText}_`;
+                } else {
+                    question += el.textContent;
+                }
+            });
         }
 
         if (question) {
