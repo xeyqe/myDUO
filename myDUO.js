@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.1.1
+// @version      3.0.1.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -997,6 +997,10 @@ async function setLearnObserver() {
     if (!targetNode) {
         document.querySelector('[data-test="player-next"]')?.click();
         await new Promise(resolve => setTimeout(resolve, 700));
+        if (!document.querySelector('[data-test*="challenge "]')) {
+            document.querySelector('#session\\/PlayerFooter button').addEventListener("click", setLearnObserver);
+            return;
+        }
         targetNode = document.querySelector('[data-test*="challenge "]').parentElement.parentElement;
     }
     const config = { attributes: false, childList: true, subtree: true, characterData: false };
@@ -1185,7 +1189,7 @@ function setScrollEvent() {
                         document.querySelector('.WzuSM')?.swiper("swipeUp", () => {
                             document.querySelector('[data-test="stories-player-continue"]')?.click();
                         });
-                    } else if (mutation.addedNodes[0]?.querySelector('[data-test="quit-button"]')) {
+                    } else if (mutation.addedNodes[0]?.querySelector('[data-test*="challenge "]') && !document.querySelector('#my-autoclick-bu')) {
                         // LEARN
                         if (document.querySelector('[role="progressbar"]')) {
                             setLearnObserver();
