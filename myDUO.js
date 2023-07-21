@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.1.0
+// @version      3.0.1.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -953,6 +953,9 @@ async function setLearnObserver() {
     if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
         draggable();
         setDraggableObserver();
+    } else if (document.querySelector('[data-test="challenge challenge-dialogue"]')) {
+        hideShowFooter(false);
+        footerHidden = false;
     } else if (document.querySelector('textarea, input')) {
         document.querySelector('textarea, input').addEventListener('tab', (event) => {
             setTimeout(() => {
