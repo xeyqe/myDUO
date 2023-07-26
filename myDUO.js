@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.1.2
+// @version      3.0.1.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -666,6 +666,11 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-partialReverseTranslate"]')) {
             question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
             yourAnswer = Array.from(document.querySelector('label').children).filter(it => !it.classList.contains('_31xxw')).map(it => it.textContent).join('');
+        } else if (document.querySelector('[data-test="challenge challenge-readComprehension"]')) {
+            footerHidden = localStorage.getItem('footerHidden') === "true"
+            if (footerHidden) hideShowFooter(true);
+            question = document.querySelector('[data-test="hint-token"]').parentElement.parentElement.textContent;
+            yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').querySelector('[data-test="challenge-judge-text"]').textContent;
         }
 
         if (question) {
@@ -953,7 +958,7 @@ async function setLearnObserver() {
     if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
         draggable();
         setDraggableObserver();
-    } else if (document.querySelector('[data-test="challenge challenge-dialogue"]')) {
+    } else if (document.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
         hideShowFooter(false);
         footerHidden = false;
     } else if (document.querySelector('textarea, input')) {
@@ -974,7 +979,7 @@ async function setLearnObserver() {
                 if (mutation.addedNodes[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
                     draggable();
                     setDraggableObserver();
-                } else if (mutation.addedNodes[0]?.querySelector('[data-test="challenge challenge-dialogue"]')) {
+                } else if (mutation.addedNodes[0]?.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
                     hideShowFooter(false);
                     footerHidden = false;
                 } else if (mutation.addedNodes[0].contains(document.querySelector('textarea, input'))) {
