@@ -643,6 +643,9 @@ function neco(color) {
             if (footerHidden) hideShowFooter(true);
             question = document.querySelector('[data-test="hint-token"]').parentElement.parentElement.textContent;
             yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').querySelector('[data-test="challenge-judge-text"]').textContent;
+        } else if (document.querySelector('[data-test="challenge challenge-name"]')) {
+            question = document.querySelector('[data-test="challenge-header"]').textContent;
+            yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
         }
 
         if (question) {
