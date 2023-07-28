@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.1.4
+// @version      3.0.1.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -646,6 +646,9 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-name"]')) {
             question = document.querySelector('[data-test="challenge-header"]').textContent;
             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
+        } else {
+            const challenge = document.querySelector('[data-test*="challenge"]').getAttribute('data-test');
+            question = `This ${challenge} was not covered by myDuo script. :(`;
         }
 
         if (question) {
