@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.1.3
+// @version      3.0.1.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,7 +9,6 @@
 // @match        https://duolingo.com/*
 // @match        http://*.duolingo.com/*
 // @match        https://*.duolingo.com/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
 
@@ -500,33 +499,6 @@ function removeTempAlert(num) {
     }, num);
 }
 
-async function reclick(index) {
-    const clickedBtt = Array.from(document.querySelectorAll('._1uasP button')).slice(index);
-    let unclickedBtt = Array.from(document.querySelectorAll('[data-test="word-bank"] button[aria-disabled]'));
-    const clickedStrs = clickedBtt.map(bt => bt.innerText);
-    clickedBtt.forEach(bt => bt.click());
-    await new Promise(resolve => setTimeout(resolve, 250));
-
-    unclickedBtt = unclickedBtt.filter(bt => !bt.hasAttribute('aria-disabled'));
-    const unclickedStrs = unclickedBtt.map(bt => bt.innerText);
-
-    clickedStrs.forEach(clStr => {
-        const indx = unclickedStrs.indexOf(clStr);
-        unclickedBtt[indx].click();
-        unclickedStrs[indx] = null;
-    });
-
-}
-
-function draggable() {
-    const output = document.querySelector('.PcKtj');
-
-    Sortable.create(output, {
-        onEnd: function (evt) { reclick(evt.newIndex) },
-        animation: 150,
-    });
-}
-
 function createSlider() {
     const panel = document.createElement("div");
 
@@ -935,30 +907,9 @@ function setSkillTreeObserver() {
     observer.observe(targetNode, config);
 }
 
-function setDraggableObserver() {
-    const el = document.querySelector('.uH5m4');
-    if (el.scrollHeight > el.clientHeight) {
-        document.querySelector('._1C_S3').style = 'display: unset;';
-        document.querySelector('._2PLYW').style.cssText = 'min-height: 52px; margin-bottom: 2rem;';
-
-        const callback = function (mutationsList, observer) {
-            for (const mutation of mutationsList) {
-                document.querySelector('._2PLYW').style.height = document.querySelector('.PcKtj').clientHeight + 'px';
-            }
-        }
-        const targetNode = document.querySelector('.PcKtj');
-        const config = { attributes: false, childList: true, subtree: false, characterData: false };
-        const observer = new MutationObserver(callback);
-        observer.observe(targetNode, config);
-    }
-}
-
 async function setLearnObserver() {
     hideShowFooter(footerHidden);
-    if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
-        draggable();
-        setDraggableObserver();
-    } else if (document.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
+    if (document.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
         hideShowFooter(false);
         footerHidden = false;
     } else if (document.querySelector('textarea, input')) {
@@ -976,10 +927,7 @@ async function setLearnObserver() {
     const callback = function (mutationsList, observer) {
         for (const mutation of mutationsList) {
             if (mutation.addedNodes[0]?.nodeType === 1) {
-                if (mutation.addedNodes[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
-                    draggable();
-                    setDraggableObserver();
-                } else if (mutation.addedNodes[0]?.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
+                if (mutation.addedNodes[0]?.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
                     hideShowFooter(false);
                     footerHidden = false;
                 } else if (mutation.addedNodes[0].contains(document.querySelector('textarea, input'))) {
