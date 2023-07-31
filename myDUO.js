@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.1.5
+// @version      3.0.1.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -262,6 +262,7 @@ const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-
     "    ._3-gOT.LBIqX, /* duolingo flags */",
     "    ._3BevS.PA4Av._3I8oV, /* another duolingo flags */",
     "    ._3BevS._1fpAw, /* duolingo flags my profile*/",
+    "    ._1Ykml, /* challenge-select img */",
     "    svg {",
     "        filter: invert(100%) hue-rotate(180deg) !important;",
     "    }",
@@ -287,6 +288,8 @@ const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-
     "    ._3-gOT.LBIqX,",
     "    ._3BevS.PA4Av._3I8oV,",
     "    ._3BevS._1fpAw,",
+    "    ._1Ykml,",
+    "    svg",
     "    div#viewer.pdfViewer div.page",
     "    {",
     "        filter: invert(100%) hue-rotate(180deg) !important;",
