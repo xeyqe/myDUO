@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.1.8
+// @version      3.0.1.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -270,10 +270,6 @@ const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-
     "    @media only screen and (max-width: 37.5em) {",
     "        ._1bdcY, .switch {",
     "            background-color: inherit;",
-    "        }",
-    "        .slider.round {",
-    "            background-color: inherit !important;",
-    "            filter: invert(100%) hue-rotate(200deg) !important;",
     "        }",
     "    }",
     "}",
@@ -731,48 +727,18 @@ function neco(color) {
 
 }
 
-function createThemeSwitcherButton() {
-    label = document.createElement('label');
-    const input = document.createElement('input');
-    const span = document.createElement('span');
-    const span2 = document.createElement('span');
-
-
-    label.append(input, span);
-    span.append(span2);
-    label.setAttribute('class', 'switch');
-    label.style.zIndex = '100';
-    label.style.top = '0.8em';
-    label.style.marginLeft = '9px';
-    label.style.minWidth = '3.5rem';
-    input.setAttribute('type', 'checkbox');
-    input.id = 'checkbx';
-    span.setAttribute('class', 'slider round');
-
-    input.addEventListener('click', function (e) {
-        if (!document.querySelector('#checkbx').checked) {
-            if (document.querySelector('#darkDUOmobile')) {
-                document.querySelector('#darkDUOmobile').remove();
-            }
-            localStorage.setItem('themed', '0');
-        } else {
-            head[0].appendChild(style);
-            localStorage.setItem('themed', '1');
-
-        }
-    });
+function saveDarkModeStyle(val) {
+    const oldVal = localStorage.getItem('duo.darkMode');
+    const newVal = oldVal.replace(/:"[a-z]+"/, `:"${val}"`);
+    localStorage.setItem('duo.darkMode', newVal);
 }
 
-async function appendThemeSwitcher() {
-    let element = document.querySelector('._1bdcY') || document.querySelector('._3gRtk') || document.querySelector('._5k0pQ') || document.querySelector('.-YrWa');
-    if (!element)
-        await new Promise(resolve => setTimeout(resolve, 500));
-    element = document.querySelector('._1bdcY') || document.querySelector('._3gRtk') || document.querySelector('._5k0pQ') || document.querySelector('.-YrWa');
-    if (element) {
-        element.append(label);
-        if (localStorage.getItem('themed') === '1' && document.querySelector('#checkbx')) {
-            document.querySelector('#checkbx').checked = true;
-        }
+function toggleTheme() {
+    if (localStorage.getItem('duo.darkMode').endsWith(':"custom"}')) {
+        document.querySelector('html').setAttribute("data-duo-theme", "light");
+        document.getElementsByTagName("html")[0].appendChild(style);
+    } else {
+        document.querySelector('#darkDUOmobile')?.remove();
     }
 }
 
@@ -1144,6 +1110,37 @@ function setScrollEvent() {
     // document.addEventListener('scroll', scrolling);
 }
 
+function addCustomDarkModeOption() {
+    if (!this.document.querySelector('#darkMode') || this.document.querySelector('#darkMode').textContent.includes('Custom')) return;
+    const savedValue = localStorage.getItem('duo.darkMode');
+
+    if (savedValue.endsWith(':"custom"}')) document.querySelector('.cqJc3').innerText = 'Custom';
+    const el = document.createElement('OPTION');
+    el.classList.add('._24isA');
+    el.value = 'custom';
+    el.innerText = 'Custom';
+    const callback = function (mutationsList, observer) {
+        for (let mutation of mutationsList) {
+            if (!document.querySelector('.cqJc3').innerText) {
+                document.querySelector('html').setAttribute("data-duo-theme", "light");
+                document.querySelector('.cqJc3').innerText = 'Custom';
+            }
+        }
+    }
+    const targetNode = document.querySelector('.cqJc3');
+    const config = { childList: true };
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+
+    document.querySelector('[data-test="save-button"]').addEventListener('click', () => {
+        setTimeout(() => {
+            toggleTheme();
+        }, 300);
+    });
+
+    this.document.querySelector('#darkMode').appendChild(el);
+}
+
 // function removeTouchEndEvent(e) {
 //     e.stopPropagation();
 // }
@@ -1158,8 +1155,6 @@ function setScrollEvent() {
     window.addEventListener('load', function () {
         setScrollEvent();
         addThemes();
-        createThemeSwitcherButton();
-        appendThemeSwitcher();
 
         if (document.querySelector('[data-test="skill-path"]')) {
             // createHideButton();
@@ -1169,23 +1164,29 @@ function setScrollEvent() {
             // });
         }
 
-        if (localStorage.getItem('themed') === "1") {
+        const oldTheme = localStorage.getItem('themed');
+        if (oldTheme === '1') saveDarkModeStyle('custom');
+        if (oldTheme) localStorage.removeItem('themed');
+
+        if (localStorage.getItem('duo.darkMode').endsWith(':"custom"}')) {
+            document.querySelector('html').setAttribute("data-duo-theme", "light")
             head[0].appendChild(style);
-            if (document.querySelector('#checkbx')) {
-                document.querySelector('#checkbx').checked = true;
-            }
         }
 
         setTimeout(() => {
             document.querySelector('._34v50._275sd._1ZefG._316JV')?.click(); // open in app dialog
+            addCustomDarkModeOption();
         }, 200);
 
         const callback = function (mutationsList, observer) {
             for (let mutation of mutationsList) {
 
                 if (mutation.addedNodes[0]?.nodeType === 1) {
-                    if (mutation.addedNodes[0]?.querySelector('._3GElo') || mutation.addedNodes[0]?.querySelector('._1bdcY')) {
-                        appendThemeSwitcher();
+                    // if (mutation.addedNodes[0]?.querySelector('._3GElo') || mutation.addedNodes[0]?.querySelector('._1bdcY')) {
+                    //     appendThemeSwitcher();
+                    // }
+                    if (mutation.addedNodes[0]?.querySelector('#darkMode')) {
+                        addCustomDarkModeOption();
                     }
 
                     if (mutation.addedNodes[0]?.querySelector('[data-test="skill-tree"]')) {
