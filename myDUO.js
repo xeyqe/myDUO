@@ -604,7 +604,7 @@ function neco(color) {
             question = document.querySelector('._3t3oQ._2FKqf._2ti2i').textContent;
             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
         } else if (document.querySelector('[data-test="challenge challenge-listenMatch"]')) {
-            yourAnswer = Array.from(document.querySelectorAll("[data-test='challenge-tap-token-text']")).map(bt => bt.textContent).toString();
+            yourAnswer = Array.from(document.querySelectorAll('[data-test="challenge-tap-token-text"]')).map(it => it.textContent).join(', ')
         } else if (document.querySelector('[data-test="challenge challenge-listenIsolation"]')) {
             question = '';
             const els = Array.from(document.querySelector('[data-test=hint-token]').parentElement.children);
