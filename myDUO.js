@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.2.0
+// @version      3.0.2.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -521,8 +521,12 @@ function draggable() {
     const output = document.querySelector('.PcKtj');
 
     Sortable.create(output, {
-        onEnd: function (evt) { reclick(evt.newIndex) },
+        onEnd: function (evt) {
+            if (evt.oldIndex !== evt.newIndex) reclick(evt.newIndex);
+            else evt.item.querySelector('button').click();
+        },
         animation: 150,
+
     });
 }
 
@@ -1125,7 +1129,7 @@ function addCustomDarkModeOption() {
     const callback = function (mutationsList, observer) {
         for (let mutation of mutationsList) {
             if (!document.querySelector('.cqJc3').innerText) {
-                document.querySelector('html').setAttribute("data-duo-theme", "light");
+                // document.querySelector('html').setAttribute("data-duo-theme", "light");
                 document.querySelector('.cqJc3').innerText = 'Custom';
             }
         }
