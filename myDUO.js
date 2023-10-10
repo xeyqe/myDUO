@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.2.2
+// @version      3.0.2.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -1006,16 +1006,18 @@ async function setLearnObserver() {
                 hideShowFooter(footerHidden);
             }
             if (mutation.addedNodes[0]?.querySelector('[data-test="blame blame-correct"]')) {
-                if (!document.querySelector('[data-test="blame blame-correct"]').parentElement.classList.value.includes('_2NxDA')) { // can't listen/speak skip
-                    neco('right').then(() => {
-                        changeCounter('right');
-                        if (document.querySelector('#my-autoclick-bu').innerText === 'A') {
-                            document.querySelector('[data-test="player-next"]')?.click();
-                        } else {
-                            hideShowFooter(false);
-                        }
-                    });
-                }
+                setTimeout(() => {
+                    if (!document.querySelector('[data-test="blame blame-correct"]').querySelector('._1W9Eh')) { // can't listen/speak skip
+                        neco('right').then(() => {
+                            changeCounter('right');
+                            if (document.querySelector('#my-autoclick-bu').innerText === 'A') {
+                                document.querySelector('[data-test="player-next"]')?.click();
+                            } else {
+                                hideShowFooter(false);
+                            }
+                        });
+                    }
+                });
             } else if (mutation.addedNodes[0]?.querySelector('[data-test="blame blame-incorrect"]')) {
                 if (!document.querySelector('[data-test="challenge challenge-speak"]')) {
                     neco('wrong').then(() => {
