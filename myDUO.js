@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.2.1
+// @version      3.0.2.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -937,10 +937,11 @@ function setDraggableObserver() {
 
 async function setLearnObserver() {
     hideShowFooter(footerHidden);
-    if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
-        draggable();
-        setDraggableObserver();
-    } else if (document.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
+    // if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
+    //     draggable();
+    //     setDraggableObserver();
+    // } else
+    if (document.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
         hideShowFooter(false);
         footerHidden = false;
     } else if (document.querySelector('textarea, input')) {
@@ -958,10 +959,11 @@ async function setLearnObserver() {
     const callback = function (mutationsList, observer) {
         for (const mutation of mutationsList) {
             if (mutation.addedNodes[0]?.nodeType === 1) {
-                if (mutation.addedNodes[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
-                    draggable();
-                    setDraggableObserver();
-                } else if (mutation.addedNodes[0]?.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
+                // if (mutation.addedNodes[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
+                //     draggable();
+                //     setDraggableObserver();
+                // } else
+                if (mutation.addedNodes[0]?.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
                     hideShowFooter(false);
                     footerHidden = false;
                 } else if (mutation.addedNodes[0].contains(document.querySelector('textarea, input'))) {
