@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.2.3
+// @version      3.0.2.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -609,9 +609,9 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-listenTap"]')) {
             yourAnswer = document.querySelector('.PcKtj').innerText.replace(/\n/g, ' ')
         } else if (document.querySelector('[data-test="challenge challenge-match"]')) {
-            const els = Array.from(document.querySelectorAll('._2eHne'));
-            question = els[0].innerText.replace(/\n/g, '|');
-            yourAnswer = els[1].innerText.replace(/\n/g, '|');
+            const ar = Array.from(document.querySelectorAll('[data-test="challenge-tap-token-text"]')).map(it => it.textContent);
+            question = ar.slice(0, 5).join(' | ');
+            yourAnswer = ar.slice(5).join(' | ');
         } else if (document.querySelector('[data-test="challenge challenge-speak"]')) {
             question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
         } else if (document.querySelector('[data-test="challenge challenge-judge"]')) {
