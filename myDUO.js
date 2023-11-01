@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.2.4
+// @version      3.0.2.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -1185,7 +1185,7 @@ function addCustomDarkModeOption() {
         }
 
         setTimeout(() => {
-            document.querySelector('._34v50._275sd._1ZefG._316JV')?.click(); // open in app dialog
+            document.querySelector('._2OFC6')?.click(); // open in app dialog
             addCustomDarkModeOption();
         }, 200);
 
