@@ -9,7 +9,6 @@
 // @match        https://duolingo.com/*
 // @match        http://*.duolingo.com/*
 // @match        https://*.duolingo.com/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
 
