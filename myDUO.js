@@ -1127,7 +1127,7 @@ function addCustomDarkModeOption() {
     if (!this.document.querySelector('#darkMode') || this.document.querySelector('#darkMode').textContent.includes('Custom')) return;
     const savedValue = localStorage.getItem('duo.darkMode');
 
-    if (savedValue.endsWith(':"custom"}')) document.querySelector('.cqJc3').innerText = 'Custom';
+    if (savedValue?.endsWith(':"custom"}')) document.querySelector('.cqJc3').innerText = 'Custom';
     const el = document.createElement('OPTION');
     el.classList.add('._24isA');
     el.value = 'custom';
