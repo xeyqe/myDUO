@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.3.0
+// @version      3.0.3.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -664,8 +664,10 @@ function neco(color) {
             question = Array.from(document.querySelectorAll('[data-test="hint-token"]')).map(it => it.textContent).join('');
             yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').querySelector('[data-test="challenge-judge-text"]').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-gapFill"]')) {
-            question = Array.from(document.querySelectorAll('[data-test="hint-token"]')).map(bt => bt.textContent).join('');
-            yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').querySelector('[data-test="challenge-judge-text"]').textContent;
+            yourAnswer = Array.from(document.querySelectorAll('[data-test="hint-token"]')).map(it => {
+                const txt = it.parentElement.textContent;
+                return it.classList.value.includes('_1aMpd') ? `_${txt}_` : txt
+            }).join(' ').replace(/_ _/g, ' ');
         } else if (document.querySelector('[data-test="challenge challenge-partialReverseTranslate"]')) {
             question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
             yourAnswer = Array.from(document.querySelector('label').children).filter(it => !it.classList.contains('_31xxw')).map(it => it.textContent).join('');
