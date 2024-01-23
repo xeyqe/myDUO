@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.3.2
+// @version      3.0.3.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -623,9 +623,9 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-selectTranscription"]')) {
             yourAnswer = document.querySelector('[data-test="challenge-choice"].disCS > div').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-name"]')) {
-            yourAnswer = document.querySelector('[aria-checked="true"][data-test="challenge-choice"] [data-test="challenge-judge-text"]').textContent;
-            yourAnswer = document.querySelector('[data-test="challenge-choice"].disCS > div').textContent;
-            yourAnswer = yourAnswer + ' ' + document.querySelector('[data-test="challenge-text-input"]').value;
+            const article = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').querySelector('[data-test="challenge-judge-text"]').textContent;
+            const word = document.querySelector('[data-test="challenge-text-input"]').value;
+            yourAnswer = `${article} ${word}`;
         } else if (document.querySelector('[data-test="challenge challenge-assist"]')) {
             yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-listenComplete"]')) {
