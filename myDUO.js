@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.3.5
+// @version      3.0.3.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -174,7 +174,7 @@ const css = [".switch {",
     "        min-height: fit-content;",
     "    }",
     "    .panel.show.shorter {",
-    "        max-height: 72vh;",
+    "        max-height: 83vh;",
     "    }",
     "    .hidden-footer {",
     "        display: none;",
@@ -385,11 +385,8 @@ Node.prototype.swiper = function (direction, func, forbidden) {
 function swipeFunc(event) {
     if (mayISwipe(event)) {
         if (!document.querySelector('.show')) {
-            if (document.querySelector('[data-test="player-next"]')) {
-                document.querySelector('[data-test="player-next"]').click();
-            }
-        }
-        else if (!document.querySelector('.hide')) {
+            document.querySelector('[data-test="player-next"]')?.click();
+        } else if (!document.querySelector('.hide')) {
             showHidePanel();
         }
     }
@@ -540,13 +537,9 @@ function createSlider() {
         const isClickInside = document.querySelector('.panel').contains(event.target) || panel === event.target;
 
         if (!isClickInside) {
-            if (document.querySelector('.show')) {
-                showHidePanel();
-            }
+            if (document.querySelector('.show')) showHidePanel();
         } else {
-            if (document.querySelector('.hide')) {
-                showHidePanel();
-            }
+            if (document.querySelector('.hide')) showHidePanel();
         }
     });
 }
@@ -718,16 +711,6 @@ function neco(color) {
                 tempAlert(document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-correct"]').children[1].firstChild.firstChild);
             }
         }
-
-
-        const panel = document.querySelector('.panel.show');
-        setTimeout(() => {
-            if (panel) {
-                panel.classList.remove('show');
-                panel.classList.add('hide');
-            }
-        }, 20);
-
         resolve();
     });
     return promise;
@@ -895,7 +878,7 @@ function movePopout() {
 function setSkillTreeObserver() {
     const callback = function (mutationsList, observer) {
         for (const mutation of mutationsList) {
-            if (mutation.addedNodes[0]?.nodeType === 1) {
+            if (mutation.addedNodes?.[0]?.nodeType === 1) {
                 // if (mutation.addedNodes[0].nodeName === 'SECTION') {
                 //     if (mutation.addedNodes[0].attributes.hasOwnProperty('data-test')) {
                 //         hideInSection(mutation.addedNodes[0])
@@ -904,7 +887,7 @@ function setSkillTreeObserver() {
                 // } else
                     if (
                     mutation.addedNodes[0] === document.querySelector('[data-test=skill-popout]') ||
-                    mutation.addedNodes[0]?.querySelector('[data-test="skill-popout"]')
+                    mutation.addedNodes?.[0]?.querySelector('[data-test="skill-popout"]')
                 ) {
                     movePopout();
                 }
@@ -958,12 +941,13 @@ async function setLearnObserver() {
 
     const callback = function (mutationsList, observer) {
         for (const mutation of mutationsList) {
-            if (mutation.addedNodes[0]?.nodeType === 1) {
-                // if (mutation.addedNodes[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
+            if (mutation.addedNodes?.[0]?.querySelector("#session\\/PlayerFooter")) console.error(mutation)
+            if (mutation.addedNodes?.[0]?.nodeType === 1) {
+                // if (mutation.addedNodes?.[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
                 //     draggable();
                 //     setDraggableObserver();
                 // } else
-                if (mutation.addedNodes[0]?.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
+                if (mutation.addedNodes?.[0]?.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
                     hideShowFooter(false);
                     footerHidden = false;
                 } else if (mutation.addedNodes[0].contains(document.querySelector('textarea, input'))) {
@@ -1005,7 +989,7 @@ async function setLearnObserver() {
             ) {
                 hideShowFooter(footerHidden);
             }
-            if (mutation.addedNodes[0]?.querySelector('[data-test="blame blame-correct"]')) {
+            if (mutation.addedNodes?.[0]?.querySelector('[data-test="blame blame-correct"]')) {
                 setTimeout(() => {
                     if (!document.querySelector('[data-test="blame blame-correct"]').querySelector('._1W9Eh')) { // can't listen/speak skip
                         neco('right').then(() => {
@@ -1018,7 +1002,7 @@ async function setLearnObserver() {
                         });
                     }
                 });
-            } else if (mutation.addedNodes[0]?.querySelector('[data-test="blame blame-incorrect"]')) {
+            } else if (mutation.addedNodes?.[0]?.querySelector('[data-test="blame blame-incorrect"]')) {
                 if (!document.querySelector('[data-test="challenge challenge-speak"]')) {
                     neco('wrong').then(() => {
                         changeCounter('bad');
@@ -1192,22 +1176,22 @@ function addCustomDarkModeOption() {
         const callback = function (mutationsList, observer) {
             for (let mutation of mutationsList) {
 
-                if (mutation.addedNodes[0]?.nodeType === 1) {
-                    // if (mutation.addedNodes[0]?.querySelector('._3GElo') || mutation.addedNodes[0]?.querySelector('._1bdcY')) {
+                if (mutation.addedNodes?.[0]?.nodeType === 1) {
+                    // if (mutation.addedNodes?.[0]?.querySelector('._3GElo') || mutation.addedNodes?.[0]?.querySelector('._1bdcY')) {
                     //     appendThemeSwitcher();
                     // }
-                    if (mutation.addedNodes[0]?.querySelector('#darkMode')) {
+                    if (mutation.addedNodes?.[0]?.querySelector('#darkMode')) {
                         addCustomDarkModeOption();
                     }
 
-                    if (mutation.addedNodes[0]?.querySelector('[data-test="skill-tree"]')) {
+                    if (mutation.addedNodes?.[0]?.querySelector('[data-test="skill-tree"]')) {
                         // MAIN PAGE
                         setSkillTreeObserver();
                         // createHideButton();
                         if (document.querySelector('[data-test=skill-popout]')) {
                             movePopout();
                         }
-                    } else if (mutation.addedNodes[0]?.querySelector('[data-test="stories-player-continue"]')) {
+                    } else if (mutation.addedNodes?.[0]?.querySelector('[data-test="stories-player-continue"]')) {
                         // STORIES PAGE
                         setStoriesObservers();
                         createAutoClickButton(true);
@@ -1215,7 +1199,7 @@ function addCustomDarkModeOption() {
                         document.querySelector('.WzuSM')?.swiper("swipeUp", () => {
                             document.querySelector('[data-test="stories-player-continue"]')?.click();
                         });
-                    } else if (mutation.addedNodes[0]?.querySelector('[data-test*="challenge "]') && !document.querySelector('#my-autoclick-bu')) {
+                    } else if (mutation.addedNodes?.[0]?.querySelector('[data-test*="challenge "]') && !document.querySelector('#my-autoclick-bu')) {
                         // LEARN
                         if (document.querySelector('[role="progressbar"]')) {
                             setLearnObserver();
@@ -1243,9 +1227,9 @@ function addCustomDarkModeOption() {
                                 ]
                             );
                         }
-                    } else if (mutation.addedNodes[0]?.querySelector('[data-test="xp-slide"]')) {
+                    } else if (mutation.addedNodes?.[0]?.querySelector('[data-test="xp-slide"]')) {
                         if (footerHidden) hideShowFooter(false);
-                    } else if (mutation.addedNodes[0]?.querySelector('._2OFC6._36Vd3._16r-S._316JV')) {
+                    } else if (mutation.addedNodes?.[0]?.querySelector('._2OFC6._36Vd3._16r-S._316JV')) {
                         // TODO more specific
                         document.querySelector('._2OFC6._36Vd3._16r-S._316JV').click();
                     }
