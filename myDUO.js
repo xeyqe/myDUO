@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.3.4
+// @version      3.0.3.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -1028,7 +1028,7 @@ async function setLearnObserver() {
             }
         }
     }
-    const targetNode2 = document.querySelector('#session\\/PlayerFooter').parentElement;
+    const targetNode2 = document.querySelector('#session\\/PlayerFooter').parentElement.parentElement;
     const config2 = { attributes: true, childList: true, subtree: true, characterData: false };
     const observer2 = new MutationObserver(callback2);
     observer2.observe(targetNode2, config2);
