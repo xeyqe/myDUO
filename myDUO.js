@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.3.6
+// @version      3.0.3.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -621,6 +621,7 @@ function neco(color) {
             const word = document.querySelector('[data-test="challenge-text-input"]').value;
             yourAnswer = `${article}${word}`;
         } else if (document.querySelector('[data-test="challenge challenge-assist"]')) {
+            question = document.querySelector('[aria-label="choice"]')?.previousElementSibling?.textContent;
             yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-listenComplete"]')) {
             question = document.querySelector('._3t3oQ._2FKqf._2ti2i').textContent;
