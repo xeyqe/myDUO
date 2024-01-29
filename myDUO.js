@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.3.7
+// @version      3.0.3.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -846,7 +846,7 @@ function showHideFooter() {
 }
 
 function hideShowFooter(hide) {
-    const el = document.querySelector('#session\\/PlayerFooter').parentElement;
+    const el = document.querySelector('#session\\/PlayerFooter').parentElement.parentElement;
     if (hide) {
         el?.classList?.add('hidden-footer');
         document.querySelector('.panel')?.classList?.remove('shorter')
