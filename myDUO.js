@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.4.0
+// @version      3.0.4.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -647,10 +647,11 @@ function neco(color) {
             question = document.querySelector('[data-test="hint-token"]')?.parentElement?.parentElement?.textContent;
             yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').querySelector('[data-test="challenge-judge-text"]').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-gapFill"]')) {
-            yourAnswer = Array.from(document.querySelectorAll('[data-test="hint-token"]')).map(it => {
-                const txt = it.parentElement.textContent;
-                return it.classList.value.includes('_1aMpd') ? `_${txt}_` : txt
-            }).join(' ').replace(/_ _/g, ' ');
+            const ar = Array.from(document.querySelectorAll('[aria-hidden="true"]'));
+            question = ar.map(el => {
+                const txt = el.textContent;
+                return el.classList.contains('_1aMpd') ? `_${txt}_` : txt
+            }).join('').replace(/__/g, '');
         } else if (document.querySelector('[data-test="challenge challenge-partialReverseTranslate"]')) {
             question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
             yourAnswer = Array.from(document.querySelector('label').children).filter(it => !it.classList.contains('_31xxw')).map(it => it.textContent).join('');
@@ -879,7 +880,7 @@ function setSkillTreeObserver() {
                 //     }
                 //     // mutation.target.parentElement.parentElement.parentElement.classList.add('hidden-item');
                 // } else
-                    if (
+                if (
                     mutation.addedNodes[0] === document.querySelector('[data-test=skill-popout]') ||
                     mutation.addedNodes?.[0]?.querySelector('[data-test="skill-popout"]')
                 ) {
