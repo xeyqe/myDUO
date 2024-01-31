@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.3.9
+// @version      3.0.4.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -639,15 +639,8 @@ function neco(color) {
             yourAnswer = document.querySelector('[aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
             question = document.querySelector('[role="radiogroup"]').previousElementSibling.textContent;
         } else if (document.querySelector('[data-test="challenge challenge-tapComplete"]')) {
-            const els = Array.from(document.querySelector('[data-test="hint-token"]').parentElement.parentElement.children);
-            question = '';
-            els.forEach(el => {
-                if (el.tagName === 'DIV') {
-                    question += `_${el.innerText}_`;
-                } else {
-                    question += el.textContent;
-                }
-            });
+            question = Array.from(document.querySelectorAll('[aria-hidden="true"]')).map(el => el.textContent).join('').replace(/\s\s/g, ' ___ ');
+            yourAnswer = Array.from(document.querySelector('[aria-hidden="true"]').parentElement.parentElement.parentElement.querySelectorAll('[data-test="challenge-tap-token-text"]')).map(it => it.textContent).join();
         } else if (document.querySelector('[data-test="challenge challenge-dialogue"]')) {
             footerHidden = localStorage.getItem('footerHidden') === "true"
             if (footerHidden) hideShowFooter(true);
