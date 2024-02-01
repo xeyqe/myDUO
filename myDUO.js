@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.4.1
+// @version      3.0.4.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -589,12 +589,12 @@ function neco(color) {
         }
 
         if (document.querySelector('[data-test="challenge challenge-translate"]')) {
+            question = Array.from(document.querySelectorAll('[aria-hidden=true]')).map(el => el.textContent).join('');
             if (document.querySelector('[data-test="challenge-translate-input"]')) {
                 yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').textContent;
-                question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
             } else if (document.querySelector('[data-test="word-bank"]')) {
-                question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
-                yourAnswer = document.querySelector('.PcKtj').innerText.replace(/\n/g, ' ')
+                const el = document.querySelector("[data-test*=challenge-tap-token]").parentElement.parentElement.parentElement;
+                yourAnswer = Array.from(el.querySelectorAll('button')).map(el => el.textContent).join(' ');
             }
         } else if (document.querySelector('[data-test="challenge challenge-listen"]')) {
             yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').textContent;
