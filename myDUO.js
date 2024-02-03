@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.4.5
+// @version      3.0.4.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -1021,6 +1021,7 @@ async function setLearnObserver() {
                 const panel = document.querySelector('.panel');
                 panel.classList.add('show');
                 panel.classList.remove('hide');
+                hideShowFooter(false);
             }
         }
     }
