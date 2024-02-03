@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.4.4
+// @version      3.0.4.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -639,10 +639,10 @@ function neco(color) {
             yourAnswer = document.querySelector('[aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
             question = document.querySelector('[role="radiogroup"]').previousElementSibling.textContent;
         } else if (document.querySelector('[data-test="challenge challenge-tapComplete"]')) {
-            question = Array.from(document.querySelectorAll('[aria-hidden="true"]')).map(el => el.textContent).join('').replace(/\s\s/g, ' ___ ');
+            question = Array.from(document.querySelectorAll('[aria-hidden="true"]')).map(el => el.textContent).join('').replace(/\s\s/g, ' ___ ').replace(/\s\./g, ' ___.');;
             const el = document.querySelector('[aria-hidden="true"]').parentElement.parentElement.parentElement;
             const ar = Array.from(el.querySelectorAll('[data-test="challenge-tap-token-text"]')).map(it => it.innerText).filter(i => i);
-            ar.forEach(it => question = question.replace(' ___ ', ` _${it}_ `));
+            ar.forEach(it => question = question.replace('___', `_${it}_`));
         } else if (document.querySelector('[data-test="challenge challenge-dialogue"]')) {
             footerHidden = localStorage.getItem('footerHidden') === "true"
             if (footerHidden) hideShowFooter(true);
@@ -986,6 +986,7 @@ async function setLearnObserver() {
             ) {
                 hideShowFooter(footerHidden);
             }
+            if (mutation?.addedNodes?.[0]?.nodeType !== 1) continue;
             if (mutation.addedNodes?.[0]?.querySelector('[data-test="blame blame-correct"]')) {
                 setTimeout(() => {
                     if (!document.querySelector('[data-test="blame blame-correct"]').querySelector('._1W9Eh')) { // can't listen/speak skip
