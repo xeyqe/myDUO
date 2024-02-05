@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.4.8
+// @version      3.0.4.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -634,6 +634,7 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-listenComplete"]')) {
             question = document.querySelector('._3t3oQ._2FKqf._2ti2i').textContent;
             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
+            if (question.includes(`_${yourAnswer}_`)) yourAnswer = null;
         } else if (document.querySelector('[data-test="challenge challenge-listenMatch"]')) {
             yourAnswer = Array.from(document.querySelectorAll('[data-test="challenge-tap-token-text"]')).map(it => it.textContent).join(', ')
         } else if (document.querySelector('[data-test="challenge challenge-listenIsolation"]')) {
