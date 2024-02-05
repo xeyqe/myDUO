@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.4.6
+// @version      3.0.4.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -526,6 +526,17 @@ function draggable() {
     });
 }
 
+function togglePanel() {
+    const panel = document.querySelector('.panel');
+    if (panel.classList.contains('show')) {
+        panel.classList.remove('show');
+        panel.classList.add('hide');
+    } else {
+        panel.classList.add('show');
+        panel.classList.remove('hide');
+    }
+}
+
 function createSlider() {
     const panel = document.createElement("div");
 
@@ -542,18 +553,15 @@ function createSlider() {
             if (document.querySelector('.hide')) showHidePanel();
         }
     });
+    document.onkeyup = function (e) {
+        if (e.code === 'Escape' && document.querySelector('.panel.show'))
+            togglePanel();
+    }
 }
 
 function showHidePanel(event) {
     if (mayISwipe(event)) {
-        const panel = document.querySelector('.panel');
-        if (panel.classList.contains('show')) {
-            panel.classList.remove('show');
-            panel.classList.add('hide');
-        } else {
-            panel.classList.add('show');
-            panel.classList.remove('hide');
-        }
+        togglePanel();
     }
 }
 
@@ -660,13 +668,15 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-readComprehension"]')) {
             footerHidden = localStorage.getItem('footerHidden') === "true"
             if (footerHidden) hideShowFooter(true);
-            question = document.querySelector('[data-test="hint-token"]').parentElement.parentElement.textContent;
-            yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').querySelector('[data-test="challenge-judge-text"]').textContent;
+            question = document.querySelector('[aria-hidden=true]').parentElement.parentElement.textContent;
+            const selEl = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]');
+            question2 = selEl.parentElement.previousElementSibling.textContent;
+            yourAnswer = selEl.querySelector('[data-test="challenge-judge-text"]').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-name"]')) {
             question = document.querySelector('[data-test="challenge-header"]').textContent;
             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
         } else if (document.querySelector('[data-test="challenge challenge-listenComprehension"]')) {
-            question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
+            question = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').parentElement.previousElementSibling.textContent;
             yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-listenSpeak"]')) {
             question = Array.from(document.querySelectorAll('[data-test="hint-token"]')).map(it => it.parentElement.textContent).join(' ') + '.';
@@ -938,7 +948,6 @@ async function setLearnObserver() {
 
     const callback = function (mutationsList, observer) {
         for (const mutation of mutationsList) {
-            if (mutation.addedNodes?.[0]?.querySelector("#session\\/PlayerFooter")) console.error(mutation)
             if (mutation.addedNodes?.[0]?.nodeType === 1) {
                 // if (mutation.addedNodes?.[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
                 //     draggable();
@@ -984,22 +993,21 @@ async function setLearnObserver() {
                 mutation.target.id === 'session/PlayerFooter' &&
                 mutation.target.classList.value.includes('_399cc')
             ) {
-                hideShowFooter(footerHidden);
+                if (footerHidden && document.querySelector('[role=progressbar]').getAttribute('aria-valuenow') !== '1')
+                    hideShowFooter(true);
             }
             if (mutation?.addedNodes?.[0]?.nodeType !== 1) continue;
             if (mutation.addedNodes?.[0]?.querySelector('[data-test="blame blame-correct"]')) {
-                setTimeout(() => {
-                    if (!document.querySelector('[data-test="blame blame-correct"]').querySelector('._1W9Eh')) { // can't listen/speak skip
-                        neco('right').then(() => {
-                            changeCounter('right');
-                            if (document.querySelector('#my-autoclick-bu').innerText === 'A') {
-                                document.querySelector('[data-test="player-next"]')?.click();
-                            } else {
-                                hideShowFooter(false);
-                            }
-                        });
-                    }
-                });
+                if (!document.querySelector('[data-test="blame blame-correct"]').querySelector('._1W9Eh')) { // can't listen/speak skip
+                    neco('right').then(() => {
+                        changeCounter('right');
+                        if (document.querySelector('#my-autoclick-bu').innerText === 'A') {
+                            document.querySelector('[data-test="player-next"]')?.click();
+                        } else {
+                            hideShowFooter(false);
+                        }
+                    });
+                }
             } else if (mutation.addedNodes?.[0]?.querySelector('[data-test="blame blame-incorrect"]')) {
                 if (!document.querySelector('[data-test="challenge challenge-speak"]')) {
                     neco('wrong').then(() => {
@@ -1022,6 +1030,7 @@ async function setLearnObserver() {
                 panel.classList.add('show');
                 panel.classList.remove('hide');
                 hideShowFooter(false);
+                document.onkeyup = null;
             }
         }
     }
