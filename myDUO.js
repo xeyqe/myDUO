@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.5.0
+// @version      3.0.5.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -141,9 +141,8 @@ const css = [".switch {",
     "    max-width: 95vw;",
     "    height: fit-content;",
     "    position: absolute;",
-    "    top: 8%;",
     "    overflow-y: scroll;",
-    "    max-height: 82%;",
+    "    max-height: 100%;",
     "    z-index: 1000;",
     "    scrollbar-width: none;",
     "}",
