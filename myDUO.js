@@ -615,13 +615,13 @@ function neco(color) {
             question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
         } else if (document.querySelector('[data-test="challenge challenge-judge"]')) {
             question = document.querySelector('._3-JBe').textContent;
-            yourAnswer = document.querySelector('[data-test="challenge-choice"].disCS > div').textContent;
+            yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').innerText;
         } else if (document.querySelector('[data-test="challenge challenge-completeReverseTranslation"]')) {
             question = document.querySelector('._1KUxv._11rtD').textContent;
             question2 = document.querySelector('[data-test="challenge-text-input"]').parentElement.parentElement.textContent;
             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
         } else if (document.querySelector('[data-test="challenge challenge-selectTranscription"]')) {
-            yourAnswer = document.querySelector('[data-test="challenge-choice"].disCS > div').textContent;
+            yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').innerText;
         } else if (document.querySelector('[data-test="challenge challenge-name"]')) {
             const el = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]');
             const article = el ? el.querySelector('[data-test="challenge-judge-text"]').textContent + ' ' : '';
