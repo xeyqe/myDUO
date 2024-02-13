@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.5.1
+// @version      3.0.5.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -608,9 +608,16 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-listenTap"]')) {
             yourAnswer = document.querySelector('.PcKtj').innerText.replace(/\n/g, ' ')
         } else if (document.querySelector('[data-test="challenge challenge-match"]')) {
-            const ar = Array.from(document.querySelectorAll('[data-test="challenge-tap-token-text"]')).map(it => it.textContent);
-            question = ar.slice(0, 5).join(' | ');
-            yourAnswer = ar.slice(5).join(' | ');
+            if (matchTexts.line1) {
+                question = matchTexts.line1;
+                yourAnswer = matchTexts.line2;
+                matchTexts.line1 = '';
+                matchTexts.line2 = '';
+            } else {
+                const ar = Array.from(document.querySelectorAll('[data-test="challenge-tap-token-text"]')).map(it => it.textContent);
+                question = ar.slice(0, 5).join(' | ');
+                yourAnswer = ar.slice(5).join(' | ');
+            }
         } else if (document.querySelector('[data-test="challenge challenge-speak"]')) {
             question = document.querySelector('[data-test="hint-token"]').parentElement.textContent;
         } else if (document.querySelector('[data-test="challenge challenge-judge"]')) {
@@ -925,6 +932,28 @@ function setDraggableObserver() {
     }
 }
 
+const matchTexts = {
+    line1: '',
+    line2: ''
+}
+function setLernerMatchObserver() {
+    const targetNode = document.querySelector('[style*="--match-challenge-rows"]');
+    const callback = function (mutationsList, observer) {
+        for (const mutation of mutationsList) {
+            if (mutation.attributeName !== 'class' || mutation.target.nodeName !== 'BUTTON') continue;
+            const buttons = Array.from(document.querySelectorAll('[data-test*="-challenge-tap-token"]'));
+            const txt = mutation.target.textContent;
+            if (buttons.indexOf(mutation.target) < (buttons.length/2))
+                matchTexts.line1 = matchTexts.line1 ? `${matchTexts.line1} | ${txt}` : txt;
+            else
+                matchTexts.line2 = matchTexts.line2 ? `${matchTexts.line2} | ${txt}` : txt;
+        }
+    }
+    const config = { attributes: true, childList: true, subtree: true, characterData: false };
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+}
+
 async function setLearnObserver() {
     hideShowFooter(footerHidden);
     // if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
@@ -967,6 +996,8 @@ async function setLearnObserver() {
                     setTimeout(() => {
                         document.querySelector('textarea, input').focus({ preventScroll: true });
                     }, 200);
+                } else if (mutation.addedNodes?.[0]?.querySelector('[data-test="challenge challenge-match"]')) {
+                    setLernerMatchObserver();
                 }
             }
         }
@@ -993,7 +1024,7 @@ async function setLearnObserver() {
                 mutation.target.id === 'session/PlayerFooter' &&
                 mutation.target.classList.value.includes('_399cc')
             ) {
-                if (footerHidden && document.querySelector('[role=progressbar]').getAttribute('aria-valuenow') !== '1')
+                if (footerHidden && document.querySelector('[role=progressbar]') && document.querySelector('[role=progressbar]').getAttribute('aria-valuenow') !== '1')
                     hideShowFooter(true);
             }
             if (mutation?.addedNodes?.[0]?.nodeType !== 1) continue;
@@ -1147,6 +1178,13 @@ function addCustomDarkModeOption() {
 // function removeTouchEndEvent(e) {
 //     e.stopPropagation();
 // }
+
+function restoreConsoleLog() {
+    var i = document.createElement('iframe');
+    i.style.display = 'none';
+    document.body.appendChild(i);
+    window.console = i.contentWindow.console;
+}
 
 (function () {
     'use strict';
