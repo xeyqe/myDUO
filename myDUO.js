@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.5.5
+// @version      3.0.5.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -686,7 +686,7 @@ function neco(color) {
             question = document.querySelector('[data-test="challenge-choice"][aria-checked="true"]').parentElement.previousElementSibling.textContent;
             yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-listenSpeak"]')) {
-            question = Array.from(document.querySelectorAll('[data-test="hint-token"]')).map(it => it.parentElement.textContent).join(' ') + '.';
+            question = document.querySelector('span [aria-hidden="true"]').parentElement.parentElement.parentElement.textContent;
         } else {
             const challenge = document.querySelector('[data-test*="challenge"]').getAttribute('data-test');
             question = `This ${challenge} was not covered by myDuo script. :(`;
