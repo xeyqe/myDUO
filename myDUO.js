@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.5.7
+// @version      3.0.5.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -330,24 +330,37 @@ function addThemes() {
     }
 }
 
-Node.prototype.swiper = function (direction, func, forbidden) {
-    let touchstartX = 0;
-    let touchstartY = 0;
-    let touchendX = 0;
-    let touchendY = 0;
+let touched = false;
+function swiper(el, direction, func, forbidden) {
+    if (!el) return;
+    let touchstartX = null;
+    let touchstartY = null;
+    let touchendX = null;
+    let touchendY = null;
 
-    const gesuredZone = this;
-
-    gesuredZone.addEventListener(
+    el.addEventListener(
         'touchstart',
         function (event) {
+            if (event.touches.length > 1) {
+                touchstartX = null;
+                touchstartY = null;
+                touchendX = null;
+                touchendY = null;
+                return;
+            }
             touchstartX = event.touches[0].pageX;
             touchstartY = event.touches[0].pageY;
-        },
-        { passive: true }
+        }
     );
 
-    gesuredZone.addEventListener('touchend', function (event) {
+    el.addEventListener('touchend', function (event) {
+        if (event.touches.length > 1 || touchstartX === null) {
+            touchstartX = null;
+            touchstartY = null;
+            touchendX = null;
+            touchendY = null;
+            return;
+        };
         touchendX = event.changedTouches[0].pageX;
         touchendY = event.changedTouches[0].pageY;
 
@@ -361,19 +374,19 @@ Node.prototype.swiper = function (direction, func, forbidden) {
             }
         }
 
-        if (direction === "swipeRight") {
+        if (direction === "right") {
             if (touchstartX - touchendX < -25 && absX - absY > 70) {
                 func(event);
             }
-        } else if (direction === "swipeLeft") {
+        } else if (direction === "left") {
             if (touchstartX - touchendX > 25 && absX - absY > 70) {
                 func(event);
             }
-        } else if (direction === "swipeDown") {
+        } else if (direction === "down") {
             if (touchstartY - touchendY < -25 && absY - absX > 70) {
                 func(event);
             }
-        } else if (direction === "swipeUp") {
+        } else if (direction === "up") {
             if (touchstartY - touchendY > 25 && absY - absX > 70) {
                 func(event);
             }
@@ -1241,7 +1254,7 @@ function restoreConsoleLog() {
                         setStoriesObservers();
                         createAutoClickButton(true);
                         createStoriesProgressShower();
-                        document.querySelector('.WzuSM')?.swiper("swipeUp", () => {
+                        swiper(document.querySelector('.WzuSM'), "up", () => {
                             document.querySelector('[data-test="stories-player-continue"]')?.click();
                         });
                     } else if (mutation.addedNodes?.[0]?.querySelector('[data-test*="challenge "]') && !document.querySelector('#my-autoclick-bu')) {
@@ -1260,10 +1273,10 @@ function restoreConsoleLog() {
                             if (document.querySelector('._2plWZ')) {
                                 document.querySelector('._2nDUm').classList.add('with-hearts')
                             }
-                            document.querySelector(father).swiper("swipeLeft", swipeFunc);
-                            document.querySelector(father).swiper("swipeRight", showHidePanel);
-                            document.querySelector(father).swiper(
-                                "swipeDown",
+                            swiper(document.querySelector(father), "left", swipeFunc);
+                            swiper(document.querySelector(father), "swipeRight", showHidePanel);
+                            swiper(document.querySelector(father), 
+                                "down",
                                 showHideFooter,
                                 [
                                     '.panel',
