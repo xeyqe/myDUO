@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.5.9
+// @version      3.0.6.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -107,7 +107,6 @@ const css = [".switch {",
     "    width: fit-content;",
     "    height: fit-content;",
     "    border-radius: 10px;",
-    "    margin: 10px;",
     "}",
     ".panelItem.right {",
     "    background-color: #b8f28b;",
@@ -144,6 +143,9 @@ const css = [".switch {",
     "    max-height: 100%;",
     "    z-index: 1000;",
     "    scrollbar-width: none;",
+    "    display: flex;",
+    "    flex-direction: column;",
+    "    gap: .2rem;",
     "}",
     "[data-test=challenge-tap-token] {",
     "    text-align: center;",
@@ -168,6 +170,12 @@ const css = [".switch {",
     "    }",
     "}",
     "@media (max-width: 700px) {",
+    "    .panel.hide {",
+    "        transform: translateX(-100%);",
+    "    }",
+    "    .panel.show {",
+    "        transform: translateX(-1rem);",
+    "    }",
     "    .uH5m4 {",
     "        min-height: fit-content;",
     "    }",
@@ -1285,7 +1293,7 @@ function restoreConsoleLog() {
                                 document.querySelector('._3js2_').classList.add('with-hearts')
                             }
                             swiper(document.querySelector(father), "left", swipeFunc);
-                            swiper(document.querySelector(father), "swipeRight", showHidePanel);
+                            swiper(document.querySelector(father), "right", showHidePanel);
                             swiper(document.querySelector(father), 
                                 "down",
                                 showHideFooter,
