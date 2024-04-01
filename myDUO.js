@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.5.8
+// @version      3.0.5.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -18,7 +18,7 @@ let myArray = [];
 let el;
 let label;
 
-const father = '._3x0ok';
+const father = '._1xXEO._2XpU7';
 
 const css = [".switch {",
     "    position: relative;",
@@ -119,7 +119,6 @@ const css = [".switch {",
     "}",
     "#counter {",
     "    font-size: 2rem;",
-    "    grid-column-end: end;",
     "}",
     "#tempAlert {",
     "    padding: 0.2rem;",
@@ -153,7 +152,7 @@ const css = [".switch {",
     "    height: 0;",
     "}",
     ".panel.hide {",
-    "    transform: translateX(calc(-100% + 1.2rem));",
+    "    transform: translateX(calc(-100% + .5rem));",
     "    transition: .5s ease-in-out;",
     "}",
     ".panel.show {",
@@ -186,10 +185,6 @@ const css = [".switch {",
     "        padding-bottom: 0px;",
     "        padding-top: 0px;",
     "    }",
-    "    #counter {",
-    "        top: 0.5rem;",
-    "        position: relative;",
-    "    }",
     "}",
     "#my-autoclick-bu {",
     "    width: 2rem;",
@@ -218,9 +213,22 @@ const css = [".switch {",
     "._2plWZ {",
     "    grid-gap: 0px;",
     "}",
-    "._2nDUm {",
+    "._3js2_ {",
     "    display: flex;",
-    "    grid-gap: 6px;",
+    "    gap: .5rem;",
+    "    align-items: center",
+    "}",
+    "._1_a9o {",
+    "    width: 100%;",
+    "}",
+    "@media (min-width: 700px) {",
+    "    ._1_a9o {",
+    "        padding: 0;",
+    "    }",
+    "    ._3js2_ {",
+    "        margin-left: 1rem;",
+    "        margin-right: 1rem;",
+    "    }",
     "}",
     "div[role=progressbar] {",
     "    width: 100%;",
@@ -405,14 +413,14 @@ function swipeFunc(event) {
 }
 
 function createNumber() {
-    let node = document.createElement("p");
+    let node = document.createElement("div");
     node.setAttribute("id", "counter");
 
     node.innerHTML =
         "<span id=\"wrong\" style=\"color:red\">0</span>/<span id=\"right\" style=\"color:#79c822\">0</span>";
 
-    if (document.querySelector('._2nDUm')) {
-        document.querySelector('._2nDUm').appendChild(node);
+    if (document.querySelector('._3js2_')) {
+        document.querySelector('._3js2_').appendChild(node);
     } else {
         console.error('HELP. place for counter is missing!');
     }
@@ -791,7 +799,7 @@ function createAutoClickButton(isStories) {
             document.querySelector('#my-autoclick-bu').innerText = testingAuto ? 'A' : 'M';
             localStorage.setItem('autoclick', testingAuto ? 'yes' : 'no');
         });
-        document.querySelector('._2nDUm').appendChild(bu);
+        document.querySelector('._3js2_').appendChild(bu);
     }
 }
 
@@ -1192,9 +1200,12 @@ function addCustomDarkModeOption() {
 // }
 
 function restoreConsoleLog() {
-    var i = document.createElement('iframe');
-    i.style.display = 'none';
-    document.body.appendChild(i);
+    if (!document.querySelector('#my-iframe')) {
+        var i = document.createElement('iframe');
+        i.id = 'my-iframe';
+        i.style.display = 'none';
+        document.body.appendChild(i);
+    }
     window.console = i.contentWindow.console;
 }
 
@@ -1271,7 +1282,7 @@ function restoreConsoleLog() {
                             }, 500);
                             if (footerHidden) hideShowFooter(true);
                             if (document.querySelector('._2plWZ')) {
-                                document.querySelector('._2nDUm').classList.add('with-hearts')
+                                document.querySelector('._3js2_').classList.add('with-hearts')
                             }
                             swiper(document.querySelector(father), "left", swipeFunc);
                             swiper(document.querySelector(father), "swipeRight", showHidePanel);
