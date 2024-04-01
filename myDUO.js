@@ -677,7 +677,7 @@ function neco(color) {
                 return it.querySelector('._1aMpd') ? `_${txt}_` : txt;
             }).join('').replace(/__/g, '');
         } else if (document.querySelector('[data-test="challenge challenge-select"]')) {
-            yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] .HaQTI')?.textContent;
+            yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] .AKwIn')?.textContent;
         } else if (document.querySelector('[data-test="challenge challenge-definition"]')) {
             yourAnswer = document.querySelector('[aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
             question = document.querySelector('[role="radiogroup"]').previousElementSibling.textContent;
@@ -741,8 +741,7 @@ function neco(color) {
             divMain.appendChild(div);
         }
 
-        const review = document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-incorrect"]') ||
-            document.querySelector('.panel').previousElementSibling.querySelector('[data-test="blame blame-correct"]');
+        const review = document.querySelector('#session\\/PlayerFooter').querySelector('[data-test="blame blame-incorrect"], [data-test="blame blame-correct"]');
         if (review) {
             const node = review.children[1].children[0].cloneNode(true);
             divMain.appendChild(node);
