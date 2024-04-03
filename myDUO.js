@@ -659,7 +659,7 @@ function neco(color) {
             question = document.querySelector('[aria-label="choice"]')?.previousElementSibling?.textContent;
             yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-listenComplete"]')) {
-            question = document.querySelector('._3t3oQ._2FKqf._2ti2i').textContent;
+            question = document.querySelector('[data-test="challenge-text-input"]').parentElement.parentElement.textContent;
             yourAnswer = document.querySelector('[data-test="challenge-text-input"]').value;
             if (question.includes(`_${yourAnswer}_`)) yourAnswer = null;
         } else if (document.querySelector('[data-test="challenge challenge-listenMatch"]')) {
