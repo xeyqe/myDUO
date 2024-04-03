@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.6.3
+// @version      3.0.6.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,6 +9,7 @@
 // @match        https://duolingo.com/*
 // @match        http://*.duolingo.com/*
 // @match        https://*.duolingo.com/*
+// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
 
@@ -535,16 +536,83 @@ async function reclick(index) {
 }
 
 function draggable() {
-    const output = document.querySelector('.PcKtj');
+    cloneDraggable();
+    const el = document.querySelector('#new-draggable ._1Ga4w');
+    const buttons = Array.from(document.querySelector('#new-draggable [data-test="word-bank2"]').querySelectorAll('button'));
+    buttons.forEach(el => {
+        el.addEventListener('click', () => sortableBuClickEventFn(el));
+    });
 
-    Sortable.create(output, {
+    Sortable.create(el, {
         onEnd: function (evt) {
             if (evt.oldIndex !== evt.newIndex) reclick(evt.newIndex);
             else evt.item.querySelector('button').click();
         },
         animation: 150,
-
     });
+}
+
+function cloneDraggable() {
+    const oldEl = document.querySelector('._2Z23m');
+    const newEl = oldEl.cloneNode(true);
+    newEl.querySelector('[data-test="word-bank"]').setAttribute('data-test', 'word-bank2');
+    newEl.id = 'new-draggable';
+    oldEl.id = 'old-draggable';
+    oldEl.parentElement.appendChild(newEl);
+    oldEl.style.display = 'none';
+
+    const oldBu = document.querySelector('[data-test="player-next"]')
+    const newBu = oldBu.cloneNode(true);
+    newBu.id = 'new-bu';
+    newBu.addEventListener('click', () => setRealDraggable());
+    newBu.setAttribute('disabled', false);
+
+    oldBu.parentElement.insertBefore(newBu, oldBu);    
+    oldBu.setAttribute('disabled', true);
+    oldBu.style.display = 'none';
+    oldBu.id = 'old-bu';
+}
+
+function sortableBuClickEventFn(el) {
+    if (el.getAttribute('aria-disabled') === 'true') return;
+    if (!document.querySelectorAll('#new-draggable ._1Ga4w button').length) {
+        document.querySelector('#new-bu').classList.remove('_33Jbm');
+        document.querySelector('#new-bu').removeAttribute('disabled');
+    }
+    const parent = el.parentElement.parentElement.cloneNode(true);
+    document.querySelector('#new-draggable ._1Ga4w').appendChild(parent);
+    el.classList.add('_33Jbm');
+    el.classList.add('_3Vv8d');
+    el.classList.remove('_3CBig');
+    parent.querySelector('button').addEventListener('click', () => {
+        if (document.querySelectorAll('#new-draggable ._1Ga4w button').length === 1) {
+            document.querySelector('#new-bu').classList.add('_33Jbm');
+        }
+        el.classList.add('_3CBig');
+        el.classList.remove('_33Jbm');
+        el.classList.remove('_3Vv8d');
+        parent.remove();
+    });
+    document.querySelector(`#old-draggable [data-test="${el.getAttribute('data-test')}"]`).click()
+    setTimeout(() => {
+        document.querySelector('#old-draggable ._2SctN button').click()
+    });
+}
+
+async function setRealDraggable() {
+    const ar = Array.from(document.querySelector('#new-draggable ._1Ga4w').querySelectorAll('button')).map(it => it.textContent);
+    if (!ar.length) return;
+    const buttons = Array.from(document.querySelector('#old-draggable [data-test="word-bank"]').querySelectorAll('button'));
+    for (const it of ar) {
+        buttons.find(el => el.getAttribute('aria-disabled') !== 'true' && el.textContent === it).click();
+        await new Promise(resolve => setTimeout(resolve, 100));
+    };
+    const bu = document.querySelector('#old-bu');
+    bu.removeAttribute('disabled');
+    bu.click();
+    bu.style.display = 'inline-flex';
+    document.querySelector('#new-bu').remove();
+    bu.removeAttribute('id');
 }
 
 function togglePanel() {
@@ -976,11 +1044,10 @@ function setLernerMatchObserver() {
 
 async function setLearnObserver() {
     hideShowFooter(footerHidden);
-    // if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
-    //     draggable();
-    //     setDraggableObserver();
-    // } else
-    if (document.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
+    if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
+        draggable();
+        // setDraggableObserver();
+    } else if (document.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
         hideShowFooter(false);
         footerHidden = false;
     } else if (document.querySelector('textarea, input')) {
@@ -998,11 +1065,10 @@ async function setLearnObserver() {
     const callback = function (mutationsList, observer) {
         for (const mutation of mutationsList) {
             if (mutation.addedNodes?.[0]?.nodeType === 1) {
-                // if (mutation.addedNodes?.[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
-                //     draggable();
-                //     setDraggableObserver();
-                // } else
-                if (mutation.addedNodes?.[0]?.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
+                if (mutation.addedNodes?.[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
+                    draggable();
+                    // setDraggableObserver();
+                } else if (mutation.addedNodes?.[0]?.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
                     hideShowFooter(false);
                     footerHidden = false;
                 } else if (mutation.addedNodes[0].contains(document.querySelector('textarea, input'))) {
