@@ -1238,7 +1238,7 @@ function restoreConsoleLog() {
         }
 
         setTimeout(() => {
-            document.querySelector('._2OFC6._36Vd3._16r-S._316JV')?.click(); // open in app dialog
+            document.querySelector('._2OFC6._36Vd3._16r-S._2VIrU')?.click(); // open in browser dialog
             addCustomDarkModeOption();
         }, 200);
 
