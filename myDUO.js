@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.6.1
+// @version      3.0.6.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -1305,9 +1305,9 @@ function restoreConsoleLog() {
                         }
                     } else if (mutation.addedNodes?.[0]?.querySelector('[data-test="xp-slide"]')) {
                         if (footerHidden) hideShowFooter(false);
-                    } else if (mutation.addedNodes?.[0]?.querySelector('._2OFC6._36Vd3._16r-S._316JV')) {
-                        // TODO more specific
-                        document.querySelector('._2OFC6._36Vd3._16r-S._316JV').click();
+                    } else if (mutation.addedNodes?.[0]?.querySelector('._2OFC6._36Vd3._16r-S._2VIrU')) {
+                        // continue in browser
+                        document.querySelector('._2OFC6._36Vd3._16r-S._2VIrU').click();
                     }
                 }
             }
