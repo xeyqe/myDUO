@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.6.2
+// @version      3.0.6.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -18,7 +18,7 @@ let myArray = [];
 let el;
 let label;
 
-const father = '._1xXEO._2XpU7';
+const father = '._1RBqm';
 
 const css = [".switch {",
     "    position: relative;",
@@ -170,12 +170,6 @@ const css = [".switch {",
     "    }",
     "}",
     "@media (max-width: 700px) {",
-    "    .panel.hide {",
-    "        transform: translateX(-100%);",
-    "    }",
-    "    .panel.show {",
-    "        transform: translateX(-1rem);",
-    "    }",
     "    .uH5m4 {",
     "        min-height: fit-content;",
     "    }",
@@ -249,11 +243,10 @@ const css = [".switch {",
     "}",
     "._1Oz7v {",
     "    position: relative;",
-    // "}",
-    // "section {",
-    // "    position: relative !important;",
-    // "    top: unset;",
-    "}"
+    "}",
+    "._2VM4a {",
+    "    padding-top: 0;",
+    "}",
 ].join("\n");
 const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
     "@supports (backdrop-filter: invert(100%)) {",
