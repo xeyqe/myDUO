@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.6.8
+// @version      3.0.6.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -568,7 +568,7 @@ function cloneDraggable() {
     newBu.addEventListener('click', () => setRealDraggable());
     newBu.setAttribute('disabled', false);
 
-    oldBu.parentElement.insertBefore(newBu, oldBu);    
+    oldBu.parentElement.insertBefore(newBu, oldBu);
     oldBu.setAttribute('disabled', true);
     oldBu.style.display = 'none';
     oldBu.id = 'old-bu';
@@ -1033,7 +1033,7 @@ function setLernerMatchObserver() {
             if (mutation.attributeName !== 'class' || mutation.target.nodeName !== 'BUTTON') continue;
             const buttons = Array.from(document.querySelectorAll('[data-test*="-challenge-tap-token"]'));
             const txt = mutation.target.textContent;
-            if (buttons.indexOf(mutation.target) < (buttons.length/2))
+            if (buttons.indexOf(mutation.target) < (buttons.length / 2))
                 matchTexts.line1 = matchTexts.line1 ? `${matchTexts.line1} | ${txt}` : txt;
             else
                 matchTexts.line2 = matchTexts.line2 ? `${matchTexts.line2} | ${txt}` : txt;
@@ -1048,7 +1048,7 @@ async function setLearnObserver() {
     hideShowFooter(footerHidden);
     if (
         document.querySelector('[data-test="word-bank"]') &&
-        document.querySelector('[data-test="challenge challenge-translate"]')
+        document.querySelector('[data-test="challenge challenge-translate"], [data-test="challenge challenge-listenTap"]')
     ) {
         draggable();
         // setDraggableObserver();
@@ -1070,11 +1070,12 @@ async function setLearnObserver() {
     const callback = function (mutationsList, observer) {
         for (const mutation of mutationsList) {
             if (mutation.addedNodes?.[0]?.nodeType === 1) {
-                if (
-                    mutation.addedNodes?.[0]?.querySelector('[data-test="word-bank"]') &&
-                    document.querySelector('[data-test="challenge challenge-translate"]')
-                ) {
-                    draggable();
+                if (mutation.addedNodes?.[0]?.querySelector('[data-test="word-bank"]')) {
+                    setTimeout(() => {
+                        const selector = '[data-test="challenge challenge-translate"], [data-test="challenge challenge-listenTap"]';
+                        if (!document.querySelector(selector)) return;
+                        draggable();
+                    }, 500);
                     // setDraggableObserver();
                 } else if (mutation.addedNodes?.[0]?.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
                     hideShowFooter(false);
@@ -1360,7 +1361,7 @@ function restoreConsoleLog() {
                             }
                             swiper(document.querySelector(father), "left", swipeFunc);
                             swiper(document.querySelector(father), "right", showHidePanel);
-                            swiper(document.querySelector(father), 
+                            swiper(document.querySelector(father),
                                 "down",
                                 showHideFooter,
                                 [
