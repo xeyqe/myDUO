@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.6.6
+// @version      3.0.6.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,7 +9,7 @@
 // @match        https://duolingo.com/*
 // @match        http://*.duolingo.com/*
 // @match        https://*.duolingo.com/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
 
@@ -584,6 +584,7 @@ function sortableBuClickEventFn(el) {
     el.classList.add('_33Jbm');
     el.classList.add('_3Vv8d');
     el.classList.remove('_3CBig');
+    el.setAttribute('aria-disabled', true);
     parent.querySelector('button').addEventListener('click', () => {
         if (document.querySelectorAll('#new-draggable ._1Ga4w button').length === 1) {
             document.querySelector('#new-bu').classList.add('_33Jbm');
@@ -591,6 +592,7 @@ function sortableBuClickEventFn(el) {
         el.classList.add('_3CBig');
         el.classList.remove('_33Jbm');
         el.classList.remove('_3Vv8d');
+        el.setAttribute('aria-disabled', false);
         parent.remove();
     });
     document.querySelector(`#old-draggable [data-test="${el.getAttribute('data-test')}"]`).click()
@@ -605,10 +607,11 @@ async function setRealDraggable() {
     const buttons = Array.from(document.querySelector('#old-draggable [data-test="word-bank"]').querySelectorAll('button'));
     for (const it of ar) {
         buttons.find(el => el.getAttribute('aria-disabled') !== 'true' && el.textContent === it).click();
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 0));
     };
     const bu = document.querySelector('#old-bu');
     bu.removeAttribute('disabled');
+    await new Promise(resolve => setTimeout(resolve, 100));
     bu.click();
     bu.style.display = 'inline-flex';
     document.querySelector('#new-bu').remove();
@@ -1042,7 +1045,10 @@ function setLernerMatchObserver() {
 
 async function setLearnObserver() {
     hideShowFooter(footerHidden);
-    if (document.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
+    if (
+        document.querySelector('[data-test="word-bank"]') &&
+        document.querySelector('[data-test="challenge challenge-translate"]')
+    ) {
         draggable();
         // setDraggableObserver();
     } else if (document.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
@@ -1063,7 +1069,10 @@ async function setLearnObserver() {
     const callback = function (mutationsList, observer) {
         for (const mutation of mutationsList) {
             if (mutation.addedNodes?.[0]?.nodeType === 1) {
-                if (mutation.addedNodes?.[0]?.querySelector('[data-test="word-bank"]') && !document.querySelector('#bugibugi')) {
+                if (
+                    mutation.addedNodes?.[0]?.querySelector('[data-test="word-bank"]') &&
+                    document.querySelector('[data-test="challenge challenge-translate"]')
+                ) {
                     draggable();
                     // setDraggableObserver();
                 } else if (mutation.addedNodes?.[0]?.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
