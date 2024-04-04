@@ -1123,7 +1123,7 @@ async function setLearnObserver() {
             }
             if (mutation?.addedNodes?.[0]?.nodeType !== 1) continue;
             if (mutation.addedNodes?.[0]?.querySelector('[data-test="blame blame-correct"]')) {
-                if (!document.querySelector('[data-test="blame blame-correct"]').querySelector('._1W9Eh')) { // can't listen/speak skip
+                if (!document.querySelector('[data-test="blame blame-correct"]').querySelector('._20psa')) { // can't listen/speak skip
                     neco('right').then(() => {
                         changeCounter('right');
                         if (document.querySelector('#my-autoclick-bu').innerText === 'A') {
