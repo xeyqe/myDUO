@@ -1362,7 +1362,7 @@ function restoreConsoleLog() {
                             swiper(document.querySelector(father), "left", swipeFunc);
                             swiper(document.querySelector(father), "right", showHidePanel);
                             swiper(document.querySelector(father),
-                                "down",
+                                "up",
                                 showHideFooter,
                                 [
                                     '.panel',
