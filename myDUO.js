@@ -536,6 +536,7 @@ async function reclick(index) {
 }
 
 function draggable() {
+    if (window.innerWidth > 700) return;
     cloneDraggable();
     const el = document.querySelector('#new-draggable ._1Ga4w');
     const buttons = Array.from(document.querySelector('#new-draggable [data-test="word-bank2"]').querySelectorAll('button'));
