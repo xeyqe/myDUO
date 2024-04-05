@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.6.9
+// @version      3.0.7.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -204,11 +204,10 @@ const css = [".switch {",
     "._3f9ou:not(.hidden-item) {",
     "    padding: 0px;",
     "}",
-    "._2QKoe {",
+    "._2FZ31 {",
     "    position: fixed;",
     "    width: 100%;",
-    "    transform: translateX(-50%);",
-    "    left: 50%;",
+    "    padding: .5rem 1rem",
     "}",
     "._3gjcv {",
     "    padding-top: 103px !important;",
@@ -860,8 +859,9 @@ function createAutoClickButton(isStories) {
             document.querySelector('#my-autoclick-bu').innerText = storiesAuto ? 'A' : 'M';
             localStorage.setItem('stories_autoclick', storiesAuto ? 'yes' : 'no');
         });
-        document.querySelector('._2QKoe').appendChild(bu);
-        document.querySelector('.xzblA').prepend(document.querySelector('._2QKoe'))
+        const parent = document.querySelector('[data-test="close-button-stories"]').parentElement;
+        parent.appendChild(bu);
+        document.querySelector('.DGrOY').prepend(parent);
     } else {
         bu.innerText = testingAuto ? 'A' : 'M';
         bu.addEventListener('click', () => {
@@ -878,7 +878,7 @@ function createStoriesProgressShower() {
     progressEl.innerText = document.querySelector('[role="progressbar"]').getAttribute('aria-valuenow') * 100 + '%';
     progressEl.style.cssText = "z-index: 10; margin-left: .5rem;"
     progressEl.id = 'bugibugi';
-    const target = document.querySelector('._2QKoe');
+    const target = document.querySelector('[data-test="close-button-stories"]').parentElement;
     target.append(progressEl);
 }
 
