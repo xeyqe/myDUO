@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.7.1
+// @version      3.0.7.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -1319,7 +1319,7 @@ function restoreConsoleLog() {
         }
 
         setTimeout(() => {
-            document.querySelector('._2OFC6._36Vd3._16r-S._2VIrU')?.click(); // open in browser dialog
+            document.querySelector('._3BSFV._2vfJy._3Qy5R.k-kqW')?.click(); // open in browser dialog
             addCustomDarkModeOption();
         }, 200);
 
@@ -1379,9 +1379,9 @@ function restoreConsoleLog() {
                         }
                     } else if (mutation.addedNodes?.[0]?.querySelector('[data-test="xp-slide"]')) {
                         if (footerHidden) hideShowFooter(false);
-                    } else if (mutation.addedNodes?.[0]?.querySelector('._2OFC6._36Vd3._16r-S._2VIrU')) {
+                    } else if (mutation.addedNodes?.[0]?.querySelector('._3BSFV._2vfJy._3Qy5R.k-kqW')) {
                         // continue in browser
-                        document.querySelector('._2OFC6._36Vd3._16r-S._2VIrU').click();
+                        document.querySelector('._3BSFV._2vfJy._3Qy5R.k-kqW').click();
                     }
                 }
             }
