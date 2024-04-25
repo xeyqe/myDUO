@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.7.0
+// @version      3.0.7.1
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -19,7 +19,7 @@ let myArray = [];
 let el;
 let label;
 
-const father = '._1RBqm';
+const father = '._3yE3H';
 
 const css = [".switch {",
     "    position: relative;",
@@ -169,6 +169,9 @@ const css = [".switch {",
     "    ._30i_q, ._1yghA {",
     "        display: block;",
     "    }",
+    "   ._3v4ux {",
+    "       margin: auto !important;",
+    "   }",
     "}",
     "@media (max-width: 700px) {",
     "    .uH5m4 {",
@@ -188,6 +191,9 @@ const css = [".switch {",
     "        padding-bottom: 0px;",
     "        padding-top: 0px;",
     "    }",
+    "}",
+    ".I-Avc {",
+    "   width: 100%;",
     "}",
     "#my-autoclick-bu {",
     "    width: 2rem;",
@@ -215,7 +221,7 @@ const css = [".switch {",
     "._2plWZ {",
     "    grid-gap: 0px;",
     "}",
-    "._3js2_ {",
+    "._3v4ux {",
     "    display: flex;",
     "    gap: .5rem;",
     "    align-items: center",
@@ -227,7 +233,7 @@ const css = [".switch {",
     "    ._1_a9o {",
     "        padding: 0;",
     "    }",
-    "    ._3js2_ {",
+    "    ._3v4ux {",
     "        margin-left: 1rem;",
     "        margin-right: 1rem;",
     "    }",
@@ -420,8 +426,8 @@ function createNumber() {
     node.innerHTML =
         "<span id=\"wrong\" style=\"color:red\">0</span>/<span id=\"right\" style=\"color:#79c822\">0</span>";
 
-    if (document.querySelector('._3js2_')) {
-        document.querySelector('._3js2_').appendChild(node);
+    if (document.querySelector('._3v4ux')) {
+        document.querySelector('._3v4ux').appendChild(node);
     } else {
         console.error('HELP. place for counter is missing!');
     }
@@ -869,7 +875,7 @@ function createAutoClickButton(isStories) {
             document.querySelector('#my-autoclick-bu').innerText = testingAuto ? 'A' : 'M';
             localStorage.setItem('autoclick', testingAuto ? 'yes' : 'no');
         });
-        document.querySelector('._3js2_').appendChild(bu);
+        document.querySelector('._3v4ux').appendChild(bu);
     }
 }
 
@@ -1357,7 +1363,7 @@ function restoreConsoleLog() {
                             }, 500);
                             if (footerHidden) hideShowFooter(true);
                             if (document.querySelector('._2plWZ')) {
-                                document.querySelector('._3js2_').classList.add('with-hearts')
+                                document.querySelector('._3v4ux').classList.add('with-hearts')
                             }
                             swiper(document.querySelector(father), "left", swipeFunc);
                             swiper(document.querySelector(father), "right", showHidePanel);
