@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.7.2
+// @version      3.0.7.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -543,7 +543,7 @@ async function reclick(index) {
 function draggable() {
     if (window.innerWidth > 700) return;
     cloneDraggable();
-    const el = document.querySelector('#new-draggable ._1Ga4w');
+    const el = document.querySelector('#new-draggable ._2-F7v');
     const buttons = Array.from(document.querySelector('#new-draggable [data-test="word-bank2"]').querySelectorAll('button'));
     buttons.forEach(el => {
         el.addEventListener('click', () => sortableBuClickEventFn(el));
@@ -559,7 +559,7 @@ function draggable() {
 }
 
 function cloneDraggable() {
-    const oldEl = document.querySelector('._2Z23m');
+    const oldEl = document.querySelector('.Sa7Uw');
     const newEl = oldEl.cloneNode(true);
     newEl.querySelector('[data-test="word-bank"]').setAttribute('data-test', 'word-bank2');
     newEl.id = 'new-draggable';
@@ -581,34 +581,35 @@ function cloneDraggable() {
 
 function sortableBuClickEventFn(el) {
     if (el.getAttribute('aria-disabled') === 'true') return;
-    if (!document.querySelectorAll('#new-draggable ._1Ga4w button').length) {
-        document.querySelector('#new-bu').classList.remove('_33Jbm');
+    if (!document.querySelectorAll('#new-draggable ._2-F7v button').length) {
+        document.querySelector('#new-bu').classList.remove('_20q0d');
         document.querySelector('#new-bu').removeAttribute('disabled');
     }
     const parent = el.parentElement.parentElement.cloneNode(true);
-    document.querySelector('#new-draggable ._1Ga4w').appendChild(parent);
-    el.classList.add('_33Jbm');
-    el.classList.add('_3Vv8d');
-    el.classList.remove('_3CBig');
+    document.querySelector('#new-draggable ._2-F7v').appendChild(parent);
+    el.classList.add('_20q0d');
+    el.classList.add('_31wR2');
+    el.classList.remove('_3whsM');
     el.setAttribute('aria-disabled', true);
+
     parent.querySelector('button').addEventListener('click', () => {
-        if (document.querySelectorAll('#new-draggable ._1Ga4w button').length === 1) {
-            document.querySelector('#new-bu').classList.add('_33Jbm');
+        if (document.querySelectorAll('#new-draggable ._2-F7v button').length === 1) {
+            document.querySelector('#new-bu').classList.add('_20q0d');
         }
-        el.classList.add('_3CBig');
-        el.classList.remove('_33Jbm');
-        el.classList.remove('_3Vv8d');
+        el.classList.add('_3whsM');
+        el.classList.remove('_20q0d');
+        el.classList.remove('_31wR2');
         el.setAttribute('aria-disabled', false);
         parent.remove();
     });
     document.querySelector(`#old-draggable [data-test="${el.getAttribute('data-test')}"]`).click()
     setTimeout(() => {
-        document.querySelector('#old-draggable ._2SctN button').click()
+        document.querySelector('#old-draggable .eWdJ5 button').click()
     });
 }
 
 async function setRealDraggable() {
-    const ar = Array.from(document.querySelector('#new-draggable ._1Ga4w').querySelectorAll('button')).map(it => it.textContent);
+    const ar = Array.from(document.querySelector('#new-draggable ._2-F7v').querySelectorAll('button')).map(it => it.textContent);
     if (!ar.length) return;
     const buttons = Array.from(document.querySelector('#old-draggable [data-test="word-bank"]').querySelectorAll('button'));
     for (const it of ar) {
@@ -845,7 +846,7 @@ function toggleTheme() {
 
 function mayISwipe(event) {
     if (!event) return true;
-    const el = document.querySelector('#new-draggable ._2SctN');
+    const el = document.querySelector('#new-draggable .eWdJ5');
     if (el?.contains(event.target)) return false;
     return true;
 }
