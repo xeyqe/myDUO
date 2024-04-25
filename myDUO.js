@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.7.3
+// @version      3.0.7.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -192,7 +192,7 @@ const css = [".switch {",
     "        padding-top: 0px;",
     "    }",
     "}",
-    ".I-Avc {",
+    ".I-Avc, ._1zcW8 {",
     "   width: 100%;",
     "}",
     "#my-autoclick-bu {",
@@ -706,7 +706,7 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-listen"]')) {
             yourAnswer = document.querySelector('[data-test="challenge-translate-input"]').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-listenTap"]')) {
-            yourAnswer = Array.from(document.querySelector('._20X2X').querySelectorAll('button')).map(it => it.textContent).join(' ');
+            yourAnswer = Array.from(document.querySelector('._2-F7v').querySelectorAll('button')).map(it => it.textContent).join(' ')
         } else if (document.querySelector('[data-test="challenge challenge-match"]')) {
             if (matchTexts.line1) {
                 question = matchTexts.line1;
