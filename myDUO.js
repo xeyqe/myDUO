@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.7.4
+// @version      3.0.7.5
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -253,6 +253,10 @@ const css = [".switch {",
     "._2VM4a {",
     "    padding-top: 0;",
     "}",
+    ".mAxZF {", // stories panel
+    "    position: fixed;",
+    "    width: 100%;",
+    "}"
 ].join("\n");
 const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-background-light-text-extension */ ",
     "@supports (backdrop-filter: invert(100%)) {",
@@ -868,7 +872,7 @@ function createAutoClickButton(isStories) {
         });
         const parent = document.querySelector('[data-test="close-button-stories"]').parentElement;
         parent.appendChild(bu);
-        document.querySelector('.DGrOY').prepend(parent);
+        document.querySelector('.kbjat').parentElement.prepend(parent);
     } else {
         bu.innerText = testingAuto ? 'A' : 'M';
         bu.addEventListener('click', () => {
