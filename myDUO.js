@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.7.6
+// @version      3.0.7.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -586,22 +586,22 @@ function cloneDraggable() {
 function sortableBuClickEventFn(el) {
     if (el.getAttribute('aria-disabled') === 'true') return;
     if (!document.querySelectorAll('#new-draggable ._2-F7v button').length) {
-        document.querySelector('#new-bu').classList.remove('_20q0d');
+        document.querySelector('#new-bu').classList.remove('_1NM1Q');
         document.querySelector('#new-bu').removeAttribute('disabled');
     }
     const parent = el.parentElement.parentElement.cloneNode(true);
     document.querySelector('#new-draggable ._2-F7v').appendChild(parent);
-    el.classList.add('_20q0d');
+    el.classList.add('_1NM1Q');
     el.classList.add('_31wR2');
-    el.classList.remove('_3whsM');
+    el.classList.remove('WxjqG');
     el.setAttribute('aria-disabled', true);
 
     parent.querySelector('button').addEventListener('click', () => {
         if (document.querySelectorAll('#new-draggable ._2-F7v button').length === 1) {
-            document.querySelector('#new-bu').classList.add('_20q0d');
+            document.querySelector('#new-bu').classList.add('_1NM1Q');
         }
-        el.classList.add('_3whsM');
-        el.classList.remove('_20q0d');
+        el.classList.add('WxjqG');
+        el.classList.remove('_1NM1Q');
         el.classList.remove('_31wR2');
         el.setAttribute('aria-disabled', false);
         parent.remove();
