@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.7.7
+// @version      3.0.7.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -328,6 +328,8 @@ const css2 = ["/* Shamelessly copied from https://github.com/m-khvoinitsky/dark-
     "    background-color: white;",
     "    color: black;",
     "}"].join("\n");
+
+let lightCss = `--color-snow: 255, 255, 255; --color-snow-always-light: 255, 255, 255; --color-snow-always-dark: 19, 31, 36; --color-polar: 247, 247, 247; --color-swan: 229, 229, 229; --color-swan-always-light: 229, 229, 229; --color-swan-always-dark: 55, 70, 79; --color-hare: 175, 175, 175; --color-hare-always-light: 175, 175, 175; --color-wolf: 119, 119, 119; --color-eel: 75, 75, 75; --color-squid: 235, 227, 227; --color-walking-fish: 255, 223, 224; --color-flamingo: 255, 178, 178; --color-pig: 245, 164, 164; --color-crab: 255, 120, 120; --color-cardinal: 255, 75, 75; --color-fire-ant: 234, 43, 43; --color-canary: 255, 245, 211; --color-duck: 251, 229, 109; --color-bee: 255, 200, 0; --color-bee-always-dark: 255, 199, 0; --color-lion: 255, 177, 0; --color-fox: 255, 150, 0; --color-cheetah: 255, 206, 142; --color-monkey: 229, 162, 89; --color-camel: 231, 166, 1; --color-guinea-pig: 205, 121, 0; --color-grizzly: 187, 113, 73; --color-sea-sponge: 215, 255, 184; --color-turtle: 165, 237, 110; --color-owl: 88, 204, 2; --color-tree-frog: 88, 167, 0; --color-peacock: 0, 205, 156; --color-iguana: 221, 244, 255; --color-anchovy: 210, 228, 232; --color-beluga: 187, 242, 255; --color-moon-jelly: 122, 240, 242; --color-blue-jay: 132, 216, 255; --color-macaw: 28, 176, 246; --color-whale: 24, 153, 214; --color-humpback: 43, 112, 201; --color-narwhal: 20, 83, 163; --color-manta-ray: 4, 44, 96; --color-starfish: 255, 134, 208; --color-beetle: 206, 130, 255; --color-betta: 144, 105, 205; --color-butterfly: 111, 78, 161; --color-dragon: 204, 52, 141; --color-starling: 92, 108, 252; --color-martin: 71, 85, 223; --color-grackle: 167, 160, 255; --color-honeycreeper: 193, 187, 255; --color-deep-starling: 34, 33, 81; --color-deep-martin: 16, 15, 62; --color-legendary-foreground: 140, 65, 3; --color-stardust: 199, 255, 254; --color-cosmos: 60, 77, 255; --color-nebula: 63, 34, 236; --color-nova: 207, 23, 200; --color-gamma: 38, 246, 99; --color-starlight: 38, 138, 255; --color-quasar: 252, 85, 255; --color-celestia: 255, 255, 255; --color-eclipse: 0, 4, 55; --color-black: 0, 0, 0; --color-aqua: 56, 238, 255; --color-aqua-always-light: 56, 238, 255; --color-ocean: 0, 124, 143; --color-seafoam: 158, 224, 233; --color-ice: 225, 253, 255; --color-max-shadow: 20, 208, 225; --color-black-white: 0, 0, 0; --color-diamond-stat: 86, 219, 226; --color-mask-green: 137, 226, 25; --color-pearl-stat: 255, 170, 222; --color-snow-dark-swan: 255, 255, 255; --color-black-text: 60, 60, 60; --color-blue-space: 11, 62, 113; --color-juicy-blue-space: 10, 74, 130; --color-juicy-blue-space-light: 35, 83, 144; --color-gold: 250, 169, 25; --color-gray-text: 153, 153, 153; --color-orange: 255, 157, 0; --color-diamond-highlight: 231, 251, 251; --color-diamond: 56, 208, 208; --color-banana: 255, 176, 32; --color-cloud: 207, 207, 207; --color-cloud-light: 221, 221, 221; --color-cloud-lightest: 240, 240, 240; --color-kiwi: 122, 199, 12; --color-kiwi-dark: 93, 151, 9; --color-kiwi-light: 142, 224, 0; --color-facebook: 59, 89, 152; --color-facebook-dark: 45, 67, 115; --color-google: 66, 133, 244; --color-twitter: 29, 161, 242; --color-hv-light-peach: 241, 218, 179; --color-hv-peach: 219, 186, 131; --color-hv-light-orange: 255, 177, 64; --color-hv-orange: 204, 121, 0; --color-hv-brown: 140, 90, 17; --color-streak-panel-extended-background: 255, 150, 0; --color-streak-panel-frozen-background: 221, 244, 255; --color-streak-panel-frozen-flair-background: 132, 216, 255; --color-streak-panel-frozen-subtitle: 28, 176, 246; --color-streak-panel-frozen-text: 132, 216, 255; --color-streak-panel-frozen-topbar-text: 24, 153, 214; --color-streak-panel-streak-society-background: 255, 200, 0; --color-streak-panel-streak-society-text: 205, 121, 0; --color-streak-panel-unextended-heading-text: 235, 195, 127; --color-streak-panel-unextended-heading-background: 255, 245, 211; --color-streak-panel-unextended-topbar-text: 235, 195, 127; --color-streak-panel-milestone-gradient-start: 255, 147, 58; --color-streak-panel-milestone-gradient-end: 255, 200, 0; --color-streak-society-dark-orange: 255, 151, 1; --color-streak-society-light-orange: 255, 179, 1; --color-friends-quest-own-incomplete: 175, 175, 175; --color-friends-quest-friend-incomplete: 145, 145, 145; --color-black-text-always-light: 60, 60, 60; --color-cardinal-always-light: 255, 75, 75; --color-cowbird: 174, 104, 2; --color-eel-always-light: 75, 75, 75; --color-fox-always-light: 255, 150, 0; --color-fire-ant-always-light: 234, 43, 43; --color-grizzly-lite: 220, 143, 71; --color-guinea-pig-always-light: 205, 121, 0; --color-iguana-always-light: 221, 244, 255; --color-macaw-always-light: 28, 176, 246; --color-owl-always-light: 88, 204, 2; --color-polar-always-light: 247, 247, 247; --color-sea-sponge-always-light: 215, 255, 184; --color-tree-frog-always-light: 88, 167, 0; --color-turtle-always-light: 165, 237, 110; --color-walking-fish-always-light: 255, 223, 224; --color-wolf-always-light: 119, 119, 119; --color-cardinal-always-dark: 238, 85, 85; --color-eel-always-dark: 241, 247, 251; --color-hare-always-dark: 82, 101, 109; --color-macaw-always-dark: 73, 192, 248; --color-owl-always-dark: 147, 211, 51; --color-polar-always-dark: 32, 47, 54; --color-wolf-always-dark: 220, 230, 236; --color-rookie: 0, 175, 133; --color-explorer: 255, 100, 191; --color-traveler: 255, 145, 83; --color-trailblazer: 154, 143, 232; --color-adventurer: 96, 12, 199; --color-discoverer: 111, 44, 57; --color-daredevil: 46, 83, 138; --color-navigator: 9, 47, 119; --color-champion: 255, 110, 53; --color-daily_refresh: 0, 148, 255; --color-dark-mode-locked-path-section-text-color: 82, 101, 109; --color-rookie-progress-bar: 0, 198, 150; --color-explorer-progress-bar: 255, 138, 207; --color-traveler-progress-bar: 255, 167, 106; --color-trailblazer-progress-bar: 169, 157, 254; --color-adventurer-progress-bar: 122, 13, 199; --color-discoverer-progress-bar: 131, 50, 65; --color-daredevil-progress-bar: 54, 98, 165; --color-navigator-progress-bar: 12, 57, 141; --color-champion-progress-bar: 255, 129, 80; --color-daily_refresh-progress-bar: 28, 160, 255; --color-course-complete-cta: 120, 219, 224; --color-course-complete-cta-border: 94, 201, 204; --color-bea-secondary: 24, 153, 214; --color-eddy-secondary: 234, 43, 43; --color-gilded-secondary: 231, 166, 1; --color-lily-secondary: 165, 104, 204; --color-vikram-secondary: 163, 42, 113; --color-zari-secondary: 204, 107, 166; --color-oscar-secondary: 0, 164, 125; --color-falstaff-secondary: 150, 90, 58; --color-bea-radio: 20, 123, 172; --color-duo-radio: 62, 143, 1; --color-eddy-radio: 179, 53, 53; --color-falstaff-radio: 131, 79, 51; --color-lin-lucy-radio: 179, 105, 0; --color-lily-radio: 144, 91, 179; --color-vikram-radio: 143, 36, 99; --color-zari-radio: 179, 94, 146; --color-oscar-radio: 0, 144, 109; --color-bea-junior-shine: 67, 190, 248; --color-duo-shine: 114, 214, 39; --color-eddy-shine: 255, 105, 105; --color-falstaff-shine: 227, 165, 108; --color-lily-shine: 214, 150, 255; --color-lin-lucy-shine: 255, 168, 44; --color-oscar-shine: 63, 217, 181; --color-vikram-shine: 214, 90, 162; --color-zari-shine: 255, 158, 217; --color-super-background-secondary: 26, 30, 76; --color-super-gradient-background: 12, 47, 113; --color-super-gradient-top-halo: 12, 76, 70; --color-super-gradient-bottom-halo: 76, 29, 115; --color-gold-shine: 255, 231, 0; --color-legendary-dark-background: 24, 24, 24; --color-roseate: 223, 75, 162; --color-rosefinch: 180, 28, 117; --color-bluebird: 3, 144, 211; --color-cotinga: 121, 58, 227; --color-sabrewing: 165, 112, 255; --color-blueberry: 17, 82, 167; --color-ether: 60, 89, 141; --color-diamond-tournament-purple: 161, 161, 238; --color-diamond-tournament-reaction: 118, 163, 231; --color-yir-page0: 221, 244, 255; --color-yir-page1: 227, 255, 235; --color-yir-page1-shadow: 19, 31, 36; --color-yir-page3-shadow: 187, 172, 252; --color-yir-page4-shadow: 143, 219, 255; --color-yir-page5-shadow: 255, 183, 80; --color-super-gradient-green-variant1: 38, 255, 85; --color-super-gradient-blue-variant1: 38, 139, 255; --color-super-gradient-pink-variant1: 252, 85, 255; --color-super-gradient-purple-variant1: 17, 34, 181; --color-unknown-001e2d: 0, 30, 45; --color-unknown-0047a4: 0, 71, 164; --color-unknown-0087d0: 0, 135, 208; --color-unknown-00aff9: 0, 175, 249; --color-unknown-013047: 1, 48, 71; --color-unknown-048fd1: 4, 143, 209; --color-unknown-0e0f10: 14, 15, 16; --color-unknown-0e3d79: 14, 61, 121; --color-unknown-172071: 23, 32, 113; --color-unknown-280378: 40, 3, 120; --color-unknown-3ebbf6: 62, 187, 246; --color-unknown-655ebb: 101, 94, 187; --color-unknown-696cee: 105, 108, 238; --color-unknown-7c0000: 124, 0, 0; --color-unknown-89e219: 137, 226, 25; --color-unknown-935051: 147, 80, 81; --color-unknown-959595: 149, 149, 149; --color-unknown-a2a2a2: 162, 162, 162; --color-unknown-a3dbeb: 163, 219, 235; --color-unknown-a4dffb: 164, 223, 251; --color-unknown-aaa: 170, 170, 170; --color-unknown-d087ff: 208, 135, 255; --color-unknown-d9d9d9: 217, 217, 217; --color-unknown-ddd: 221, 221, 221; --color-unknown-de8029: 222, 128, 41; --color-unknown-e3e3e3: 227, 227, 227; --color-unknown-e4ffff: 228, 255, 255; --color-unknown-ed8c01: 237, 140, 1; --color-unknown-f3484e: 243, 72, 78; --color-unknown-f4fafe: 244, 250, 254; --color-unknown-fbdec5: 251, 222, 197; --color-unknown-ffc700: 255, 199, 0; --color-unknown-fff2aa: 255, 242, 170; --color-unknown-fffbef: 255, 251, 239; --app-offset: 0px;`;
 
 function addThemes() {
     if (!document.querySelector('#darkDUOmobile')) {
@@ -833,21 +835,6 @@ function neco(color) {
 
 }
 
-function saveDarkModeStyle(val) {
-    const oldVal = localStorage.getItem('duo.darkMode');
-    const newVal = oldVal.replace(/:"[a-z]+"/, `:"${val}"`);
-    localStorage.setItem('duo.darkMode', newVal);
-}
-
-function toggleTheme() {
-    if (localStorage.getItem('duo.darkMode').endsWith(':"custom"}')) {
-        document.querySelector('html').setAttribute("data-duo-theme", "light");
-        document.getElementsByTagName("html")[0].appendChild(style);
-    } else {
-        document.querySelector('#darkDUOmobile')?.remove();
-    }
-}
-
 function mayISwipe(event) {
     if (!event) return true;
     const el = document.querySelector('#new-draggable .eWdJ5');
@@ -1231,59 +1218,42 @@ function debounce(func, timeout = 300) {
     };
 }
 
-let isScrolling = false;
-let scrollingInterval;
-function scrolling() {
-    // if (!isScrolling) document.querySelector('[data-test="skill-path"]').classList.add('scrolling');
-    // console.log('true')
-    // // e.stopPropagation();
-    // isScrolling = true;
-    // clearInterval(scrollingInterval);
-    // scrollingInterval = setTimeout(() => {
-    //     console.log('false')
-    //     isScrolling = false;
-    //     document.querySelector('[data-test="skill-path"]').classList.remove('scrolling')
-    // }, 100);
-}
-
-function setScrollEvent() {
-    // document.addEventListener('scroll', scrolling);
-}
-
 function addCustomDarkModeOption() {
-    if (!this.document.querySelector('#darkMode') || this.document.querySelector('#darkMode').textContent.includes('Custom')) return;
-    const savedValue = localStorage.getItem('duo.darkMode');
+    const selectEl = document.querySelector('[data-test="dark-mode"]');
+    if (!selectEl || selectEl.textContent.includes('Custom')) return;
 
-    if (savedValue?.endsWith(':"custom"}')) document.querySelector('.cqJc3').innerText = 'Custom';
-    const el = document.createElement('OPTION');
-    el.classList.add('._24isA');
+    if (localStorage.getItem('myDuoTheme') === 'true') document.querySelector('._1GMnI').innerText = 'Custom';
+    const el = selectEl.querySelector('option[value="off"]').cloneNode(false);
     el.value = 'custom';
     el.innerText = 'Custom';
+
+    // click events don't work so...
     const callback = function (mutationsList, observer) {
         for (let mutation of mutationsList) {
-            if (!document.querySelector('.cqJc3').innerText) {
-                // document.querySelector('html').setAttribute("data-duo-theme", "light");
-                document.querySelector('.cqJc3').innerText = 'Custom';
+            if (!selectEl.parentElement.firstElementChild.innerText) {
+                document.querySelector('html').setAttribute("data-duo-theme", "light");
+                selectEl.parentElement.firstElementChild.textContent = 'Custom';
+                localStorage.setItem('myDuoTheme', 'true');
+                document.querySelector('html').setAttribute('style', lightCss);
+                document.getElementsByTagName("html")[0].appendChild(style);
+                const st = localStorage.getItem('duo.darkMode');
+                if (st) localStorage.setItem('duo.darkMode', st.replace('custom', 'off'));
+            } else if (selectEl.parentElement.firstElementChild.textContent !== 'Custom') {
+                if (selectEl.parentElement.firstElementChild.textContent === 'Off') {
+                    lightCss = document.querySelector('html').getAttribute('style');
+                }
+                localStorage.setItem('myDuoTheme', 'false');
+                document.querySelector('#darkDUOmobile')?.remove();
             }
         }
     }
-    const targetNode = document.querySelector('.cqJc3');
-    const config = { childList: true };
+    const targetNode = selectEl.parentElement.firstElementChild;
+    const config = { attributes: true, childList: true, subtree: true, characterData: true };
     const observer = new MutationObserver(callback);
     observer.observe(targetNode, config);
 
-    document.querySelector('[data-test="save-button"]').addEventListener('click', () => {
-        setTimeout(() => {
-            toggleTheme();
-        }, 300);
-    });
-
-    this.document.querySelector('#darkMode').appendChild(el);
+    selectEl.appendChild(el);
 }
-
-// function removeTouchEndEvent(e) {
-//     e.stopPropagation();
-// }
 
 function restoreConsoleLog() {
     if (!document.querySelector('#my-iframe')) {
@@ -1303,7 +1273,6 @@ function restoreConsoleLog() {
     document.querySelector('html').insertBefore(el, document.querySelector('body'))
 
     window.addEventListener('load', function () {
-        setScrollEvent();
         addThemes();
 
         if (document.querySelector('[data-test="skill-path"]')) {
@@ -1314,13 +1283,20 @@ function restoreConsoleLog() {
             // });
         }
 
-        const oldTheme = localStorage.getItem('themed');
-        if (oldTheme === '1') saveDarkModeStyle('custom');
-        if (oldTheme) localStorage.removeItem('themed');
-
-        if (localStorage.getItem('duo.darkMode').endsWith(':"custom"}')) {
+        if (localStorage.getItem('myDuoTheme') === 'true') {
             document.querySelector('html').setAttribute("data-duo-theme", "light")
             head[0].appendChild(style);
+            document.querySelector('html').setAttribute("style", lightCss);
+        }
+
+        // repair duo.darkMode storage from older versions
+        if (localStorage.getItem('duo.darkMode').endsWith(':"custom"}')) {
+            console.log(localStorage.getItem('duo.darkMode').replace('custom', 'off'))
+            localStorage.setItem('duo.darkMode', localStorage.getItem('duo.darkMode').replace('custom', 'off'));
+            localStorage.setItem('myDuoTheme', true);
+            document.querySelector('html').setAttribute("data-duo-theme", "light")
+            head[0].appendChild(style);
+            document.querySelector('html').setAttribute("style", lightCss);
         }
 
         setTimeout(() => {
@@ -1335,7 +1311,7 @@ function restoreConsoleLog() {
                     // if (mutation.addedNodes?.[0]?.querySelector('._3GElo') || mutation.addedNodes?.[0]?.querySelector('._1bdcY')) {
                     //     appendThemeSwitcher();
                     // }
-                    if (mutation.addedNodes?.[0]?.querySelector('#darkMode')) {
+                    if (mutation.addedNodes?.[0]?.querySelector('[data-test="dark-mode"]')) {
                         addCustomDarkModeOption();
                     }
 
