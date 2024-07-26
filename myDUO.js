@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.7.9
+// @version      3.0.8.0
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -749,9 +749,9 @@ function neco(color) {
         } else if (document.querySelector('[data-test="challenge challenge-listenMatch"]')) {
             yourAnswer = Array.from(document.querySelectorAll('[data-test="challenge-tap-token-text"]')).map(it => it.textContent).join(', ')
         } else if (document.querySelector('[data-test="challenge challenge-listenIsolation"]')) {
-            question = Array.from(document.querySelector('[aria-hidden="true"]').parentElement.parentElement.children).map(it => {
+            question = Array.from(document.querySelector('[aria-hidden="true"]').parentElement.children).map(it => {
                 const txt = it.textContent;
-                return it.querySelector('._3gg5M') ? `_${txt}_` : txt;
+                return it.classList.contains('_3ykJt') ? `_${txt}_` : txt;
             }).join('').replace(/__/g, '');
         } else if (document.querySelector('[data-test="challenge challenge-select"]')) {
             yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] .AKwIn')?.textContent;
