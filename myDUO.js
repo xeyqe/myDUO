@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.8.1
+// @version      3.0.8.2
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -593,18 +593,16 @@ function sortableBuClickEventFn(el) {
     }
     const parent = el.parentElement.parentElement.cloneNode(true);
     document.querySelector('#new-draggable ._2-F7v').appendChild(parent);
-    el.classList.add('_1NM1Q');
-    el.classList.add('_31wR2');
-    el.classList.remove('WxjqG');
+    el.classList.add('_2wryV');
+    el.classList.remove('_3fmUm');
     el.setAttribute('aria-disabled', true);
 
     parent.querySelector('button').addEventListener('click', () => {
         if (document.querySelectorAll('#new-draggable ._2-F7v button').length === 1) {
             document.querySelector('#new-bu').classList.add('_1NM1Q');
         }
-        el.classList.add('WxjqG');
-        el.classList.remove('_1NM1Q');
-        el.classList.remove('_31wR2');
+        el.classList.add('_3fmUm');
+        el.classList.remove('_2wryV');
         el.setAttribute('aria-disabled', false);
         parent.remove();
     });
