@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.8.2
+// @version      3.0.8.3
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -790,6 +790,13 @@ function neco(color) {
             yourAnswer = document.querySelector('[data-test="challenge-choice"][aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
         } else if (document.querySelector('[data-test="challenge challenge-listenSpeak"]')) {
             question = document.querySelector('span [aria-hidden="true"]').parentElement.parentElement.parentElement.textContent;
+        } else if (document.querySelector('[data-test="challenge challenge-patternTapComplete"]')) {
+            const tds = Array.from(document.querySelectorAll('td')).filter(it => it.querySelector('button'));
+            const answers = [];
+            tds.forEach(td => {
+                answers.push(Array.from(td.children).map(it => it.nodeName === 'SPAN' ? it.textContent : ('_' + it.querySelector('button').textContent + '_')).join(''));
+            })
+            yourAnswer = answers.join('\n');
         } else {
             const challenge = document.querySelector('[data-test*="challenge"]').getAttribute('data-test');
             question = `This ${challenge} was not covered by myDuo script. :(`;
@@ -813,6 +820,7 @@ function neco(color) {
             const div = emptyDiv.cloneNode();
             div.innerText = yourAnswer;
             div.style.color = color === 'right' ? '#279f09' : '#e7559e';
+            div.style.whiteSpace = 'pre-line';
             divMain.appendChild(div);
         }
 
