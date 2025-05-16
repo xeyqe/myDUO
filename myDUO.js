@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.8.3
+// @version      3.0.8.4
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -197,6 +197,7 @@ const css = [".switch {",
     "}",
     "#my-autoclick-bu {",
     "    width: 2rem;",
+    "    margin-left: .5rem;",
     "}",
     "button._2mDNn > i {",
     "    opacity: 0;",
