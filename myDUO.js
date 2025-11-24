@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.8.5
+// @version      3.0.8.6
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -549,6 +549,8 @@ async function reclick(index) {
 
 function draggable() {
     if (window.innerWidth > 700) return;
+    const bb = Array.from(document.querySelector('[data-test="word-bank"]').querySelectorAll('button'));
+    bb.forEach(b => b.disabled = true);
     cloneDraggable();
     const el = document.querySelector('#new-draggable ._2-F7v');
     const buttons = Array.from(document.querySelector('#new-draggable [data-test="word-bank2"]').querySelectorAll('button'));
@@ -563,6 +565,11 @@ function draggable() {
         },
         animation: 150,
     });
+    const bb2 = [
+        ...Array.from(document.querySelector('[data-test="word-bank"]').querySelectorAll('button')),
+        ...Array.from(document.querySelector('[data-test="word-bank2"]').querySelectorAll('button'))
+    ];
+    bb2.forEach(b => b.removeAttribute('disabled'));
 }
 
 function cloneDraggable() {
