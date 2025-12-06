@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.8.7
+// @version      3.0.8.8
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -9,7 +9,7 @@
 // @match        https://duolingo.com/*
 // @match        http://*.duolingo.com/*
 // @match        https://*.duolingo.com/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.6/Sortable.min.js
 // @grant        GM_getResourceText
 // ==/UserScript==
 
