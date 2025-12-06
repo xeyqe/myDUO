@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.8.6
+// @version      3.0.8.7
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -1044,7 +1044,7 @@ function setLernerMatchObserver() {
         for (const mutation of mutationsList) {
             if (mutation.attributeName !== 'class' || mutation.target.nodeName !== 'BUTTON') continue;
             const buttons = Array.from(document.querySelectorAll('[data-test*="-challenge-tap-token"]'));
-            const txt = mutation.target.textContent;
+            const txt = mutation.target.querySelector('[data-test="challenge-tap-token-text"]').textContent;
             if (buttons.indexOf(mutation.target) < (buttons.length / 2))
                 matchTexts.line1 = matchTexts.line1 ? `${matchTexts.line1} | ${txt}` : txt;
             else
@@ -1067,7 +1067,7 @@ async function setLearnObserver() {
     } else if (document.querySelector('[data-test="challenge challenge-dialogue"], [data-test="challenge challenge-readComprehension"]')) {
         hideShowFooter(false);
         footerHidden = false;
-    } else if (document.querySelector('textarea, input')) {
+    } else if (document.querySelector('textarea, input') && window.getComputedStyle(document.querySelector('textarea, input')).display !== 'none') {
         document.querySelector('textarea, input').addEventListener('tab', (event) => {
             setTimeout(() => {
                 event.target.scrollIntoView({ block: 'end' });
@@ -1077,6 +1077,8 @@ async function setLearnObserver() {
             document.querySelector('textarea, input').focus({ preventScroll: true });
             document.querySelector('textarea, input').scrollIntoView({ block: 'end' });
         }, 200);
+    } else if (document.querySelector('[data-test="challenge challenge-match"]')) {
+        setLernerMatchObserver();
     }
 
     const callback = function (mutationsList, observer) {
