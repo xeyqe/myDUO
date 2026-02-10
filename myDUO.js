@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Duolingo Improver
-// @version      3.0.8.8
+// @version      3.0.8.9
 // @description  For description visit https://github.com/xeyqe/myDUO/blob/master/README.md
 // @icon         https://res.cloudinary.com/dn6n8yqqh/image/upload/c_scale,h_214/v1555635245/Icon_qqbnzf.png
 // @author       xeyqe
@@ -765,10 +765,11 @@ function neco(color) {
             yourAnswer = document.querySelector('[aria-checked="true"] [data-test="challenge-judge-text"]').textContent;
             question = document.querySelector('[role="radiogroup"]').previousElementSibling.textContent;
         } else if (document.querySelector('[data-test="challenge challenge-tapComplete"]')) {
-            question = Array.from(document.querySelectorAll('[aria-hidden="true"]')).map(el => el.textContent).join('').replace(/\s([,.!?\s])/g, ' ___$1');;
-            const el = document.querySelector('[aria-hidden="true"]').parentElement.parentElement.parentElement;
-            const ar = Array.from(el.querySelectorAll('[data-test="challenge-tap-token-text"]')).map(it => it.innerText).filter(i => i);
-            ar.forEach(it => question = question.replace('___', `_${it}_`));
+            const wordBank = document.querySelector('[data-test="word-bank"]');
+            const ar = Array.from(document.querySelectorAll('[aria-hidden="true"], [data-test="challenge-tap-token-text"]'));
+            question = ar.filter(el => {
+                return !wordBank.contains(el);
+            }).map(it => highlightDataTest(it)).join('');
         } else if (document.querySelector('[data-test="challenge challenge-dialogue"]')) {
             footerHidden = localStorage.getItem('footerHidden') === "true"
             if (footerHidden) hideShowFooter(true);
@@ -847,6 +848,13 @@ function neco(color) {
     });
     return promise;
 
+}
+
+function highlightDataTest(el) {
+    if (getComputedStyle(el).getPropertyValue('visibility') === 'hidden') return '';
+    const isTabToken = el.getAttribute('data-test') === 'challenge-tap-token-text';
+    const text = el.textContent;
+    return isTabToken ? `_${text}_` : text;
 }
 
 function mayISwipe(event) {
